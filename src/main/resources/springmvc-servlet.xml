@@ -6,13 +6,14 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd">
-
+	
+	<!-- 自动扫描的包名 ，使Spring支持自动检测组件 -->
+	<context:component-scan base-package="com.zouzoutingting.controllers"/>
+	<context:component-scan base-package="com.zouzoutingting.service	"/>
+	
     <mvc:default-servlet-handler />
- 
+ 	
+ 	<!-- 启用spring mvc 注解--> 
     <mvc:annotation-driven />
      
-    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"  id="internalResourceViewResolver">
-        <property name="prefix" value="/WEB-INF/jsp/" />
-        <property name="suffix" value=".jsp" />
-    </bean>
 </beans>

@@ -1,4 +1,4 @@
-package com.zouzoutingting;
+package com.zouzoutingting.controllers;
 
 /**
  * @author Jerry Wang
