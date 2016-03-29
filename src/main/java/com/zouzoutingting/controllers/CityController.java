@@ -14,16 +14,16 @@ import com.zouzoutingting.service.ICityService;
  * @date   2016年3月27日
  */
 @Controller
-@RequestMapping("/city")
 public class CityController extends BaseController {
 	
 	@Autowired
 	private ICityService cityService;
 	 
-	@RequestMapping({ "/list" })
+	@RequestMapping({ "/citys" })
 	public void list(PrintWriter pw) {
 		System.out.println("list");
 		pw.write("list");  
+		pw.close();
 	}
 
 }

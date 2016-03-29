@@ -1,7 +1,10 @@
 package com.zouzoutingting.service.impl;
 
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Service;
 
+import com.zouzoutingting.dao.ICityDao;
 import com.zouzoutingting.service.ICityService;
 
 /**
@@ -10,8 +13,9 @@ import com.zouzoutingting.service.ICityService;
  * @date   2016年3月28日
  */
 
-@Service
+@Service("cityService")
 public class CityServiceImpl implements ICityService {
 
-
+	 @Resource
+	 private ICityDao cityDao;  
 }
