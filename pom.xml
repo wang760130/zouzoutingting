@@ -1,5 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.zouzoutingting</groupId>
 	<artifactId>com.zouzoutingting</artifactId>
@@ -7,18 +8,19 @@
 	<packaging>war</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>zouzoutingting</name>
-	<url>http://maven.apache.org</url>
-	
-	<properties>  
-        <!-- spring版本号 -->  
-        <spring.version>4.0.0.RELEASE</spring.version>  
-        <!-- mybatis版本号 -->  
-        <mybatis.version>3.2.5</mybatis.version>  
-        <!-- log4j日志文件管理包版本 -->  
-        <slf4j.version>1.7.7</slf4j.version>  
-        <log4j.version>1.2.17</log4j.version>  
-    </properties>  
-    
+
+	<properties>
+		<!-- spring版本号 -->
+		<spring.version>4.0.0.RELEASE</spring.version>
+
+		<!-- hibernate版本号 -->
+		<hibernate.version>4.0.0.Final</hibernate.version>
+
+		<!-- log4j日志文件管理包版本 -->
+		<slf4j.version>1.7.7</slf4j.version>
+		<log4j.version>1.2.17</log4j.version>
+	</properties>
+
 	<dependencies>
 
 		<!-- junit -->
@@ -29,13 +31,32 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- servlet -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+		</dependency>
+
 		<!-- mysql-connector -->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.25</version>
 		</dependency>
-	
+		
+		 <!-- AspectJ -->
+	    <dependency>
+	        <groupId>org.aspectj</groupId>
+	        <artifactId>aspectjrt</artifactId>
+	        <version>1.7.4</version>
+	    </dependency>
+	    <dependency>
+	        <groupId>org.aspectj</groupId>
+	        <artifactId>aspectjweaver</artifactId>
+	        <version>1.7.4</version>
+	    </dependency>
+
 		<!-- spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -55,17 +76,53 @@
 			<version>${spring.version}</version>
 		</dependency>
 
-		<!-- mybatis -->
 		<dependency>
-			<groupId>org.mybatis</groupId>
-			<artifactId>mybatis</artifactId>
-			<version>${mybatis.version}</version>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-expression</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aop</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<!-- hibernate -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>${hibernate.version}</version>
 		</dependency>
 	</dependencies>
-	
+
 	<build>
 		<finalName>zouzoutingting</finalName>
-		
+
 		<sourceDirectory>src/main/java </sourceDirectory>
 		<testSourceDirectory>src/test/java </testSourceDirectory>
 		<resources>

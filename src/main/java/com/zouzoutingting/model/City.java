@@ -1,22 +1,39 @@
 package com.zouzoutingting.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * @author Jerry Wang
  * @Email  jerry002@126.com
  * @date   2016年3月28日
  */
+@Entity
+@Table(name="t_city")
 public class City {
 
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(name="id")
 	private long id;
 	
+	@Column(name="name")
 	private String name;
 	
+	@Column(name="ename")
 	private String ename;
 	
+	@Column(name="synopsis")
 	private String synopsis;
 	
+	@Column(name="pic")
 	private String pic;
 	
+	@Column(name="state")
 	private short state;
 
 	public long getId() {
@@ -65,6 +82,13 @@ public class City {
 
 	public void setState(short state) {
 		this.state = state;
+	}
+
+	@Override
+	public String toString() {
+		return "City [id=" + id + ", name=" + name + ", ename=" + ename
+				+ ", synopsis=" + synopsis + ", pic=" + pic + ", state="
+				+ state + "]";
 	}
 	
 }
