@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.zouzoutingting.dao.IDao;
 import com.zouzoutingting.model.City;
 import com.zouzoutingting.service.ICityService;
+import com.zouzoutingting.utils.Page;
 
 /**
  * @author Jerry Wang
@@ -19,7 +20,7 @@ import com.zouzoutingting.service.ICityService;
 public class CityServiceImpl implements ICityService {
 	
 	@Autowired
-	private IDao<City> cityDao;  
+	private IDao<City> cityDao = null;
 	
 	@Override
 	public City load(long id) {
@@ -27,8 +28,23 @@ public class CityServiceImpl implements ICityService {
 	}
 	
 	@Override
-	public List<City> query(String query) {
-		return cityDao.query(query);
+	public List<City> getAll() {
+		String conddition = "state = 0";
+		Page page = new Page();
+		page.setCondition(conddition);
+		page.setPageNo(1);
+		page.setPageSize(cityDao.count(conddition));
+		return cityDao.page(page);
+	}
+	
+	@Override
+	public List<City> page(Page page) {
+		return cityDao.page(page);
+	}
+	
+	@Override
+	public int count(String condition) {
+		return cityDao.count(condition);
 	}
 	
 	@Override

@@ -2,6 +2,8 @@ package com.zouzoutingting.dao;
 
 import java.util.List;
 
+import com.zouzoutingting.utils.Page;
+
 /**
  * @author Jerry Wang
  * @Email  jerry002@126.com
@@ -11,7 +13,9 @@ public interface IDao<T> {
 	
 	public T load(long id);
 	
-	public List<T> query(String query);
+	public List<T> page(Page page);
+	
+	public int count(String condition);
 	
 	public void save(T t);
 	

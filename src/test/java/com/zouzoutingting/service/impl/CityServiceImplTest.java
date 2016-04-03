@@ -1,4 +1,4 @@
-package com.zouzoutingting.dao.impl;
+package com.zouzoutingting.service.impl;
 
 import java.util.List;
 
@@ -8,26 +8,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.zouzoutingting.dao.IDao;
 import com.zouzoutingting.model.City;
 import com.zouzoutingting.utils.Page;
 
 /**
  * @author Jerry Wang
  * @Email  jerry002@126.com
- * @date   2016年4月2日
+ * @date   2016年4月3日
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)  
 @ContextConfiguration(locations = {"classpath:applicationContext.xml"}) 
-public class CityDaoImplTest {
-	
+public class CityServiceImplTest {
+
 	@Autowired
-	IDao<City> cityDao = null;
+	CityServiceImpl cityService = null;
 	
 	@Test
 	public void loadTest() {
-		City city = cityDao.load(4);
+		City city = cityService.load(4);
 		System.out.println(city);
 	}
 	
@@ -36,7 +35,7 @@ public class CityDaoImplTest {
 		Page page = new Page();
 		page.setPageNo(2);
 		page.setPageSize(10);
-		List<City> cityList = cityDao.page(page);
+		List<City> cityList = cityService.page(page);
 		for(City city : cityList) {
 			System.out.println(city.getEname());
 		}
@@ -44,36 +43,26 @@ public class CityDaoImplTest {
 	
 	@Test
 	public void countTest() {
-		System.out.println(cityDao.count(""));
+		System.out.println(cityService.count(""));
 	}
 	
 	@Test
 	public void saveTest() {
 		City city = new City();
 		city.setName("西安");
-		cityDao.save(city);
-	}
-	
-	@Test
-	public void batchSaveTest() {
-		City city = null;
-		for(int i = 0; i < 1000; i++){
-			city = new City();
-			city.setEname("西安" + i);
-			cityDao.save(city);
-		}
+		cityService.save(city);
 	}
 	
 	@Test
 	public void updateTest() {
-		City city = cityDao.load(4);
+		City city = cityService.load(4);
 		city.setEname("xian");
-		cityDao.update(city);
+		cityService.update(city);
 	}
 	
 	@Test
 	public void deleteTest() {
-		City city = cityDao.load(4);
-		cityDao.delete(city);
+		City city = cityService.load(4);
+		cityService.delete(city);
 	}
 }

@@ -8,16 +8,23 @@
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd">
 	
 	<!-- 自动扫描的包名 ，使Spring支持自动检测组件 -->
-	<context:component-scan base-package="com.zouzoutingting.*"/>
+	<context:component-scan base-package="com.zouzoutingting.controllers" />
 	
 	<mvc:default-servlet-handler />
  	
  	<!-- 启用spring mvc 注解--> 
     <mvc:annotation-driven />
     
-	<!-- 引入配置文件 -->  
-    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">  
-        <property name="location" value="classpath:jdbc.properties" />  
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">  
+        <property name="prefix" value="/"></property>  
+        <property name="suffix" value=".jsp"></property>  
     </bean>  
-     
+    
+    <!--  
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
+          <property name="defaultEncoding" value="utf-8" />  
+          <property name="maxUploadSize" value="10485760000" />  
+          <property name="maxInMemorySize" value="40960" />  
+    </bean> 
+    -->
 </beans>

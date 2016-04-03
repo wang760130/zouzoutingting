@@ -10,11 +10,6 @@
 		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
 	
-	<context-param>
-    	<param-name>contextConfigLocation</param-name>
-    	<param-value>classpath:/spring-*.xml</param-value>
-  	</context-param>
-  
 	<!-- 配置字符集 -->
 	<filter>
 		<filter-name>encodingFilter</filter-name>
@@ -37,15 +32,22 @@
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
-	<context-param>
-		<param-name>contextConfigLocation</param-name>
-		<param-value>classpath:applicationContext.xml</param-value>
-	</context-param>
-
-	<!-- springmvc -->
+	
+	<context-param>  
+        <param-name>contextConfigLocation</param-name>  
+        <param-value>classpath:applicationContext.xml</param-value>  
+  	</context-param>  
+	
+	
+	<!-- spring mvc -->
 	<servlet>
 		<servlet-name>springmvc</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>  
+            <param-name>contextConfigLocation</param-name>  
+            <param-value>classpath:/spring-servlet.xml</param-value>
+        </init-param>  
+        <load-on-startup>1</load-on-startup>  
 	</servlet>
 
 	<servlet-mapping>
@@ -54,8 +56,8 @@
 	</servlet-mapping>
 	
 	<!-- Spring 刷新Introspector防止内存泄露 -->  
-    <listener>  
+  	<listener>  
         <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>  
-    </listener>  
+    </listener> 
 
 </web-app>
