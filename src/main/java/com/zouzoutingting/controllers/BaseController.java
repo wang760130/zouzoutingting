@@ -1,5 +1,18 @@
 package com.zouzoutingting.controllers;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zouzoutingting.common.Global;
+import com.zouzoutingting.utils.DESCipher;
+import com.zouzoutingting.utils.GZipUtils;
+
 /**
  * @author Jerry Wang
  * @Email  jerry002@126.com
@@ -41,5 +54,39 @@ package com.zouzoutingting.controllers;
  *     ----------------------听说java继承会继承父类的所有属性→_→---------------------------
  */
 public class BaseController {
-
+	
+	private Logger logger = Logger.getLogger(this.getClass());
+	
+	public void gzipCipherResult(boolean isSuccess, String returnMessage, Object entity, HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("success", isSuccess);
+		map.put("message", returnMessage);
+		map.put("entity", entity);
+		
+        ObjectMapper mapper = new ObjectMapper();  
+        String content = null;
+        byte[] result = null;
+        try {
+			content = mapper.writeValueAsString(map);
+			result = GZipUtils.compress(content.getBytes("UTF-8"));
+			result = DESCipher.encrypt(result, Global.RESPONSE_DESKEY);
+			
+			response.setContentType ("application/octet-stream");
+			response.getOutputStream().write(result);
+			response.getOutputStream().flush();
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}  
+        
+        Object requestid = request.getAttribute("requestid");
+		if(requestid != null) {
+			String requestId = requestid.toString();
+			long currentTime = System.currentTimeMillis();
+			long timeMillis = Long.valueOf(requestId.substring(0, requestId.length() - 3));
+			long executeTime = currentTime - timeMillis;
+			logger.info("requestid="+requestId+",  executeTime="+executeTime+"ms, result=" + content);
+		}
+        
+	}
+	
 }

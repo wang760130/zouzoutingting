@@ -10,6 +10,7 @@
 	<!-- 自动扫描的包名 ，使Spring支持自动检测组件 -->
 	<context:component-scan base-package="com.zouzoutingting.controllers" />
 	
+	<!-- 对静态资源文件的访问 不支持访问WEB-INF目录 -->
 	<mvc:default-servlet-handler />
  	
  	<!-- 启用spring mvc 注解--> 
@@ -19,6 +20,11 @@
         <property name="prefix" value="/"></property>  
         <property name="suffix" value=".jsp"></property>  
     </bean>  
+    
+    <!-- 自定义配置拦截器 -->  
+	<mvc:interceptors>    
+	    <bean class="com.zouzoutingting.interceptor.AccessLoggerInterceptor"></bean>    
+	</mvc:interceptors>  
     
     <!--  
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
