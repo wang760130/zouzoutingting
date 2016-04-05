@@ -14,6 +14,7 @@ public class CityControllerTest {
 
 	private final static String HOST_URL = "http://localhost/zouzoutingting";
 	
+	/** 有参数连接**/
 	@Test
 	public void cityTest() {
 		String url = HOST_URL + "/city";
@@ -25,6 +26,7 @@ public class CityControllerTest {
 		}
 	}
 	
+	/** 无参数连接**/
 	@Test
 	public void citysTest() {
 		String url = HOST_URL + "/citys";

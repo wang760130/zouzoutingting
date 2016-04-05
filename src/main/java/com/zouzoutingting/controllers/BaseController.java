@@ -55,11 +55,17 @@ import com.zouzoutingting.utils.GZipUtils;
  */
 public class BaseController {
 	
-	private Logger logger = Logger.getLogger(this.getClass());
+	public Logger logger = Logger.getLogger(this.getClass());
 	
-	public void gzipCipherResult(boolean isSuccess, String returnMessage, Object entity, HttpServletRequest request, HttpServletResponse response) {
+	public static final int RETURN_CODE_SUCCESS = 0;
+	public static final int RETURN_CODE_EXCEPTION = -1;
+	
+	public static final String RETURN_MESSAGE_SUCCESS = "成功";
+	public static final String RETURN_MESSAGE_EXCEPTION = "服务器端异常";
+	
+	public void gzipCipherResult(int returnCode, String returnMessage, Object entity, HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("success", isSuccess);
+		map.put("code", returnCode);
 		map.put("message", returnMessage);
 		map.put("entity", entity);
 		

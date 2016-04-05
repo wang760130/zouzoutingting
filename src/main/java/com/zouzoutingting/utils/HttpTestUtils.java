@@ -37,7 +37,7 @@ public class HttpTestUtils {
 		conn.setRequestMethod("POST");
 		conn.setDoOutput(true);
 		conn.setDoInput(true);
-		String query =  RequestParamUtil.encryptParan(param);
+		String query = RequestParamUtil.encryptParan(param);
 		conn.getOutputStream().write(query.getBytes());
 		conn.connect();
 
