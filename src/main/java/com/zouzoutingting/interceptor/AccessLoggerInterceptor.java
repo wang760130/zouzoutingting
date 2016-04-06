@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.zouzoutingting.common.Global;
 import com.zouzoutingting.utils.IpUtil;
 import com.zouzoutingting.utils.RequestParamUtil;
 import com.zouzoutingting.utils.ThreadLocalRandom;
@@ -89,6 +90,16 @@ public class AccessLoggerInterceptor implements HandlerInterceptor{
 	public void afterCompletion(HttpServletRequest request,
 			HttpServletResponse response, Object handler, Exception ex)
 			throws Exception {
+		
+		String content = (String)request.getAttribute(Global.RESULT_CONTENT);
+		Object requestid = request.getAttribute("requestid");
+		if(requestid != null) {
+			String requestId = requestid.toString();
+			long currentTime = System.currentTimeMillis();
+			long timeMillis = Long.valueOf(requestId.substring(0, requestId.length() - 3));
+			long executeTime = currentTime - timeMillis;
+			logger.info("requestid="+requestId+",executeTime="+executeTime+"ms, result=" + content);
+		}
 	}
 
 	

@@ -67,13 +67,16 @@ public class BaseController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("code", returnCode);
 		map.put("message", returnMessage);
-		map.put("entity", entity);
+		map.put("entity", entity == null ? new Object() : entity);
+		map.put("token",""); // 返回用户登录凭证
+		
 		
         ObjectMapper mapper = new ObjectMapper();  
         String content = null;
         byte[] result = null;
         try {
 			content = mapper.writeValueAsString(map);
+			request.setAttribute(Global.RESULT_CONTENT, content);
 			result = GZipUtils.compress(content.getBytes("UTF-8"));
 			result = DESCipher.encrypt(result, Global.RESPONSE_DESKEY);
 			
@@ -83,15 +86,6 @@ public class BaseController {
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}  
-        
-        Object requestid = request.getAttribute("requestid");
-		if(requestid != null) {
-			String requestId = requestid.toString();
-			long currentTime = System.currentTimeMillis();
-			long timeMillis = Long.valueOf(requestId.substring(0, requestId.length() - 3));
-			long executeTime = currentTime - timeMillis;
-			logger.info("requestid="+requestId+",  executeTime="+executeTime+"ms, result=" + content);
-		}
         
 	}
 	

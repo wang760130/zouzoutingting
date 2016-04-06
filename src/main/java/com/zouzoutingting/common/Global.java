@@ -8,4 +8,6 @@ package com.zouzoutingting.common;
 public class Global {
 
 	public static String RESPONSE_DESKEY = "zouzoutingting";
+	
+	public static String RESULT_CONTENT = "resultcontent";
 }
