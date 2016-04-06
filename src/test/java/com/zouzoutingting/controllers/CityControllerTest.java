@@ -12,7 +12,7 @@ import com.zouzoutingting.utils.HttpTestUtils;
  */
 public class CityControllerTest {
 
-	private final static String HOST_URL = "http://localhost/zouzoutingting";
+	private final static String HOST_URL = "http://api.imonl.com";
 	
 	/** 有参数连接**/
 	@Test
