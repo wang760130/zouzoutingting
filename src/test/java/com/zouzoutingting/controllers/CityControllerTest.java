@@ -38,6 +38,20 @@ public class CityControllerTest {
 		}
 	}
 	
+	@Test
+	public void batchCityTest() {
+		
+		String url = HOST_URL + "/citys";
+		try {
+			for(int i = 0; i < 100; i++) {
+				JSONObject result = HttpTestUtils.testUrl(url);
+				System.out.println(JSON.toJSONString(result, true));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	
 	
 }

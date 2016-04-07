@@ -146,6 +146,14 @@
 			<artifactId>hibernate-core</artifactId>
 			<version>${hibernate.version}</version>
 		</dependency>
+		
+		<!-- druid -->
+		<dependency>
+  			<groupId>com.alibaba.druid</groupId>
+  			<artifactId>druid-wrapper</artifactId>
+  			<version>0.2.9</version>
+		</dependency>
+		
 	</dependencies>
 
 	<build>
