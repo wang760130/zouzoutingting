@@ -21,7 +21,7 @@ public class SpotServiceImpl implements ISpotService {
     @Override
     public List<Spot> loadByViewIDAndType(long vid, int type) {
         List<Spot> list = null;
-        if(vid>0L && type >0) {
+        if(vid>0L && type >=0) {
             Page page = new Page();
             page.setCondition("vid = " + vid + " and type=" + type +" and state=1");
             page.setPageNo(1);
