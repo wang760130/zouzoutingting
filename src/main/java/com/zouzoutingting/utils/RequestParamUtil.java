@@ -29,7 +29,7 @@ public class RequestParamUtil {
 
 	/**
 	 * 请求参数加密传输 APP端调用
-	 * @param postParams
+	 * @param param 参数
 	 * @return
 	 * @throws Exception
 	 * @throws UnsupportedEncodingException
@@ -84,11 +84,33 @@ public class RequestParamUtil {
 	 */
 	public static String getParam(HttpServletRequest request, String name, String defaultVal) {
 		@SuppressWarnings("unchecked")
-		Map<String, String> paramMap = (Map<String, String>) (request.getAttribute(REQUEST_PARAM_MAP));
+		Map<String, String> paramMap = (Map<String, String>) request.getAttribute(REQUEST_PARAM_MAP);
 		if (paramMap.containsKey(name)) {
 			return paramMap.get(name);
 		}
 		return defaultVal;
+	}
+
+	public static Integer getIntegerParam(HttpServletRequest request, String name, Integer defaultVal) {
+		Integer retInteger = defaultVal;
+		String value = request.getParameter(name);
+		if(value!=null){
+			if(StringUtils.isNumeric(value)){
+				retInteger = Integer.parseInt(value);
+			}
+		}
+		return retInteger;
+	}
+
+	public static Long getLongParam(HttpServletRequest request, String name, Long defaultVal) {
+		Long retLong = defaultVal;
+		String value = request.getParameter(name);
+		if(value!=null){
+			if(StringUtils.isNumeric(value)){
+				retLong = Long.parseLong(value);
+			}
+		}
+		return retLong;
 	}
 	
 }

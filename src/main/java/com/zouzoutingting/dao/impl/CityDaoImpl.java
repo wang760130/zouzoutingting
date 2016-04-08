@@ -5,21 +5,20 @@ import java.util.List;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.zouzoutingting.dao.IDao;
 import com.zouzoutingting.model.City;
 import com.zouzoutingting.utils.Page;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Jerry Wang
  * @Email jerry002@126.com
  * @date 2016年4月2日
  */
-//@Transactional  
+@Transactional
 @Repository(value="cityDao")
 public class CityDaoImpl implements IDao<City> {
 	
