@@ -12,8 +12,9 @@ import com.zouzoutingting.utils.HttpTestUtils;
  */
 public class CityControllerTest {
 
-	private final static String HOST_URL = "http://localhost/zouzoutingting";
+	private final static String HOST_URL = "http://api.imonl.com";
 	
+	/** 有参数连接**/
 	@Test
 	public void cityTest() {
 		String url = HOST_URL + "/city";
@@ -25,12 +26,27 @@ public class CityControllerTest {
 		}
 	}
 	
+	/** 无参数连接**/
 	@Test
 	public void citysTest() {
 		String url = HOST_URL + "/citys";
 		try {
 			JSONObject result = HttpTestUtils.testUrl(url);
 			System.out.println(JSON.toJSONString(result, true));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void batchCityTest() {
+		
+		String url = HOST_URL + "/citys";
+		try {
+			for(int i = 0; i < 100; i++) {
+				JSONObject result = HttpTestUtils.testUrl(url);
+				System.out.println(JSON.toJSONString(result, true));
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

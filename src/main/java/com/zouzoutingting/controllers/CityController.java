@@ -28,13 +28,21 @@ public class CityController extends BaseController {
 	@RequestMapping(value = "/city", method = RequestMethod.POST)
 	public void city(HttpServletRequest request, HttpServletResponse response) {
 		String cityid = RequestParamUtil.getParam(request, "id", "1");
-		City city = cityService.load(Integer.valueOf(cityid));
-		gzipCipherResult(true, "获取成功", city, request, response);
+		try {
+			City city = cityService.load(Integer.valueOf(cityid));
+			gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, city, request, response);
+		} catch (Exception e) {
+			gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, null, request, response);
+		}
 	}
 	
 	@RequestMapping(value = "/citys", method = RequestMethod.POST)
 	public void citys(HttpServletRequest request, HttpServletResponse response) {
 		List<City> cityList = cityService.getAll();
-		gzipCipherResult(true, "获取成功", cityList, request, response);
+		try {
+			gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, cityList, request, response);
+		} catch (Exception e) {
+			gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, null, request, response);
+		}
 	}
 }

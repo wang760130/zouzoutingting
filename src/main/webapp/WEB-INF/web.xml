@@ -55,6 +55,17 @@
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 	
+	<!-- Druid -->
+	<servlet>       
+  		<servlet-name>DruidStatView</servlet-name>     
+  		<servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class>  
+	</servlet>   
+	
+	<servlet-mapping>     
+   		<servlet-name>DruidStatView</servlet-name>  
+   		<url-pattern>/druid/*</url-pattern>  
+ 	</servlet-mapping>  
+	
 	<!-- Spring 刷新Introspector防止内存泄露 -->  
   	<listener>  
         <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>  
