@@ -34,9 +34,9 @@ public class SpotController extends BaseController{
 
         List<Spot> list = spotService.loadByViewIDAndType(vid, type);
         if(list!=null && list.size()>0){
-            gzipCipherResult(true, "获取成功", list, request, response);
+            gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, list, request, response);
         }else {
-            gzipCipherResult(false, "无数据", list, request, response);
+            gzipCipherResult(RETURN_CODE_SUCCESS, "无数据", list, request, response);
         }
     }
 }

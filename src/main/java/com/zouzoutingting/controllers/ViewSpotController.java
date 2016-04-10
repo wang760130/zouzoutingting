@@ -31,7 +31,7 @@ public class ViewSpotController extends BaseController {
         int cityid = RequestParamUtil.getIntegerParam(request, "cityid", -1);
         //坐标+imei
         List<ViewSpot> list = viewSpotService.getViewSpotByCity(cityid);
-        gzipCipherResult(true, "获取成功", list, request, response);
+        gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, list, request, response);
     }
 
     /**
@@ -43,6 +43,6 @@ public class ViewSpotController extends BaseController {
     public void viewSpotDetail(HttpServletRequest request, HttpServletResponse response){
         long detailID = RequestParamUtil.getLongParam(request, "vid", -1L);
         ViewSpot spot = viewSpotService.getViewSpotByID(detailID);
-        gzipCipherResult(true, "获取成功", spot, request, response);
+        gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, spot, request, response);
     }
 }
