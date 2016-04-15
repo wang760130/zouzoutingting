@@ -93,7 +93,7 @@ public class RequestParamUtil {
 
 	public static Integer getIntegerParam(HttpServletRequest request, String name, Integer defaultVal) {
 		Integer retInteger = defaultVal;
-		String value = request.getParameter(name);
+		String value = getParam(request, name, String.valueOf(defaultVal));
 		if(value!=null){
 			if(StringUtils.isNumeric(value)){
 				retInteger = Integer.parseInt(value);
@@ -104,7 +104,7 @@ public class RequestParamUtil {
 
 	public static Long getLongParam(HttpServletRequest request, String name, Long defaultVal) {
 		Long retLong = defaultVal;
-		String value = request.getParameter(name);
+		String value = getParam(request, name, String.valueOf(defaultVal));
 		if(value!=null){
 			if(StringUtils.isNumeric(value)){
 				retLong = Long.parseLong(value);

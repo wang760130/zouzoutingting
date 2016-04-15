@@ -26,7 +26,7 @@ public class ViewSpotController extends BaseController {
      * @param request 请求参数
      * @param response 返回
      */
-    @RequestMapping(value = "/viewspotList", method = RequestMethod.GET)
+    @RequestMapping(value = "/viewspotList", method = RequestMethod.POST)
     public void viewSpotList(HttpServletRequest request, HttpServletResponse response) {
         int cityid = RequestParamUtil.getIntegerParam(request, "cityid", -1);
         //坐标+imei
@@ -39,7 +39,7 @@ public class ViewSpotController extends BaseController {
      * @param request http请求servlet
      * @param response http返回servlet
      */
-    @RequestMapping(value = "/viewspotDetail", method = RequestMethod.GET)
+    @RequestMapping(value = "/viewspotDetail", method = RequestMethod.POST)
     public void viewSpotDetail(HttpServletRequest request, HttpServletResponse response){
         long detailID = RequestParamUtil.getLongParam(request, "vid", -1L);
         ViewSpot spot = viewSpotService.getViewSpotByID(detailID);
