@@ -21,6 +21,12 @@ public class Spot {
     private int vid;
 
     /**
+     * 类型  0:讲解  1:厕所  2 拐点
+     */
+    @Column(name = "type")
+    private short type;
+    
+    /**
      * 讲解顺序
      */
     @Column(name = "sequence")
@@ -89,8 +95,16 @@ public class Spot {
     public void setVid(int vid) {
         this.vid = vid;
     }
+    
+    public short getType() {
+		return type;
+	}
 
-    public int getSequence() {
+	public void setType(short type) {
+		this.type = type;
+	}
+
+	public int getSequence() {
         return sequence;
     }
 

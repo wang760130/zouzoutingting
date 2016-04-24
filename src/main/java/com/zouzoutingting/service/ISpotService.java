@@ -10,4 +10,6 @@ import java.util.List;
  */
 public interface ISpotService {
     public List<Spot> loadByViewIDAndType(long vid, int type);
+    
+    public List<Spot> loadByViewID(long vid);
 }

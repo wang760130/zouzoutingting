@@ -96,6 +96,15 @@
       		<artifactId>fastjson</artifactId>
       		<version>1.1.35</version>
     	</dependency>
+    	
+    	
+    	<!-- json -->
+    	<dependency>
+			<groupId>net.sf.json-lib</groupId>
+			<artifactId>json-lib</artifactId>
+			<version>2.3</version>
+			<classifier>jdk15</classifier>
+		</dependency>
 
 		<!-- spring -->
 		<dependency>
@@ -180,32 +189,42 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
-			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
-				<version>8.0.0.M3</version>
 				<configuration>
 					<stopPort>9966</stopPort>
 					<stopKey>foo</stopKey>
 					<scanIntervalSeconds>0</scanIntervalSeconds>
 					<connectors>
 						<connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-							<port>8080</port>
+							<host>api.imonl.com</host>
+							<port>80</port>
 							<maxIdleTime>60000</maxIdleTime>
 						</connector>
 					</connectors>
 					<webAppConfig>
 						<contextPath>/</contextPath>
-						<!--<defaultsDescriptor>src/test/resources/webdefault.xml
-						</defaultsDescriptor>-->
 					</webAppConfig>
+				</configuration>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.1.1</version>
+				<configuration>
+					<outputFileNameMapping>@{artifactId}@.@{extension}@</outputFileNameMapping>
+				</configuration>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.5.1</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
 		</plugins>

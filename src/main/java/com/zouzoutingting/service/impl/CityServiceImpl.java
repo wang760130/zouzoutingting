@@ -29,11 +29,11 @@ public class CityServiceImpl implements ICityService {
 	
 	@Override
 	public List<City> getAll() {
-		String conddition = "state = 0";
+		String conddition = "state = 1";
 		Page page = new Page();
 		page.setCondition(conddition);
 		page.setPageNo(1);
-		page.setPageSize(cityDao.count(conddition));
+		page.setPageSize(100);
 		return cityDao.page(page);
 	}
 	

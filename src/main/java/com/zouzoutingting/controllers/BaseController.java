@@ -62,14 +62,14 @@ public class BaseController {
 	
 	public static final String RETURN_MESSAGE_SUCCESS = "成功";
 	public static final String RETURN_MESSAGE_EXCEPTION = "服务器端异常";
+	public static final String RETURN_MESSAGE_NULL = "数据为空";
 	
 	public void gzipCipherResult(int returnCode, String returnMessage, Object entity, HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("code", returnCode);
 		map.put("message", returnMessage);
-		map.put("entity", entity == null ? new Object() : entity);
+		map.put("entity", entity == null ? "" : entity);
 		map.put("token",""); // 返回用户登录凭证
-		
 		
         ObjectMapper mapper = new ObjectMapper();  
         String content = null;
@@ -84,7 +84,7 @@ public class BaseController {
 			response.getOutputStream().write(result);
 			response.getOutputStream().flush();
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			logger.info(e.getMessage(), e);
 		}  
         
 	}

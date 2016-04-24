@@ -25,7 +25,13 @@ public class ViewSpot {
 
     @Column(name = "ecplainsize")
     private int ecplainsize;//讲解包大小
-
+    
+    @Column(name = "centercoord")
+    private String centercoord; // 中心点坐标
+    
+    @Column(name = "scaling")
+    private short scaling;  // 缩放比例
+    
     @Column(name = "synopsis")
     private String synopsis;//简介
 
@@ -81,7 +87,23 @@ public class ViewSpot {
         this.ecplainsize = ecplainsize;
     }
 
-    public String getSynopsis() {
+    public String getCentercoord() {
+		return centercoord;
+	}
+
+	public void setCentercoord(String centercoord) {
+		this.centercoord = centercoord;
+	}
+
+	public short getScaling() {
+		return scaling;
+	}
+
+	public void setScaling(short scaling) {
+		this.scaling = scaling;
+	}
+
+	public String getSynopsis() {
         return synopsis;
     }
 

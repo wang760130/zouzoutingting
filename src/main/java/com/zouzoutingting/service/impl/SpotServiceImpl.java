@@ -23,7 +23,7 @@ public class SpotServiceImpl implements ISpotService {
         List<Spot> list = null;
         if(vid>0L && type >=0) {
             Page page = new Page();
-            page.setCondition("vid = " + vid + " and type=" + type +" and state=1");
+            page.setCondition("vid = " + vid + " and type=" + type +" and state = 1");
             page.setPageNo(1);
             page.setPageSize(100);
             page.setOrderName("sequence asc");
@@ -32,4 +32,19 @@ public class SpotServiceImpl implements ISpotService {
         }
         return list;
     }
+    
+    @Override
+	public List<Spot> loadByViewID(long vid) {
+		List<Spot> list = null;
+		if (vid > 0L) {
+			Page page = new Page();
+			page.setCondition("vid = " + vid + " and state = 1");
+			page.setPageNo(1);
+			page.setPageSize(100);
+			page.setOrderName("sequence asc");
+
+			list = spotDao.page(page);
+		}
+		return list;
+	}
 }

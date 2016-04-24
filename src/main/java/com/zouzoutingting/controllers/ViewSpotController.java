@@ -3,6 +3,7 @@ package com.zouzoutingting.controllers;
 import com.zouzoutingting.model.ViewSpot;
 import com.zouzoutingting.service.IViewSpotService;
 import com.zouzoutingting.utils.RequestParamUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.util.List;
 
 /**
@@ -21,17 +23,25 @@ public class ViewSpotController extends BaseController {
 
     @Autowired
     private IViewSpotService viewSpotService;
+    
     /**
      * 景点列表
      * @param request 请求参数
      * @param response 返回
      */
-    @RequestMapping(value = "/viewspotList", method = RequestMethod.POST)
-    public void viewSpotList(HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = "/viewspots", method = RequestMethod.POST)
+    public void viewspots(HttpServletRequest request, HttpServletResponse response) {
         int cityid = RequestParamUtil.getIntegerParam(request, "cityid", -1);
-        //坐标+imei
-        List<ViewSpot> list = viewSpotService.getViewSpotByCity(cityid);
-        gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, list, request, response);
+        try {
+        	List<ViewSpot> list = viewSpotService.getViewSpotByCity(cityid);
+        	if(list != null && list.size() > 0) {
+				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, list, request, response);
+			} else {
+				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_NULL, null, request, response);
+			}
+        } catch (Exception e) {
+			gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, null, request, response);
+		}
     }
 
     /**
@@ -39,10 +49,18 @@ public class ViewSpotController extends BaseController {
      * @param request http请求servlet
      * @param response http返回servlet
      */
-    @RequestMapping(value = "/viewspotDetail", method = RequestMethod.POST)
-    public void viewSpotDetail(HttpServletRequest request, HttpServletResponse response){
-        long detailID = RequestParamUtil.getLongParam(request, "vid", -1L);
-        ViewSpot spot = viewSpotService.getViewSpotByID(detailID);
-        gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, spot, request, response);
+    @RequestMapping(value = "/viewspot", method = RequestMethod.POST)
+    public void viewspot(HttpServletRequest request, HttpServletResponse response){
+        long vid = RequestParamUtil.getLongParam(request, "vid", -1L);
+        try {
+	        ViewSpot viewSpot = viewSpotService.getViewSpotByID(vid);
+	        if(viewSpot != null) {
+				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, viewSpot, request, response);
+			} else {
+				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_NULL, null, request, response);
+			}
+        } catch (Exception e) {
+			gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, null, request, response);
+		}
     }
 }

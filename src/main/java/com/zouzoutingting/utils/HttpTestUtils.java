@@ -41,7 +41,8 @@ public class HttpTestUtils {
 		conn.getOutputStream().write(query.getBytes());
 		conn.connect();
 
-		byte[] inputBytes = input2byte(conn.getInputStream());
+		InputStream is = conn.getInputStream();
+		byte[] inputBytes = input2byte(is);
 		byte[] decryptBytes = DESCipher.decrypt(inputBytes, Global.RESPONSE_DESKEY);
 		byte[] unzipBytes = GZipUtils.decompress(decryptBytes);
 		String str = new String(unzipBytes);

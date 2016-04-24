@@ -13,13 +13,14 @@ import com.zouzoutingting.utils.HttpTestUtils;
 public class CityControllerTest {
 
 	private final static String HOST_URL = "http://api.imonl.com";
+//	private final static String HOST_URL = "http://123.56.242.84:8080";
 	
 	/** 有参数连接**/
 	@Test
 	public void cityTest() {
 		String url = HOST_URL + "/city";
 		try {
-			JSONObject result = HttpTestUtils.testUrl(url, "id=10");
+			JSONObject result = HttpTestUtils.testUrl(url, "id=2");
 			System.out.println(JSON.toJSONString(result, true));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -30,6 +31,17 @@ public class CityControllerTest {
 	@Test
 	public void citysTest() {
 		String url = HOST_URL + "/citys";
+		try {
+			JSONObject result = HttpTestUtils.testUrl(url);
+			System.out.println(JSON.toJSONString(result, true));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void cityspotTest() {
+		String url = HOST_URL + "/cityspot";
 		try {
 			JSONObject result = HttpTestUtils.testUrl(url);
 			System.out.println(JSON.toJSONString(result, true));
