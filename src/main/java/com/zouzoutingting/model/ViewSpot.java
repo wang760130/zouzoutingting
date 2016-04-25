@@ -1,6 +1,12 @@
 package com.zouzoutingting.model;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * Created by zhangyong on 16/4/6.
@@ -38,15 +44,21 @@ public class ViewSpot {
     @Column(name = "introduce")
     private String introduce;//详细介绍
 
-    @Column(name = "pic")
-    private String pic;//图片地址
+    @Column(name = "defualtPic")
+    private String defualtPic;//列表页图片
+    
+    @Column(name = "listPic")
+    private String listPic;//详情页轮播图片地址
 
     @Column(name = "price")
     private double price;
 
     @Column(name = "state")
     private int state;//状态
-
+    
+    @Transient
+    private String[] pic;//详情页轮播图片地址数组
+    
     public long getId() {
         return id;
     }
@@ -119,15 +131,24 @@ public class ViewSpot {
         this.introduce = introduce;
     }
 
-    public String getPic() {
-        return pic;
-    }
+	public String getDefualtPic() {
+		return defualtPic;
+	}
 
-    public void setPic(String pic) {
-        this.pic = pic;
-    }
+	public void setDefualtPic(String defualtPic) {
+		this.defualtPic = defualtPic;
+	}
 
-    public double getPrice() {
+	
+    public String getListPic() {
+		return listPic;
+	}
+
+	public void setListPic(String listPic) {
+		this.listPic = listPic;
+	}
+
+	public double getPrice() {
         return price;
     }
 
@@ -143,4 +164,12 @@ public class ViewSpot {
         this.state = state;
     }
 
+	public String[] getPic() {
+		return pic;
+	}
+
+	public void setPic(String[] pic) {
+		this.pic = pic;
+	}
+    
 }

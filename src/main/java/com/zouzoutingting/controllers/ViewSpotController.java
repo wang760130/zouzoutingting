@@ -1,18 +1,19 @@
 package com.zouzoutingting.controllers;
 
-import com.zouzoutingting.model.ViewSpot;
-import com.zouzoutingting.service.IViewSpotService;
-import com.zouzoutingting.utils.RequestParamUtil;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import java.util.List;
+import com.zouzoutingting.model.ViewSpot;
+import com.zouzoutingting.service.IViewSpotService;
+import com.zouzoutingting.utils.RequestParamUtil;
 
 /**
  * Created by zhangyong on 16/4/5.
@@ -34,12 +35,22 @@ public class ViewSpotController extends BaseController {
         int cityid = RequestParamUtil.getIntegerParam(request, "cityid", -1);
         try {
         	List<ViewSpot> list = viewSpotService.getViewSpotByCity(cityid);
+        	List<ViewSpot> resultList = null;
         	if(list != null && list.size() > 0) {
-				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, list, request, response);
+        		resultList = new ArrayList<ViewSpot>();
+        		for(ViewSpot viewSpot : list) {
+        			String listPic = viewSpot.getListPic();
+        			if(listPic != null && !"".equals(listPic)) {
+        				viewSpot.setPic(listPic.split(","));
+        			}
+        			resultList.add(viewSpot);
+        		}
+				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, resultList, request, response);
 			} else {
 				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_NULL, null, request, response);
 			}
         } catch (Exception e) {
+        	logger.info(e.getMessage(), e);
 			gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, null, request, response);
 		}
     }
@@ -55,11 +66,16 @@ public class ViewSpotController extends BaseController {
         try {
 	        ViewSpot viewSpot = viewSpotService.getViewSpotByID(vid);
 	        if(viewSpot != null) {
+	        	String listPic = viewSpot.getListPic();
+	        	if(listPic != null && !"".equals(listPic)) {
+	        		viewSpot.setPic(listPic.split(","));
+	        	}
 				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, viewSpot, request, response);
 			} else {
 				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_NULL, null, request, response);
 			}
         } catch (Exception e) {
+        	logger.info(e.getMessage(), e);
 			gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, null, request, response);
 		}
     }

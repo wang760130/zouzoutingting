@@ -35,6 +35,7 @@ public class FeedbackController extends BaseController {
 			feedbackService.add(message);
 			gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, null, request, response);
 		} catch (Exception e) {
+			logger.info(e.getMessage(), e);
 			gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, null, request, response);
 		}
 			

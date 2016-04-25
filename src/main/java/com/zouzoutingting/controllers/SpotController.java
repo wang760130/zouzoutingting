@@ -96,6 +96,7 @@ public class SpotController extends BaseController{
 	        gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, resultMap, request, response);
 	       
         } catch (Exception e) {
+        	logger.info(e.getMessage(), e);
 			gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, null, request, response);
 		}
     }

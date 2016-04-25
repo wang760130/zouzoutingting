@@ -47,6 +47,7 @@ public class CityController extends BaseController {
 				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_NULL, null, request, response);
 			}
 		} catch (Exception e) {
+			logger.info(e.getMessage(), e);
 			gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, null, request, response);
 		}
 	}
@@ -67,6 +68,7 @@ public class CityController extends BaseController {
 				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_NULL, city, request, response);
 			}
 		} catch (Exception e) {
+			logger.info(e.getMessage(), e);
 			gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, null, request, response);
 		}
 	}

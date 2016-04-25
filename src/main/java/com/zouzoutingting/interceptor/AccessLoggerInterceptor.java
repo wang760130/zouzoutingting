@@ -61,7 +61,7 @@ public class AccessLoggerInterceptor implements HandlerInterceptor{
 		sb.append(",");
 		
 		Map<String, String> paramMap = RequestParamUtil.getParamMap(request);
-		if(paramMap != null) {
+		if(paramMap != null && paramMap.size() > 0) {
 			sb.append("param=");
 			for (String key : paramMap.keySet()) { 
 				sb.append(key);
