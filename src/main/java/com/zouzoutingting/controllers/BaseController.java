@@ -2,6 +2,7 @@ package com.zouzoutingting.controllers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -65,11 +66,15 @@ public class BaseController {
 	public static final String RETURN_MESSAGE_EXCEPTION = "服务器端异常";
 	public static final String RETURN_MESSAGE_NULL = "数据为空";
 	
+	
+	public static final Map<String, String> NULL_OBJECT = new HashMap<String, String>();
+	public static final List<String> NULL_ARRAY = new ArrayList<String>();
+	
 	public void gzipCipherResult(int returnCode, String returnMessage, Object entity, HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("code", returnCode);
 		map.put("message", returnMessage);
-		map.put("entity", entity == null ? new ArrayList<String>() : entity);
+		map.put("entity", entity == null ? new HashMap<String, String>() : entity);
 		map.put("token",""); // 返回用户登录凭证
 		
         ObjectMapper mapper = new ObjectMapper();  
@@ -87,7 +92,6 @@ public class BaseController {
 		} catch (Exception e) {
 			logger.info(e.getMessage(), e);
 		}  
-        
 	}
 	
 }

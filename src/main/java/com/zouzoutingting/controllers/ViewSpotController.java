@@ -38,11 +38,11 @@ public class ViewSpotController extends BaseController {
         	if(list != null && list.size() > 0) {
 				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, list, request, response);
 			} else {
-				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_NULL, null, request, response);
+				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_NULL, NULL_ARRAY, request, response);
 			}
         } catch (Exception e) {
         	logger.info(e.getMessage(), e);
-			gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, null, request, response);
+			gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, NULL_ARRAY, request, response);
 		}
     }
 
@@ -59,11 +59,11 @@ public class ViewSpotController extends BaseController {
 	        if(viewSpot != null) {
 				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, viewSpot, request, response);
 			} else {
-				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_NULL, null, request, response);
+				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_NULL, NULL_OBJECT, request, response);
 			}
         } catch (Exception e) {
         	logger.info(e.getMessage(), e);
-			gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, null, request, response);
+			gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, NULL_OBJECT, request, response);
 		}
     }
 }

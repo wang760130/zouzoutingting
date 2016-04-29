@@ -27,16 +27,16 @@ public class FeedbackController extends BaseController {
 		String message = RequestParamUtil.getParam(request, "message", "");
 		System.out.println(message);
 		if(message == null || "".equals(message)) {
-			gzipCipherResult(RETURN_CODE_EXCEPTION, "数据不能为空", null, request, response);
+			gzipCipherResult(RETURN_CODE_EXCEPTION, "数据不能为空", NULL_OBJECT, request, response);
 			return ;
 		}
 		
 		try {
 			feedbackService.add(message);
-			gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, null, request, response);
+			gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, NULL_OBJECT, request, response);
 		} catch (Exception e) {
 			logger.info(e.getMessage(), e);
-			gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, null, request, response);
+			gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, NULL_OBJECT, request, response);
 		}
 			
 	}
