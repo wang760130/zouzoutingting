@@ -35,17 +35,8 @@ public class ViewSpotController extends BaseController {
         int cityid = RequestParamUtil.getIntegerParam(request, "cityid", -1);
         try {
         	List<ViewSpot> list = viewSpotService.getViewSpotByCity(cityid);
-        	List<ViewSpot> resultList = null;
         	if(list != null && list.size() > 0) {
-        		resultList = new ArrayList<ViewSpot>();
-        		for(ViewSpot viewSpot : list) {
-        			String listPic = viewSpot.getListPic();
-        			if(listPic != null && !"".equals(listPic)) {
-        				viewSpot.setPic(listPic.split(","));
-        			}
-        			resultList.add(viewSpot);
-        		}
-				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, resultList, request, response);
+				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, list, request, response);
 			} else {
 				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_NULL, null, request, response);
 			}
@@ -66,10 +57,6 @@ public class ViewSpotController extends BaseController {
         try {
 	        ViewSpot viewSpot = viewSpotService.getViewSpotByID(vid);
 	        if(viewSpot != null) {
-	        	String listPic = viewSpot.getListPic();
-	        	if(listPic != null && !"".equals(listPic)) {
-	        		viewSpot.setPic(listPic.split(","));
-	        	}
 				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, viewSpot, request, response);
 			} else {
 				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_NULL, null, request, response);

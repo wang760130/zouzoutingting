@@ -1,5 +1,6 @@
 package com.zouzoutingting.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,7 +69,7 @@ public class BaseController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("code", returnCode);
 		map.put("message", returnMessage);
-		map.put("entity", entity == null ? "" : entity);
+		map.put("entity", entity == null ? new ArrayList<String>() : entity);
 		map.put("token",""); // 返回用户登录凭证
 		
         ObjectMapper mapper = new ObjectMapper();  

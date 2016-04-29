@@ -13,14 +13,14 @@ import com.zouzoutingting.utils.HttpTestUtils;
  */
 public class ViewSpotControllerTest {
 	
-//	private final static String HOST_URL = "http://api.imonl.com";
-	private final static String HOST_URL = "http://123.56.242.84:8080";
+	private final static String HOST_URL = "http://api.imonl.com";
+//	private final static String HOST_URL = "http://123.56.242.84:8080";
 	
 	@Test
 	public void viewspotsTest() {
 		String url = HOST_URL + "/viewspots";
 		try {
-			JSONObject result = HttpTestUtils.testUrl(url,"cityid=1");
+			JSONObject result = HttpTestUtils.testUrl(url);
 			System.out.println(JSON.toJSONString(result, true));
 		} catch (Exception e) {
 			e.printStackTrace();

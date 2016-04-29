@@ -26,6 +26,8 @@ public class RequestParamUtil {
 
 	public static final String REQUEST_PARAM = "param";
 	public static final String REQUEST_PARAM_MAP = "param_map";
+	
+	private static final String DEFUALT_CHARSET = "utf-8";
 
 	/**
 	 * 请求参数加密传输 APP端调用
@@ -35,9 +37,9 @@ public class RequestParamUtil {
 	 * @throws UnsupportedEncodingException
 	 */
 	public static String encryptParan(String param) throws Exception {
-		byte[] encryptbytes = DESCipher.encrypt(param.getBytes("utf-8"),Global.RESPONSE_DESKEY);
+		byte[] encryptbytes = DESCipher.encrypt(param.getBytes(DEFUALT_CHARSET),Global.RESPONSE_DESKEY);
 		String byte2str = Base64.encode(encryptbytes);
-		String strenpar = REQUEST_PARAM + "=" + URLEncoder.encode(byte2str, "utf-8");
+		String strenpar = REQUEST_PARAM + "=" + URLEncoder.encode(byte2str, DEFUALT_CHARSET);
 		return strenpar;
 	}
 	
@@ -52,12 +54,12 @@ public class RequestParamUtil {
 		try {
 			if(StringUtils.isNotBlank(param)){
 				byte[] strParBytes = Base64.decode(param);
-				String params = new String(DESCipher.decrypt(strParBytes,Global.RESPONSE_DESKEY), "utf-8");
+				String params = new String(DESCipher.decrypt(strParBytes,Global.RESPONSE_DESKEY), DEFUALT_CHARSET);
 				for (String p : params.split("\\&")) {
 					String[] paramsArr = p.split("\\=");
 					if(paramsArr !=null && paramsArr.length>=2){
 						String k = paramsArr[0];
-						String v = URLDecoder.decode(paramsArr[1],"utf-8");
+						String v = URLDecoder.decode(paramsArr[1], DEFUALT_CHARSET);
 						paramMap.put(k, v);
 					}
 				}
