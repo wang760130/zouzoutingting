@@ -30,13 +30,13 @@ public class ViewSpot {
     private int explaincount;//讲解景点数
 
     @Column(name = "ecplainsize")
-    private int ecplainsize;//讲解包大小
+    private double ecplainsize;//讲解包大小
     
     @Column(name = "centercoord")
     private String centercoord; // 中心点坐标
     
     @Column(name = "scaling")
-    private short scaling;  // 缩放比例
+    private double scaling;  // 缩放比例
     
     @Column(name = "synopsis")
     private String synopsis;//简介
@@ -91,11 +91,11 @@ public class ViewSpot {
         this.explaincount = explaincount;
     }
 
-    public int getEcplainsize() {
+    public double getEcplainsize() {
         return ecplainsize;
     }
 
-    public void setEcplainsize(int ecplainsize) {
+    public void setEcplainsize(double ecplainsize) {
         this.ecplainsize = ecplainsize;
     }
 
@@ -107,11 +107,11 @@ public class ViewSpot {
 		this.centercoord = centercoord;
 	}
 
-	public short getScaling() {
+	public double getScaling() {
 		return scaling;
 	}
 
-	public void setScaling(short scaling) {
+	public void setScaling(double scaling) {
 		this.scaling = scaling;
 	}
 
