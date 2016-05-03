@@ -58,14 +58,18 @@ import com.zouzoutingting.utils.GZipUtils;
 public class BaseController {
 	
 	public Logger logger = Logger.getLogger(this.getClass());
-	
+
+	// 返回成功唯一标识
 	public static final int RETURN_CODE_SUCCESS = 0;
+	// 主要用作服务器异常
 	public static final int RETURN_CODE_EXCEPTION = -1;
+	// 主要用作接收数据参数异常
+	public static final int RETURN_CODE_PARAMETER_ERROR = -2;
 	
 	public static final String RETURN_MESSAGE_SUCCESS = "成功";
 	public static final String RETURN_MESSAGE_EXCEPTION = "服务器端异常";
 	public static final String RETURN_MESSAGE_NULL = "数据为空";
-	
+	public static final String RETUEN_MESSAGE_PARAMETER_ERROR = "参数错误";
 	
 	public static final Map<String, String> NULL_OBJECT = new HashMap<String, String>();
 	public static final List<String> NULL_ARRAY = new ArrayList<String>();

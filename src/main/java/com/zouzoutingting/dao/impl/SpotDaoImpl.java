@@ -3,6 +3,7 @@ package com.zouzoutingting.dao.impl;
 import com.zouzoutingting.dao.IDao;
 import com.zouzoutingting.model.Spot;
 import com.zouzoutingting.utils.Page;
+
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -31,7 +32,8 @@ public class SpotDaoImpl implements IDao<Spot> {
         return (Spot)sessionFactory.getCurrentSession().get(Spot.class, id);
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public List<Spot> page(Page page) {
         Session session = sessionFactory.getCurrentSession();
 
