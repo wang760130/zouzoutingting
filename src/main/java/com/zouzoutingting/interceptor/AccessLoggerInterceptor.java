@@ -98,7 +98,13 @@ public class AccessLoggerInterceptor implements HandlerInterceptor{
 			long currentTime = System.currentTimeMillis();
 			long timeMillis = Long.valueOf(requestId.substring(0, requestId.length() - 3));
 			long executeTime = currentTime - timeMillis;
-			logger.info("requestid="+requestId+",executeTime="+executeTime+"ms, result=" + content);
+			StringBuffer sb = new StringBuffer();
+			sb.append("requestid=").append(requestId).append(",");
+			sb.append("executeTime=").append(executeTime).append("ms");
+			if(content != null && !"".equals(content)) {
+				sb.append(",result=").append(content);
+			}
+			logger.info(sb.toString());
 		}
 	}
 
