@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.zouzoutingting.dao.IDao;
 import com.zouzoutingting.model.AppVersion;
-import com.zouzoutingting.model.City;
 import com.zouzoutingting.utils.Page;
 
 /**

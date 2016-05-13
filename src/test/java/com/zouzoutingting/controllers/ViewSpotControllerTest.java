@@ -13,8 +13,8 @@ import com.zouzoutingting.utils.HttpTestUtils;
  */
 public class ViewSpotControllerTest {
 	
-//	private final static String HOST_URL = "http://api.imonl.com";
-	private final static String HOST_URL = "http://123.56.242.84:8080";
+	private final static String HOST_URL = "http://api.imonl.com";
+//	private final static String HOST_URL = "http://123.56.242.84:8080";
 	
 	@Test
 	public void viewspotsTest() {
