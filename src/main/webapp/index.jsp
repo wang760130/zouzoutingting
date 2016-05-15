@@ -23,7 +23,7 @@
 		<meta name="baidu_union_verify" content="c249a47672b6225f1ccccb2cb99ab1d5">
 		
 		<!-- 腾讯统计 -->
-        <script type="text/javascript" src="http://tajs.qq.com/stats?sId=42697682" charset="UTF-8"></script>
+        <script type="text/javascript" src="http://tajs.qq.com/stats?sId=56227192" charset="UTF-8"></script>
 				
 		<!-- 腾讯统计 网站测速 -->
 		<script type="text/javascript">
