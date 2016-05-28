@@ -25,7 +25,7 @@ public class HttpTestUtils {
 		conn.setDoInput(true);
 		
 		byte[] inputBytes = input2byte(conn.getInputStream());
-		byte[] decryptBytes = DESCipher.decrypt(inputBytes, Global.RESPONSE_DESKEY);
+		byte[] decryptBytes = DES.decrypt(inputBytes, Global.RESPONSE_DESKEY);
 		byte[] unzipBytes = GZipUtils.decompress(decryptBytes);
 		String str = new String(unzipBytes);
         return  JSON.parseObject(str);
@@ -43,7 +43,7 @@ public class HttpTestUtils {
 
 		InputStream is = conn.getInputStream();
 		byte[] inputBytes = input2byte(is);
-		byte[] decryptBytes = DESCipher.decrypt(inputBytes, Global.RESPONSE_DESKEY);
+		byte[] decryptBytes = DES.decrypt(inputBytes, Global.RESPONSE_DESKEY);
 		byte[] unzipBytes = GZipUtils.decompress(decryptBytes);
 		String str = new String(unzipBytes);
         return  JSON.parseObject(str);

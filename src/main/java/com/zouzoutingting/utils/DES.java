@@ -13,7 +13,7 @@ import javax.crypto.spec.DESKeySpec;
  * @Email  jerry002@126.com
  * @date   2016年4月4日
  */
-public class DESCipher {
+public class DES {
 
 	/**
 	 * 加密

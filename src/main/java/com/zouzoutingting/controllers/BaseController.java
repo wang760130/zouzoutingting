@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zouzoutingting.common.Global;
-import com.zouzoutingting.utils.DESCipher;
+import com.zouzoutingting.utils.DES;
 import com.zouzoutingting.utils.GZipUtils;
 
 /**
@@ -88,7 +88,7 @@ public class BaseController {
 			content = mapper.writeValueAsString(map);
 			request.setAttribute(Global.RESULT_CONTENT, content);
 			result = GZipUtils.compress(content.getBytes("UTF-8"));
-			result = DESCipher.encrypt(result, Global.RESPONSE_DESKEY);
+			result = DES.encrypt(result, Global.RESPONSE_DESKEY);
 			
 			response.setContentType ("application/octet-stream");
 			response.getOutputStream().write(result);
