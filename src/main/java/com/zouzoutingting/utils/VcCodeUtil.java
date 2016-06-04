@@ -19,8 +19,8 @@ public class VcCodeUtil {
 	 * 生成的vcCode，随机6位数字
 	 * @return
 	 */
-	public static String genVcCode() {
-		return Integer.toString((int) (100000 + Math.random() * 900000));
+	public static int genVcCode() {
+		return (int) (100000 + Math.random() * 900000);
 	}
 	
 	public static boolean checkVcCode(String vcCode) {
