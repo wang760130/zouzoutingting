@@ -11,17 +11,9 @@ import org.apache.commons.lang3.StringUtils;
 public class ValidityUtil {
 
 	private static final int PHOME_NUM_LENGTHS = 11;
-	private static final int VCCODE_LENGTH = 6;
 	
 	public static boolean checkPhoneNum(String phoneNum) {
 		if(isNum(phoneNum, PHOME_NUM_LENGTHS)) {
-			return true;
-		}
-		return false;
-	}
-	
-	public static boolean checkVccode(String vccode) {
-		if(isNum(vccode, VCCODE_LENGTH)) {
 			return true;
 		}
 		return false;

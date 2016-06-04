@@ -88,7 +88,7 @@ public class BaseController {
 			content = mapper.writeValueAsString(map);
 			request.setAttribute(Global.RESULT_CONTENT, content);
 			result = GZipUtils.compress(content.getBytes("UTF-8"));
-			result = DES.encrypt(result, Global.RESPONSE_DESKEY);
+			result = DES.encrypt(result, Global.DESKEY);
 			
 			response.setContentType ("application/octet-stream");
 			response.getOutputStream().write(result);

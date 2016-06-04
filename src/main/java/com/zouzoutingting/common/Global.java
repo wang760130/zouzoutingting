@@ -7,7 +7,10 @@ package com.zouzoutingting.common;
  */
 public class Global {
 
-	public static String RESPONSE_DESKEY = "zouzoutingting";
+	/**
+	 * 全局加密密钥
+	 */
+	public static String DESKEY = "zouzoutingting";
 	
 	public static String RESULT_CONTENT = "resultcontent";
 }
