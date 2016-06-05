@@ -9,11 +9,11 @@ public class VcCode {
 
 	private long id;
 	
-	private long uid;
+	private int code;
 	
-	private long code;
+	private long phone;
 	
-	private short isUsed;
+	private short used;
 	
 	private long addtime;
 
@@ -25,28 +25,28 @@ public class VcCode {
 		this.id = id;
 	}
 
-	public long getUid() {
-		return uid;
-	}
-
-	public void setUid(long uid) {
-		this.uid = uid;
-	}
-
-	public long getCode() {
+	public int getCode() {
 		return code;
 	}
 
-	public void setCode(long code) {
+	public void setCode(int code) {
 		this.code = code;
 	}
 
-	public short getIsUsed() {
-		return isUsed;
+	public long getPhone() {
+		return phone;
 	}
 
-	public void setIsUsed(short isUsed) {
-		this.isUsed = isUsed;
+	public void setPhone(long phone) {
+		this.phone = phone;
+	}
+
+	public short getUsed() {
+		return used;
+	}
+
+	public void setUsed(short used) {
+		this.used = used;
 	}
 
 	public long getAddtime() {
@@ -56,5 +56,6 @@ public class VcCode {
 	public void setAddtime(long addtime) {
 		this.addtime = addtime;
 	}
+
 
 }

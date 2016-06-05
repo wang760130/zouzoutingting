@@ -25,9 +25,9 @@ public class UserServiceImpl implements IUserService{
 	@Override
 	public User getUserByPhone(long phone) {
 		User user = null;
-		String conddition = "phone = " + phone;
+		String condition = "phone = " + phone;
 		Page page = new Page();
-		page.setCondition(conddition);
+		page.setCondition(condition);
 		page.setPageNo(1);
 		page.setPageSize(1);
 		List<User> userList = userDao.page(page);
