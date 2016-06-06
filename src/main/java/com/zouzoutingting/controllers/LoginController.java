@@ -8,8 +8,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.zouzoutingting.model.User;
+import com.zouzoutingting.service.IUserService;
 import com.zouzoutingting.service.IVcCodeService;
 import com.zouzoutingting.utils.RequestParamUtil;
+import com.zouzoutingting.utils.TokenUtil;
 import com.zouzoutingting.utils.ValidityUtil;
 import com.zouzoutingting.utils.VcCodeUtil;
 
@@ -25,6 +28,9 @@ public class LoginController extends BaseController {
 	@Autowired
 	private IVcCodeService vcCodeService;
 	
+	@Autowired
+	private IUserService userService;
+	
 	/**
 	 * 发送验证码
 	 * @param request
@@ -33,9 +39,8 @@ public class LoginController extends BaseController {
 	@RequestMapping(value = "/vccode", method = RequestMethod.POST)
 	public void vccode(HttpServletRequest request, HttpServletResponse response) {
 		String phone = RequestParamUtil.getParam(request, "phone", "");
-		boolean checkResult = ValidityUtil.checkPhoneNum(phone);
 		
-		if(checkResult == false) {
+		if(ValidityUtil.checkPhoneNum(phone) == false) {
 			gzipCipherResult(RETURN_CODE_PARAMETER_ERROR, "手机号验证失败", NULL_ARRAY, request, response);
 		}
 		
@@ -61,7 +66,35 @@ public class LoginController extends BaseController {
 		String phone = RequestParamUtil.getParam(request, "phone", "");
 		String vcCode = RequestParamUtil.getParam(request, "vccode", "");
 		
-		
+		try {
+			if(ValidityUtil.checkPhoneNum(phone) == false) {
+				gzipCipherResult(RETURN_CODE_PARAMETER_ERROR, "手机号验证失败", NULL_ARRAY, request, response);
+			}
+			
+			if(VcCodeUtil.checkVcCode(vcCode) == false) {
+				gzipCipherResult(RETURN_CODE_PARAMETER_ERROR, "验证失败", NULL_ARRAY, request, response);
+			}
+			
+			if(vcCodeService.checkVcCode(Long.valueOf(phone), Integer.valueOf(vcCode))) {
+				User user = userService.getUserByPhone(Long.valueOf(phone));
+				long uid = -1L;
+				if(user != null) {
+					uid = user.getId();
+				} else {
+					uid = userService.createUserByPhone(Long.valueOf(phone));
+				}
+				
+				String token = TokenUtil.generateToken(uid);
+				request.setAttribute("token", token);
+				
+				gzipCipherResult(RETURN_CODE_SUCCESS, "登入成功", NULL_ARRAY, request, response);
+			} else {
+				gzipCipherResult(RETURN_CODE_PARAMETER_ERROR, "验证失败", NULL_ARRAY, request, response);
+			}
+		} catch(Exception e) {
+			logger.info(e.getMessage(), e);
+			gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, NULL_OBJECT, request, response);
+		}
 	}
 
 }
