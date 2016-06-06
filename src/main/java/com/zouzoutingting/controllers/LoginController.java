@@ -40,19 +40,24 @@ public class LoginController extends BaseController {
 	public void vccode(HttpServletRequest request, HttpServletResponse response) {
 		String phone = RequestParamUtil.getParam(request, "phone", "");
 		
-		if(ValidityUtil.checkPhoneNum(phone) == false) {
-			gzipCipherResult(RETURN_CODE_PARAMETER_ERROR, "手机号验证失败", NULL_ARRAY, request, response);
-		}
-		
-		int vcCode = VcCodeUtil.genVcCode();
-//		boolean sendSuccess = JuheSmsApi.sendVcCode(Integer.valueOf(phone), vcCode);
-		boolean sendSuccess = true;
-		
-		if(sendSuccess) {
-			vcCodeService.addVcCode(Integer.valueOf(phone), vcCode);
-			gzipCipherResult(RETURN_CODE_SUCCESS, "验证码发送成功", NULL_ARRAY, request, response);
-		} else {
-			gzipCipherResult(RETURN_CODE_EXCEPTION, "验证码发送失败", NULL_ARRAY, request, response);
+		try {
+			if(ValidityUtil.checkPhoneNum(phone) == false) {
+				gzipCipherResult(RETURN_CODE_PARAMETER_ERROR, "手机号验证失败", NULL_ARRAY, request, response);
+			}
+			
+			int vcCode = VcCodeUtil.genVcCode();
+	//		boolean sendSuccess = JuheSmsApi.sendVcCode(Integer.valueOf(phone), vcCode);
+			boolean sendSuccess = true;
+			
+			if(sendSuccess) {
+				vcCodeService.addVcCode(Long.valueOf(phone), vcCode);
+				gzipCipherResult(RETURN_CODE_SUCCESS, "验证码发送成功", NULL_ARRAY, request, response);
+			} else {
+				gzipCipherResult(RETURN_CODE_EXCEPTION, "验证码发送失败", NULL_ARRAY, request, response);
+			}
+		} catch(Exception e) {
+			logger.info(e.getMessage(), e);
+			gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, NULL_OBJECT, request, response);
 		}
 	}
 	
@@ -75,7 +80,8 @@ public class LoginController extends BaseController {
 				gzipCipherResult(RETURN_CODE_PARAMETER_ERROR, "验证失败", NULL_ARRAY, request, response);
 			}
 			
-			if(vcCodeService.checkVcCode(Long.valueOf(phone), Integer.valueOf(vcCode))) {
+//			if(vcCodeService.checkVcCode(Long.valueOf(phone), Integer.valueOf(vcCode))) {
+			if(true) {
 				User user = userService.getUserByPhone(Long.valueOf(phone));
 				long uid = -1L;
 				if(user != null) {
