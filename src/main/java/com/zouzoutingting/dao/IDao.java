@@ -17,7 +17,7 @@ public interface IDao<T> {
 	
 	public int count(String condition);
 	
-	public void save(T t);
+	public long save(T t);
 	
 	public void update(T t);
 	

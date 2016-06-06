@@ -82,8 +82,8 @@ public class AppVersionDaoImpl implements IDao<AppVersion>{
 	}
 	
 	@Override
-	public void save(AppVersion appVersion) {
-		sessionFactory.getCurrentSession().save(appVersion);
+	public long save(AppVersion appVersion) {
+		return (Long)sessionFactory.getCurrentSession().save(appVersion);
 	}
 	
 	@Override

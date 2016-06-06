@@ -79,8 +79,8 @@ public class UserDaoImpl implements IDao<User> {
 	}
 
 	@Override
-	public void save(User user) {
-		sessionFactory.getCurrentSession().save(user);
+	public long save(User user) {
+		return (Long)sessionFactory.getCurrentSession().save(user);
 	}
 
 	@Override

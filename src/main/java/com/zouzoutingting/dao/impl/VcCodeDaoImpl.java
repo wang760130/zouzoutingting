@@ -77,8 +77,8 @@ public class VcCodeDaoImpl implements IDao<VcCode> {
 	}
 
 	@Override
-	public void save(VcCode vcCode) {
-		sessionFactory.getCurrentSession().save(vcCode);
+	public long save(VcCode vcCode) {
+		return (Long)sessionFactory.getCurrentSession().save(vcCode);
 	}
 
 	@Override

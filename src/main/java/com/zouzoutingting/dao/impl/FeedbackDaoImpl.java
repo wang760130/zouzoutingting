@@ -81,8 +81,8 @@ public class FeedbackDaoImpl implements IDao<Feedback>{
 	}
 	
 	@Override
-	public void save(Feedback feedback) {
-		sessionFactory.getCurrentSession().save(feedback);
+	public long save(Feedback feedback) {
+		return (Long)sessionFactory.getCurrentSession().save(feedback);
 	}
 	
 	@Override

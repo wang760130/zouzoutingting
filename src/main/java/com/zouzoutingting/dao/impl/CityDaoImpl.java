@@ -83,8 +83,8 @@ public class CityDaoImpl implements IDao<City> {
 	}
 	
 	@Override
-	public void save(City city) {
-		sessionFactory.getCurrentSession().save(city);
+	public long save(City city) {
+		return (Long)sessionFactory.getCurrentSession().save(city);
 	}
 	
 	@Override

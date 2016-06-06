@@ -76,8 +76,8 @@ public class SpotDaoImpl implements IDao<Spot> {
     }
 
     @Override
-    public void save(Spot spot) {
-        sessionFactory.getCurrentSession().save(spot);
+    public long save(Spot spot) {
+        return (Long)sessionFactory.getCurrentSession().save(spot);
     }
 
     @Override

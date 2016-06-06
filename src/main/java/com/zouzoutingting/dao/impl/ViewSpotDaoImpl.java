@@ -75,8 +75,8 @@ public class ViewSpotDaoImpl implements IDao<ViewSpot> {
     }
 
     @Override
-    public void save(ViewSpot viewSpot) {
-        sessionFactory.getCurrentSession().save(viewSpot);
+    public long save(ViewSpot viewSpot) {
+        return (Long)sessionFactory.getCurrentSession().save(viewSpot);
     }
 
     @Override
