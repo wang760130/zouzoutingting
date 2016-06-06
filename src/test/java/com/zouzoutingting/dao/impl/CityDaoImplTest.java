@@ -50,8 +50,9 @@ public class CityDaoImplTest {
 	@Test
 	public void saveTest() {
 		City city = new City();
-		city.setName("西安");
-		cityDao.save(city);
+		city.setName("渭南");
+		long id = cityDao.save(city);
+		System.out.println(id);
 	}
 	
 	@Test

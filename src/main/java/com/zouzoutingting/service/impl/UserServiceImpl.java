@@ -17,7 +17,7 @@ import com.zouzoutingting.utils.Page;
  * @date   2016年6月4日
  */
 @Service("userService")
-public class UserServiceImpl implements IUserService{
+public class UserServiceImpl implements IUserService {
 	
 	@Autowired
 	private IDao<User> userDao = null;
@@ -38,11 +38,11 @@ public class UserServiceImpl implements IUserService{
 	}
 
 	@Override
-	public void createUserByPhone(long phone) {
+	public long createUserByPhone(long phone) {
 		User user = new User();
 		user.setPhone(phone);
 		user.setAddtime(new Date());
-		userDao.save(user);;
+		return userDao.save(user);
 	}
 	
 }

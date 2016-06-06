@@ -11,5 +11,5 @@ public interface IUserService {
 	
 	public User getUserByPhone(long phone);
 	
-	public void createUserByPhone(long phone);
+	public long createUserByPhone(long phone);
 }

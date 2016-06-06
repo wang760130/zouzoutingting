@@ -7,8 +7,8 @@ package com.zouzoutingting.service;
  */
 public interface IVcCodeService {
 
-	public void addVcCode(int code, int phone);
+	public void addVcCode(long phone, int code);
 	
-	public boolean checkVcCode(int phone, int code);
+	public boolean checkVcCode(long phone, int code);
 
 }

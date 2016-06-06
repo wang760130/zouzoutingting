@@ -15,6 +15,7 @@ import com.zouzoutingting.common.Global;
 import com.zouzoutingting.utils.IpUtil;
 import com.zouzoutingting.utils.RequestParamUtil;
 import com.zouzoutingting.utils.ThreadLocalRandom;
+import com.zouzoutingting.utils.TokenUtil;
 
 /**
  * 解密参数  && 打印访问日志
@@ -22,7 +23,7 @@ import com.zouzoutingting.utils.ThreadLocalRandom;
  * @Email  jerry002@126.com
  * @date   2016年4月4日
  */
-public class AccessLoggerInterceptor implements HandlerInterceptor{
+public class AccessLoggerInterceptor implements HandlerInterceptor {
 
 	private static Logger logger = Logger.getLogger(AccessLoggerInterceptor.class);
 	
@@ -41,12 +42,16 @@ public class AccessLoggerInterceptor implements HandlerInterceptor{
 		long timeMillis = System.currentTimeMillis();
 		long random = ThreadLocalRandom.current().nextLong(100l,999l);
 		String requestid = String.valueOf(timeMillis) + String.valueOf(random);
+		Map<String, String> paramMap = RequestParamUtil.getParamMap(request);
+		
+		String token = paramMap.get("token");
+		long uid = TokenUtil.getUid(token);
 		
 		StringBuffer sb = new StringBuffer();
 
-		sb.append("requestid=");
-		sb.append(requestid);
-		sb.append(",");
+		sb.append("requestid=").append(requestid).append(",");
+		sb.append("token=").append(token).append(",");
+		sb.append("uid=").append(uid).append(",");
 		
 		sb.append("url=");
 		sb.append(request.getRequestURL());
@@ -60,7 +65,6 @@ public class AccessLoggerInterceptor implements HandlerInterceptor{
 		}
 		sb.append(",");
 		
-		Map<String, String> paramMap = RequestParamUtil.getParamMap(request);
 		if(paramMap != null && paramMap.size() > 0) {
 			sb.append("param=");
 			for (String key : paramMap.keySet()) { 
@@ -71,11 +75,12 @@ public class AccessLoggerInterceptor implements HandlerInterceptor{
 			}
 		}
 		
-		sb.append("ip=");
-		sb.append(IpUtil.getClickUserIp(request));
+		sb.append("ip=").append(IpUtil.getClickUserIp(request));
 		
 		logger.info(sb.toString());
 		
+		request.setAttribute("token", token);
+		request.setAttribute("uid", uid);
 		request.setAttribute("requestid", requestid);
 		return true;
 	}

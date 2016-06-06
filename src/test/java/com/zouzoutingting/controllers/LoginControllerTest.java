@@ -7,18 +7,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.zouzoutingting.common.Global;
 import com.zouzoutingting.utils.HttpTestUtils;
 
-/**
- * @author Jerry Wang
- * @Email  jerry002@126.com
- * @date   2016年4月24日
- */
-public class ViewSpotControllerTest {
-	
+public class LoginControllerTest {
+
 	@Test
-	public void viewspotsTest() {
-		String url = Global.HOST_URL + "/viewspots";
+	public void vccodeTest() {
+		String url = Global.HOST_URL + "/vccode";
 		try {
-			JSONObject result = HttpTestUtils.testUrl(url,"cityid=1");
+			JSONObject result = HttpTestUtils.testUrl(url, "phone=15210740626");
 			System.out.println(JSON.toJSONString(result, true));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -26,10 +21,10 @@ public class ViewSpotControllerTest {
 	}
 	
 	@Test
-	public void viewspotTest() {
-		String url = Global.HOST_URL + "/viewspot";
+	public void loginTest() {
+		String url = Global.HOST_URL + "/login";
 		try {
-			JSONObject result = HttpTestUtils.testUrl(url,"vid=12");
+			JSONObject result = HttpTestUtils.testUrl(url, "phone=15210740626&vccode=123456");
 			System.out.println(JSON.toJSONString(result, true));
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -79,7 +79,7 @@ public class BaseController {
 		map.put("code", returnCode);
 		map.put("message", returnMessage);
 		map.put("entity", entity == null ? new HashMap<String, String>() : entity);
-		map.put("token",""); // 返回用户登录凭证
+		map.put("token", request.getAttribute("token")); // 返回用户登录凭证
 		
         ObjectMapper mapper = new ObjectMapper();  
         String content = null;
@@ -87,7 +87,7 @@ public class BaseController {
         try {
 			content = mapper.writeValueAsString(map);
 			request.setAttribute(Global.RESULT_CONTENT, content);
-			result = GZipUtils.compress(content.getBytes("UTF-8"));
+			result = GZipUtils.compress(content.getBytes(Global.DEFUALT_CHARSET));
 			result = DES.encrypt(result, Global.DESKEY);
 			
 			response.setContentType ("application/octet-stream");

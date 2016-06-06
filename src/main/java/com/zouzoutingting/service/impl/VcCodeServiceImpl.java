@@ -3,6 +3,7 @@ package com.zouzoutingting.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.zouzoutingting.dao.IDao;
 import com.zouzoutingting.model.VcCode;
@@ -14,6 +15,7 @@ import com.zouzoutingting.utils.Page;
  * @Email  jerry002@126.com
  * @date   2016年6月5日
  */
+@Service("vcCodeService")
 public class VcCodeServiceImpl implements IVcCodeService {
 	
 	private static final short IS_USED = 0;
@@ -23,7 +25,7 @@ public class VcCodeServiceImpl implements IVcCodeService {
 	private IDao<VcCode> vcCodeDao = null;
 	
 	@Override
-	public void addVcCode(int phone, int code) {
+	public void addVcCode(long phone, int code) {
 		VcCode vcCode = new VcCode();
 		vcCode.setCode(code);
 		vcCode.setPhone(phone);
@@ -33,7 +35,7 @@ public class VcCodeServiceImpl implements IVcCodeService {
 	}
 	
 	@Override
-	public boolean checkVcCode(int phone, int code) {
+	public boolean checkVcCode(long phone, int code) {
 		boolean result = false;
 		Page page = new Page();
 		String condition = "code = " + code + " and phone = " + phone + " and used = " + IS_NOT_USERD;

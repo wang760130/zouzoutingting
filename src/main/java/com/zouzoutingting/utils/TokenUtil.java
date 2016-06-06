@@ -1,5 +1,10 @@
 package com.zouzoutingting.utils;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.StringUtils;
+
 import com.zouzoutingting.common.Global;
 
 /**
@@ -10,21 +15,66 @@ import com.zouzoutingting.common.Global;
 public class TokenUtil {
 	
 	/**
-	 * 生成用户登录令牌，长度为32位
+	 * 生成用户登录令牌
 	 * @return
+	 * @throws Exception 
 	 */
-	public static String generateToken(long uid)  {
-		return MD5.Md5Encryt(MD5.Md5Encryt(Long.toString(uid)) + MD5.Md5Encryt(Global.DESKEY));
+	public static String generateToken(long uid) throws Exception  {
+		String str = "UID=" + uid + "&TS=" + System.currentTimeMillis();
+		byte[] bytes = DES.encrypt(String.valueOf(str).getBytes(Global.DEFUALT_CHARSET),Global.DESKEY);
+		return Base64.encode(bytes);
 	}
 	
-	public static boolean checkToken(long uid, String token) {
-		if(token == null) {
-			return false;
+	public static long getUid(String token) throws Exception {
+		long uid = -1L;
+		if(token == null || token.equals("")) {
+			return uid;
+		}
+		byte[] bytes = Base64.decode(token);
+		String str = new String(DES.decrypt(bytes,Global.DESKEY), Global.DEFUALT_CHARSET);
+		
+		Matcher matcher = Pattern.compile("UID=[\\d]+").matcher(str);
+		if(matcher.find()) {
+			uid = getLong(matcher.group().substring(4), -1L);
 		}
 		
-		if(TokenUtil.generateToken(uid).equals(token)) {
-			return true;
-		}
-		return false;
+		return uid;
 	}
+	
+	public static long getTs(String token) throws Exception {
+		long ts = -1L;
+		if(token == null || token.equals("")) {
+			return ts;
+		}
+		byte[] bytes = Base64.decode(token);
+		String str = new String(DES.decrypt(bytes,Global.DESKEY), Global.DEFUALT_CHARSET);
+		
+		Matcher matcher = Pattern.compile("TS=[\\d]+").matcher(str);
+		if(matcher.find()) {
+			ts = getLong(matcher.group().substring(3), -1L);
+		}
+		
+		return ts;
+	}
+	
+	private static final long getLong(Object obj, long defaultValue) {
+		try {
+			if ((obj == null) || (StringUtils.isEmpty(obj.toString().trim())))
+				return defaultValue;
+			return Long.valueOf(obj.toString()).longValue();
+		} catch (Exception e) {
+		}
+		return defaultValue;
+	}
+	
+	
+	public static void main(String[] args) throws Exception {
+		long uid = 123456L;
+		String token = TokenUtil.generateToken(uid);
+		
+		System.out.println("token = " + token);
+		System.out.println(TokenUtil.getUid(token));
+		System.out.println(TokenUtil.getTs(token));
+	}
+	
 }	

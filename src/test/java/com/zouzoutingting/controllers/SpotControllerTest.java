@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.zouzoutingting.common.Global;
 import com.zouzoutingting.utils.HttpTestUtils;
 
 /**
@@ -13,12 +14,9 @@ import com.zouzoutingting.utils.HttpTestUtils;
  */
 public class SpotControllerTest {
 
-//	private final static String HOST_URL = "http://api.imonl.com";
-	private final static String HOST_URL = "http://123.56.242.84:8080";
-	
 	@Test
 	public void spotsTest() {
-		String url = HOST_URL + "/spots";
+		String url = Global.HOST_URL + "/spots";
 		try {
 			JSONObject result = HttpTestUtils.testUrl(url,"vid=13");
 			System.out.println(JSON.toJSONString(result, true));

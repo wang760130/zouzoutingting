@@ -1,8 +1,10 @@
 package com.zouzoutingting.controllers;
 
 import org.junit.Test;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.zouzoutingting.common.Global;
 import com.zouzoutingting.utils.HttpTestUtils;
 
 /**
@@ -11,16 +13,13 @@ import com.zouzoutingting.utils.HttpTestUtils;
  * @date   2016年4月4日
  */
 public class CityControllerTest {
-
-	private final static String HOST_URL = "http://api.imonl.com";
-//	private final static String HOST_URL = "http://123.56.242.84:8080";
 	
 	/** 有参数连接**/
 	@Test
 	public void cityTest() {
-		String url = HOST_URL + "/city";
+		String url = Global.HOST_URL + "/city";
 		try {
-			JSONObject result = HttpTestUtils.testUrl(url, "id=2");
+			JSONObject result = HttpTestUtils.testUrl(url, "id=1");
 			System.out.println(JSON.toJSONString(result, true));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -30,7 +29,7 @@ public class CityControllerTest {
 	/** 无参数连接**/
 	@Test
 	public void citysTest() {
-		String url = HOST_URL + "/citys";
+		String url = Global.HOST_URL + "/citys";
 		try {
 			JSONObject result = HttpTestUtils.testUrl(url);
 			System.out.println(JSON.toJSONString(result, true));
@@ -41,7 +40,7 @@ public class CityControllerTest {
 	
 	@Test
 	public void cityspotTest() {
-		String url = HOST_URL + "/cityspot";
+		String url = Global.HOST_URL + "/cityspot";
 		try {
 			JSONObject result = HttpTestUtils.testUrl(url);
 			System.out.println(JSON.toJSONString(result, true));
@@ -53,7 +52,7 @@ public class CityControllerTest {
 	@Test
 	public void batchCityTest() {
 		
-		String url = HOST_URL + "/citys";
+		String url = Global.HOST_URL + "/citys";
 		try {
 			for(int i = 0; i < 100; i++) {
 				JSONObject result = HttpTestUtils.testUrl(url);
