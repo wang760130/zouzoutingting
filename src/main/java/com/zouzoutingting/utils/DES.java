@@ -7,6 +7,8 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 
+import com.zouzoutingting.common.Global;
+
 /**
  * DES加密
  * @author Jerry Wang
@@ -21,7 +23,7 @@ public class DES {
 	public static byte[] encrypt(byte[] datasource, String password)
 			throws Exception {
 		SecureRandom random = new SecureRandom();
-		DESKeySpec desKey = new DESKeySpec(password.getBytes("UTF-8"));
+		DESKeySpec desKey = new DESKeySpec(password.getBytes(Global.DEFUALT_CHARSET));
 		SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
 		SecretKey securekey = keyFactory.generateSecret(desKey);
 		Cipher cipher = Cipher.getInstance("DES");
@@ -34,7 +36,7 @@ public class DES {
 	 */
 	public static byte[] decrypt(byte[] src, String password) throws Exception {
 		SecureRandom random = new SecureRandom();
-		DESKeySpec desKey = new DESKeySpec(password.getBytes("UTF-8"));
+		DESKeySpec desKey = new DESKeySpec(password.getBytes(Global.DEFUALT_CHARSET));
 		SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
 		SecretKey securekey = keyFactory.generateSecret(desKey);
 		Cipher cipher = Cipher.getInstance("DES");

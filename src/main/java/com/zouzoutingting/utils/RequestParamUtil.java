@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -36,7 +37,7 @@ public class RequestParamUtil {
 	 */
 	public static String encryptParan(String param) throws Exception {
 		byte[] encryptbytes = DES.encrypt(param.getBytes(Global.DEFUALT_CHARSET),Global.DESKEY);
-		String byte2str = Base64.encode(encryptbytes);
+		String byte2str = new String(Base64.encodeBase64(encryptbytes));
 		String strenpar = REQUEST_PARAM + "=" + URLEncoder.encode(byte2str, Global.DEFUALT_CHARSET);
 		return strenpar;
 	}
@@ -51,7 +52,7 @@ public class RequestParamUtil {
 		Map<String, String> paramMap = new HashMap<String, String>();
 		try {
 			if(StringUtils.isNotBlank(param)){
-				byte[] strParBytes = Base64.decode(param);
+				byte[] strParBytes = Base64.decodeBase64(param);
 				String params = new String(DES.decrypt(strParBytes,Global.DESKEY), Global.DEFUALT_CHARSET);
 				for (String p : params.split("\\&")) {
 					String[] paramsArr = p.split("\\=");

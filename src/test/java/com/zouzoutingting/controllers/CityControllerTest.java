@@ -19,7 +19,7 @@ public class CityControllerTest {
 	public void cityTest() {
 		String url = Global.HOST_URL + "/city";
 		try {
-			JSONObject result = HttpTestUtils.testUrl(url, "id=1");
+			JSONObject result = HttpTestUtils.testUrl(url, "id=1&token=/v8F00YWcAeOMI4hgvYWBA1Z5fvZ2PMS4sh9Yc5iHXo=");
 			System.out.println(JSON.toJSONString(result, true));
 		} catch (Exception e) {
 			e.printStackTrace();

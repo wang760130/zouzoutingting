@@ -3,6 +3,7 @@ package com.zouzoutingting.utils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 
 import com.zouzoutingting.common.Global;
@@ -22,7 +23,7 @@ public class TokenUtil {
 	public static String generateToken(long uid) throws Exception  {
 		String str = "UID=" + uid + "&TS=" + System.currentTimeMillis();
 		byte[] bytes = DES.encrypt(String.valueOf(str).getBytes(Global.DEFUALT_CHARSET),Global.DESKEY);
-		return Base64.encode(bytes);
+		return new String(Base64.encodeBase64(bytes));
 	}
 	
 	public static long getUid(String token) throws Exception {
@@ -30,7 +31,7 @@ public class TokenUtil {
 		if(token == null || token.equals("")) {
 			return uid;
 		}
-		byte[] bytes = Base64.decode(token);
+		byte[] bytes = Base64.decodeBase64(token);
 		String str = new String(DES.decrypt(bytes,Global.DESKEY), Global.DEFUALT_CHARSET);
 		
 		Matcher matcher = Pattern.compile("UID=[\\d]+").matcher(str);
@@ -46,7 +47,7 @@ public class TokenUtil {
 		if(token == null || token.equals("")) {
 			return ts;
 		}
-		byte[] bytes = Base64.decode(token);
+		byte[] bytes = Base64.decodeBase64(token);
 		String str = new String(DES.decrypt(bytes,Global.DESKEY), Global.DEFUALT_CHARSET);
 		
 		Matcher matcher = Pattern.compile("TS=[\\d]+").matcher(str);
