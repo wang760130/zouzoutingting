@@ -46,10 +46,9 @@ public class LoginController extends BaseController {
 			}
 			
 			int vcCode = VcCodeUtil.genVcCode();
-	//		boolean sendSuccess = JuheSmsApi.sendVcCode(Integer.valueOf(phone), vcCode);
-			boolean sendSuccess = true;
 			
-			if(sendSuccess) {
+//			if(JuheSmsApi.sendVcCode(Integer.valueOf(phone), vcCode)) {
+			if(true) {
 				vcCodeService.addVcCode(Long.valueOf(phone), vcCode);
 				gzipCipherResult(RETURN_CODE_SUCCESS, "验证码发送成功", NULL_ARRAY, request, response);
 			} else {
