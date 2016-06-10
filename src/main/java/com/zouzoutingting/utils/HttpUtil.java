@@ -1,5 +1,8 @@
 package com.zouzoutingting.utils;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -15,6 +18,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -54,24 +59,96 @@ public class HttpUtil {
 	 * @throws ParseException 
 	 */
 	public static String post(String url, Map<String, String> params) throws ParseException, IOException {
-		DefaultHttpClient httpclient = new DefaultHttpClient();
+		HttpClient httpclient = null;
 		String body = null;
-		HttpPost post = postForm(url, params);
-		body = invoke(httpclient, post);
-		httpclient.getConnectionManager().shutdown();
+		try {
+			httpclient = new DefaultHttpClient();
+			HttpPost post = postForm(url, params);
+			body = invoke(httpclient, post);
+		} catch(IOException e) {
+			throw e;
+		} catch(ParseException e) {
+			throw e;
+		} finally {
+			httpclient.getConnectionManager().shutdown();
+		}
 		return body;
 	}
 
+	/**
+	 * 根据url和参数发起http get请求
+	 * 
+	 * @param url
+	 * @return
+	 * @throws IOException 
+	 * @throws ParseException 
+	 */
 	public static String get(String url) throws ParseException, IOException {
-		DefaultHttpClient httpclient = new DefaultHttpClient();
+		HttpClient httpclient = null;
 		String body = null;
-		HttpGet get = new HttpGet(url);
-		body = invoke(httpclient, get);
-		httpclient.getConnectionManager().shutdown();
+		try {
+			httpclient = new DefaultHttpClient();
+			HttpGet get = new HttpGet(url);
+			body = invoke(httpclient, get);
+		} catch(IOException e) {
+			throw e;
+		} catch(ParseException e) {
+			throw e;
+		} finally {
+			httpclient.getConnectionManager().shutdown();
+		}
+	
 		return body;
 	}
+	
+	/**
+	 * 下载文件保存到本地 
+	 * @param path 文件保存位置 
+	 * @param url 文件地址 
+	 * @throws IOException 
+	 * @throws ClientProtocolException 
+	 */
+	public static void downloadFile(String path, String url) throws ClientProtocolException, IOException {
+		HttpClient httpClient = null;
+		
+		try {
+			httpClient = new DefaultHttpClient();
+			HttpGet httpGet = new HttpGet(url);
+			HttpResponse response = httpClient.execute(httpGet);
+			
+			if(response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+				byte[] result = EntityUtils.toByteArray(response.getEntity());
+				
+				BufferedOutputStream bos = null;
+				FileOutputStream fos = null;
+				
+				try {
+					File file = new File(path);
+					if(!file.getParentFile().exists()) {
+						file.getParentFile().mkdirs();
+					}
+					fos = new FileOutputStream(path);
+					bos = new BufferedOutputStream(fos);
+					bos.write(result);
+				} catch(IOException e) {
+					throw e;
+				} finally {
+					if(bos != null) {
+						bos.close();
+					}
+					if(fos != null) {
+						fos.close();
+					}
+				}
+			}
+		} catch(ClientProtocolException e) {
+			throw e;
+		} finally {
+			httpClient.getConnectionManager().shutdown();
+		}
+	}
 
-	private static String invoke(DefaultHttpClient httpclient,
+	private static String invoke(HttpClient httpclient,
 			HttpUriRequest httpost) throws ParseException, IOException {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
