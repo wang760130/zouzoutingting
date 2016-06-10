@@ -44,7 +44,7 @@ public class SpotController extends BaseController{
         
         try {
 	        Map<String, Object> resultMap = new HashMap<String, Object>();
-        	List<Spot> list = spotService.loadByViewID(vid);
+        	List<Spot> spotList = spotService.loadByViewID(vid);
 	        
         	// 讲解
         	List<Map<String, Object>> explainList = new ArrayList<Map<String, Object>>();
@@ -54,7 +54,7 @@ public class SpotController extends BaseController{
         	List<Map<String, Object>> pointList = new ArrayList<Map<String, Object>>();
         	
         	Map<String, Object> map = null;
-	        for(Spot spot : list) {
+	        for(Spot spot : spotList) {
 	        	map = new HashMap<String, Object>();
 	        	if(spot.getType() == EXPLAIN) {
 	        		map.put("id", spot.getId());
