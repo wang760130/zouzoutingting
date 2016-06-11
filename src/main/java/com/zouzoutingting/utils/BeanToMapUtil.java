@@ -27,7 +27,7 @@ public class BeanToMapUtil {
      * @throws InstantiationException  如果实例化 JavaBean 失败 
      * @throws InvocationTargetException  如果调用属性的 setter 方法失败 
 	 */
-	public static Object convertMap(Class<?> type, Map<String, Object> map)   throws IntrospectionException, IllegalAccessException, InstantiationException, InvocationTargetException {
+	public static Object convertMapToBean(Class<?> type, Map<String, Object> map)   throws IntrospectionException, IllegalAccessException, InstantiationException, InvocationTargetException {
 		// 获取类属性 
 		BeanInfo beanInfo = Introspector.getBeanInfo(type);
 		// 创建 JavaBean 对象 
@@ -61,7 +61,7 @@ public class BeanToMapUtil {
      * @throws IllegalAccessException 如果实例化 JavaBean 失败 
      * @throws InvocationTargetException 如果调用属性的 setter 方法失败 
      */ 
-	public static Map<String, Object> convertBean(Object bean) throws IntrospectionException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+	public static Map<String, Object> convertBeanToMap(Object bean) throws IntrospectionException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 		Class<?> type = bean.getClass();
 		Map<String, Object> map = new HashMap<String, Object>();
 		
