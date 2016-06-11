@@ -49,7 +49,10 @@ public class ViewSpot {
     
     @Column(name = "listPic")
     private String listPic;//详情页轮播图片地址
-
+    
+    @Column(name = "offlinepackage")
+    private String offlinepackage; // 离线下载包地址
+ 
     @Column(name = "price")
     private double price;
 
@@ -58,48 +61,48 @@ public class ViewSpot {
     
     @Transient
     private String[] pic;//详情页轮播图片地址数组
-    
-    public long getId() {
-        return id;
-    }
 
-    public void setId(long id) {
-        this.id = id;
-    }
+	public long getId() {
+		return id;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setId(long id) {
+		this.id = id;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public int getCityid() {
+		return cityid;
+	}
 
-    public int getCityid() {
-        return cityid;
-    }
+	public void setCityid(int cityid) {
+		this.cityid = cityid;
+	}
 
-    public void setCityid(int cityid) {
-        this.cityid = cityid;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public int getExplaincount() {
-        return explaincount;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setExplaincount(int explaincount) {
-        this.explaincount = explaincount;
-    }
+	public int getExplaincount() {
+		return explaincount;
+	}
 
-    public double getEcplainsize() {
-        return ecplainsize;
-    }
+	public void setExplaincount(int explaincount) {
+		this.explaincount = explaincount;
+	}
 
-    public void setEcplainsize(double ecplainsize) {
-        this.ecplainsize = ecplainsize;
-    }
+	public double getEcplainsize() {
+		return ecplainsize;
+	}
 
-    public String getCentercoord() {
+	public void setEcplainsize(double ecplainsize) {
+		this.ecplainsize = ecplainsize;
+	}
+
+	public String getCentercoord() {
 		return centercoord;
 	}
 
@@ -116,20 +119,20 @@ public class ViewSpot {
 	}
 
 	public String getSynopsis() {
-        return synopsis;
-    }
+		return synopsis;
+	}
 
-    public void setSynopsis(String synopsis) {
-        this.synopsis = synopsis;
-    }
+	public void setSynopsis(String synopsis) {
+		this.synopsis = synopsis;
+	}
 
-    public String getIntroduce() {
-        return introduce;
-    }
+	public String getIntroduce() {
+		return introduce;
+	}
 
-    public void setIntroduce(String introduce) {
-        this.introduce = introduce;
-    }
+	public void setIntroduce(String introduce) {
+		this.introduce = introduce;
+	}
 
 	public String getDefualtPic() {
 		return defualtPic;
@@ -139,8 +142,7 @@ public class ViewSpot {
 		this.defualtPic = defualtPic;
 	}
 
-	
-    public String getListPic() {
+	public String getListPic() {
 		return listPic;
 	}
 
@@ -148,21 +150,29 @@ public class ViewSpot {
 		this.listPic = listPic;
 	}
 
+	public String getOfflinepackage() {
+		return offlinepackage;
+	}
+
+	public void setOfflinepackage(String offlinepackage) {
+		this.offlinepackage = offlinepackage;
+	}
+
 	public double getPrice() {
-        return price;
-    }
+		return price;
+	}
 
-    public void setPrice(double price) {
-        this.price = price;
-    }
+	public void setPrice(double price) {
+		this.price = price;
+	}
 
-    public int getState() {
-        return state;
-    }
+	public int getState() {
+		return state;
+	}
 
-    public void setState(int state) {
-        this.state = state;
-    }
+	public void setState(int state) {
+		this.state = state;
+	}
 
 	public String[] getPic() {
 		return pic;
