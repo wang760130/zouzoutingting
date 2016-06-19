@@ -44,4 +44,18 @@ public class MD5 {
         return resultString;
     }
 
+    public static String Md5Encryt(String origin, String charsetname) {
+        String resultString = null;
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            if (charsetname == null || "".equals(charsetname))
+                resultString = byteToString(md.digest(origin.getBytes()));
+            else
+                resultString = byteToString(md.digest(origin.getBytes(charsetname)));
+        } catch (Exception exception) {
+            exception.fillInStackTrace();
+        }
+        return resultString;
+    }
+
 }

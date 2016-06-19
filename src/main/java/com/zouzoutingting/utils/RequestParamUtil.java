@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.language.DoubleMetaphone;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -112,6 +113,17 @@ public class RequestParamUtil {
 			}
 		}
 		return retLong;
+	}
+
+	public static Double getDoubleParam(HttpServletRequest request, String name, Double defaultVal){
+		Double retDouble = defaultVal;
+		String value = getParam(request, name, String.valueOf(defaultVal));
+		if(value!=null){
+			if(StringUtils.isNumeric(value)){
+				retDouble = Double.parseDouble(value);
+			}
+		}
+		return retDouble;
 	}
 	
 }

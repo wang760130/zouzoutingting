@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,17 +21,22 @@ import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.apache.log4j.Logger;
 
 /**
  * 这个httpclient比较旧，以后有空再更新
@@ -39,6 +45,8 @@ import org.apache.http.util.EntityUtils;
  * @date   2016年6月5日
  */
 public class HttpUtil {
+	private static final Logger logger = Logger.getLogger(HttpUtil.class);
+
 	private static final int CONNECTION_TIMEOUT = 10 * 1000;
 	private static final int SO_TIMEOUT = 5 * 1000;
 
@@ -53,7 +61,7 @@ public class HttpUtil {
 	 * 根据url和参数发起http post请求
 	 * 
 	 * @param url
-	 * @param paramMap
+	 * @param params
 	 * @return
 	 * @throws IOException 
 	 * @throws ParseException 
@@ -73,6 +81,29 @@ public class HttpUtil {
 			httpclient.getConnectionManager().shutdown();
 		}
 		return body;
+	}
+
+	public static String post(final String url, String body) {
+		CloseableHttpClient httpclient = null;
+		HttpPost httpost = null;
+		try {
+			httpclient = HttpClients.custom().build();
+			httpost = new HttpPost(url);
+			// 设置请求和传输超时时间
+			RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(SO_TIMEOUT)
+					.setConnectTimeout(CONNECTION_TIMEOUT).build();
+			httpost.setConfig(requestConfig);
+			StringEntity sey = new StringEntity(body, Charset.forName("UTF-8"));
+			httpost.setEntity(sey);
+			return invoke(httpclient, httpost);
+		} catch (Exception ex) {
+			logger.error("http post:"+url+" Error", ex);
+		} finally {
+			if (httpost != null) {
+				httpost.releaseConnection();
+			}
+		}
+		return null;
 	}
 
 	/**
