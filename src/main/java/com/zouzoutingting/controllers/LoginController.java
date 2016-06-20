@@ -1,5 +1,8 @@
 package com.zouzoutingting.controllers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -56,7 +59,7 @@ public class LoginController extends BaseController {
 			}
 		} catch(Exception e) {
 			logger.info(e.getMessage(), e);
-			gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, NULL_OBJECT, request, response);
+			gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, NULL_ARRAY, request, response);
 		}
 	}
 	
@@ -72,11 +75,11 @@ public class LoginController extends BaseController {
 		
 		try {
 			if(ValidityUtil.checkPhoneNum(phone) == false) {
-				gzipCipherResult(RETURN_CODE_PARAMETER_ERROR, "手机号验证失败", NULL_ARRAY, request, response);
+				gzipCipherResult(RETURN_CODE_PARAMETER_ERROR, "手机号验证失败", NULL_OBJECT, request, response);
 			}
 			
 			if(VcCodeUtil.checkVcCode(vcCode) == false) {
-				gzipCipherResult(RETURN_CODE_PARAMETER_ERROR, "验证失败", NULL_ARRAY, request, response);
+				gzipCipherResult(RETURN_CODE_PARAMETER_ERROR, "验证失败", NULL_OBJECT, request, response);
 			}
 			
 //			if(vcCodeService.checkVcCode(Long.valueOf(phone), Integer.valueOf(vcCode))) {
@@ -92,9 +95,12 @@ public class LoginController extends BaseController {
 				String token = TokenUtil.generateToken(uid);
 				request.setAttribute("token", token);
 				
-				gzipCipherResult(RETURN_CODE_SUCCESS, "登入成功", NULL_ARRAY, request, response);
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("token", token);
+				
+				gzipCipherResult(RETURN_CODE_SUCCESS, "登入成功", map, request, response);
 			} else {
-				gzipCipherResult(RETURN_CODE_PARAMETER_ERROR, "验证失败", NULL_ARRAY, request, response);
+				gzipCipherResult(RETURN_CODE_PARAMETER_ERROR, "验证失败", NULL_OBJECT, request, response);
 			}
 		} catch(Exception e) {
 			logger.info(e.getMessage(), e);
