@@ -14,7 +14,7 @@ import com.zouzoutingting.utils.HttpTestUtils;
  */
 public class CityControllerTest {
 	
-	/** 有参数连接**/
+	
 	@Test
 	public void cityTest() {
 		String url = Global.HOST_URL + "/city";
@@ -26,12 +26,12 @@ public class CityControllerTest {
 		}
 	}
 	
-	/** 无参数连接**/
+	
 	@Test
 	public void citysTest() {
 		String url = Global.HOST_URL + "/citys";
 		try {
-			JSONObject result = HttpTestUtils.testUrl(url);
+			JSONObject result = HttpTestUtils.testUrl(url,"lon=108.97888&lat=34.217952");
 			System.out.println(JSON.toJSONString(result, true));
 		} catch (Exception e) {
 			e.printStackTrace();

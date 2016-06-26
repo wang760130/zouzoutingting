@@ -7,6 +7,6 @@ package com.zouzoutingting.service;
  */
 public interface IFeedbackService {
 
-	public void add(String message);
+	public void add(long uid, String message);
 
 }

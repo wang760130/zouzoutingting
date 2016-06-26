@@ -1,5 +1,7 @@
 package com.zouzoutingting.model;
 
+import java.util.Arrays;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -61,6 +63,9 @@ public class ViewSpot {
     
     @Transient
     private String[] pic;//详情页轮播图片地址数组
+    
+    @Transient
+    private double distance; // 距离
 
 	public long getId() {
 		return id;
@@ -181,5 +186,25 @@ public class ViewSpot {
 	public void setPic(String[] pic) {
 		this.pic = pic;
 	}
-    
+
+	public double getDistance() {
+		return distance;
+	}
+
+	public void setDistance(double distance) {
+		this.distance = distance;
+	}
+
+	@Override
+	public String toString() {
+		return "ViewSpot [id=" + id + ", cityid=" + cityid + ", name=" + name
+				+ ", explaincount=" + explaincount + ", ecplainsize="
+				+ ecplainsize + ", centercoord=" + centercoord + ", scaling="
+				+ scaling + ", synopsis=" + synopsis + ", introduce="
+				+ introduce + ", defualtPic=" + defualtPic + ", listPic="
+				+ listPic + ", offlinepackage=" + offlinepackage + ", price="
+				+ price + ", state=" + state + ", pic=" + Arrays.toString(pic)
+				+ ", distance=" + distance + "]";
+	}
+
 }

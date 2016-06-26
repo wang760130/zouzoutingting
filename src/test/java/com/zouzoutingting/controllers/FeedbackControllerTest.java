@@ -17,10 +17,10 @@ public class FeedbackControllerTest {
 	
 	@Test
 	public void addTest() {
-		String message = "";
+		String message = "挺好的";
 		String url = Global.HOST_URL + "/feedback/add";
-		try {
-			JSONObject result = HttpTestUtils.testUrl(url,"message="+ message);
+		try {																						
+			JSONObject result = HttpTestUtils.testUrl(url,"message="+ message + "&token=7VsmL13CpPP1QKZi3cd/UZDPvSfGXYJUusKHogoPC3E=");
 			System.out.println(JSON.toJSONString(result, true));
 		} catch (Exception e) {
 			e.printStackTrace();

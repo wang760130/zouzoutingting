@@ -118,9 +118,9 @@ public class RequestParamUtil {
 		Double retDouble = defaultVal;
 		String value = getParam(request, name, String.valueOf(defaultVal));
 		if(value!=null){
-			if(StringUtils.isNumeric(value)){
+			try {
 				retDouble = Double.parseDouble(value);
-			}
+			} catch(Exception e) {}
 		}
 		return retDouble;
 	}

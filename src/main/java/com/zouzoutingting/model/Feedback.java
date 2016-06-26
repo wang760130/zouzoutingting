@@ -24,6 +24,9 @@ public class Feedback {
 	@Column(name="id")
 	private long id;
 	
+	@Column(name="uid")
+	private long uid;
+	
 	@Column(name="message")
 	private String message;
 	
@@ -36,6 +39,14 @@ public class Feedback {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public long getUid() {
+		return uid;
+	}
+
+	public void setUid(long uid) {
+		this.uid = uid;
 	}
 
 	public String getMessage() {
@@ -53,5 +64,11 @@ public class Feedback {
 	public void setAddtime(Date addtime) {
 		this.addtime = addtime;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "Feedback [id=" + id + ", uid=" + uid + ", message=" + message
+				+ ", addtime=" + addtime + "]";
+	}
+
 }

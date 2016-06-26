@@ -21,8 +21,9 @@ public class FeedbackServiceImpl implements IFeedbackService {
 	private IDao<Feedback> feedbackDao = null;
 	
 	@Override
-	public void add(String message) {
+	public void add(long uid, String message) {
 		Feedback feedback = new Feedback();
+		feedback.setUid(uid);
 		feedback.setMessage(message);
 		feedback.setAddtime(new Date());
 		feedbackDao.save(feedback);

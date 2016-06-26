@@ -31,14 +31,15 @@ public class TokenUtil {
 		if(token == null || token.equals("")) {
 			return uid;
 		}
-		byte[] bytes = Base64.decodeBase64(token);
-		String str = new String(DES.decrypt(bytes,Global.DESKEY), Global.DEFUALT_CHARSET);
-		
-		Matcher matcher = Pattern.compile("UID=[\\d]+").matcher(str);
-		if(matcher.find()) {
-			uid = getLong(matcher.group().substring(4), -1L);
-		}
-		
+		try {
+			byte[] bytes = Base64.decodeBase64(token);
+			String str = new String(DES.decrypt(bytes,Global.DESKEY), Global.DEFUALT_CHARSET);
+			
+			Matcher matcher = Pattern.compile("UID=[\\d]+").matcher(str);
+			if(matcher.find()) {
+				uid = getLong(matcher.group().substring(4), -1L);
+			}
+		} catch(Exception e) {}
 		return uid;
 	}
 	
@@ -47,14 +48,16 @@ public class TokenUtil {
 		if(token == null || token.equals("")) {
 			return ts;
 		}
-		byte[] bytes = Base64.decodeBase64(token);
-		String str = new String(DES.decrypt(bytes,Global.DESKEY), Global.DEFUALT_CHARSET);
 		
-		Matcher matcher = Pattern.compile("TS=[\\d]+").matcher(str);
-		if(matcher.find()) {
-			ts = getLong(matcher.group().substring(3), -1L);
-		}
-		
+		try {
+			byte[] bytes = Base64.decodeBase64(token);
+			String str = new String(DES.decrypt(bytes,Global.DESKEY), Global.DEFUALT_CHARSET);
+			
+			Matcher matcher = Pattern.compile("TS=[\\d]+").matcher(str);
+			if(matcher.find()) {
+				ts = getLong(matcher.group().substring(3), -1L);
+			}
+		} catch(Exception e) {}
 		return ts;
 	}
 	
@@ -70,12 +73,17 @@ public class TokenUtil {
 	
 	
 	public static void main(String[] args) throws Exception {
-		long uid = 123456L;
+		long uid = 10000L;
 		String token = TokenUtil.generateToken(uid);
 		
 		System.out.println("token = " + token);
 		System.out.println(TokenUtil.getUid(token));
 		System.out.println(TokenUtil.getTs(token));
+		
+		for(int i = 0; i < 100000; i++) {
+			String token2 = TokenUtil.generateToken(i);
+			System.out.println(token2);
+		}
 	}
 	
 }	

@@ -146,6 +146,13 @@ public class OfflinePackage {
 	        		String audioFile = this.md5Url(audio);
 	        		HttpUtil.downloadFile(tempPath + fileName + File.separator + audioFile, audio);
 	        		map.put("audio", audio);
+	        		map.put("content", spot.getContent());
+	        		String spotListPic = spot.getListPic();
+	        		if(spotListPic != null && !"".equals(spotListPic)) {
+	        			map.put("listpic", spotListPic.split(","));
+	        		} else {
+	        			map.put("listpic", new ArrayList<String>());
+	        		}
 	        		map.put("longitude", spot.getLongitude());
 	        		map.put("latitude", spot.getLatitude());
 	        		map.put("radius", spot.getRadius());
@@ -199,7 +206,7 @@ public class OfflinePackage {
 	
 	@Test
 	public void generate() {
-		this.generate(DTFRY_VIEW_SPOT_ID);
+		this.generate(HQC_VIEW_SPOT_ID);
 	}
 	
 }

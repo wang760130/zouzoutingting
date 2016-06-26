@@ -28,6 +28,22 @@ public class CityServiceImpl implements ICityService {
 	}
 	
 	@Override
+	public City getCityByCode(int cityCode) {
+		City city = null;
+		String conddition = "cityCode = " + cityCode;
+		Page page = new Page();
+		page.setCondition(conddition);
+		page.setPageNo(1);
+		page.setPageSize(1);
+		List<City> cityList = cityDao.page(page);
+		if(cityList != null && cityList.size() > 0) {
+			city = cityList.get(0);
+		}
+		return city;
+	}
+	
+	
+	@Override
 	public List<City> getAll() {
 		String conddition = "state = 1";
 		Page page = new Page();

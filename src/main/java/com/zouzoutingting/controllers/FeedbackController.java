@@ -25,14 +25,15 @@ public class FeedbackController extends BaseController {
 	@RequestMapping(value = "/feedback/add", method = RequestMethod.POST)
 	public void add(HttpServletRequest request, HttpServletResponse response) {
 		String message = RequestParamUtil.getParam(request, "message", "");
-		System.out.println(message);
+		
 		if(message == null || "".equals(message)) {
 			gzipCipherResult(RETURN_CODE_EXCEPTION, "数据不能为空", NULL_OBJECT, request, response);
 			return ;
 		}
 		
 		try {
-			feedbackService.add(message);
+			long uid = Long.valueOf(request.getAttribute("uid") + "");
+			feedbackService.add(uid, message);
 			gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, NULL_OBJECT, request, response);
 		} catch (Exception e) {
 			logger.info(e.getMessage(), e);

@@ -14,6 +14,8 @@ public interface ICityService {
 	
 	public City load(long id);
 	
+	public City getCityByCode(int cityCode);
+	
 	public List<City> getAll();
 	
 	public List<City> page(Page page);

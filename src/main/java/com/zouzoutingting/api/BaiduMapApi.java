@@ -68,7 +68,8 @@ public class BaiduMapApi {
 	}
 	
 	public static void main(String[] args) throws ParseException, IOException {
-		JSONObject jsonObject = BaiduMapApi.geocoder(108.980486, 34.219017);
+		JSONObject jsonObject = BaiduMapApi.geocoder(108.97888, 34.217952);
 		System.out.println(jsonObject.getJSONObject("result").getJSONObject("addressComponent").getString("city"));
+		System.out.println(jsonObject.getJSONObject("result").getInteger("cityCode"));
 	}
 }

@@ -18,7 +18,7 @@ public class ViewSpotControllerTest {
 	public void viewspotsTest() {
 		String url = Global.HOST_URL + "/viewspots";
 		try {
-			JSONObject result = HttpTestUtils.testUrl(url,"cityid=1");
+			JSONObject result = HttpTestUtils.testUrl(url,"cityid=1&lon=108.980486&lat=34.219017");
 			System.out.println(JSON.toJSONString(result, true));
 		} catch (Exception e) {
 			e.printStackTrace();

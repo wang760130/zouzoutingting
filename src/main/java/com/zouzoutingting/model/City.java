@@ -27,6 +27,9 @@ public class City {
 	@Column(name="ename")
 	private String ename;
 	
+	@Column(name="citycode")
+	private int citycode;
+	
 	@Column(name="synopsis")
 	private String synopsis;
 	
@@ -60,6 +63,14 @@ public class City {
 		this.ename = ename;
 	}
 
+	public int getCitycode() {
+		return citycode;
+	}
+
+	public void setCitycode(int citycode) {
+		this.citycode = citycode;
+	}
+
 	public String getSynopsis() {
 		return synopsis;
 	}
@@ -87,8 +98,8 @@ public class City {
 	@Override
 	public String toString() {
 		return "City [id=" + id + ", name=" + name + ", ename=" + ename
-				+ ", synopsis=" + synopsis + ", pic=" + pic + ", state="
-				+ state + "]";
+				+ ", citycode=" + citycode + ", synopsis=" + synopsis
+				+ ", pic=" + pic + ", state=" + state + "]";
 	}
-	
+
 }

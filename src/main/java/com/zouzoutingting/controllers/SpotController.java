@@ -62,6 +62,13 @@ public class SpotController extends BaseController{
 	        		map.put("sequence", spot.getSequence());
 	        		map.put("pic", spot.getPic());
 	        		map.put("audio", spot.getAudio());
+	        		map.put("content", spot.getContent());
+	        		String listPic = spot.getListPic();
+	        		if(listPic != null && !"".equals(listPic)) {
+	        			map.put("listpic", listPic.split(","));
+	        		} else {
+	        			map.put("listpic", NULL_ARRAY);
+	        		}
 	        		map.put("longitude", spot.getLongitude());
 	        		map.put("latitude", spot.getLatitude());
 	        		map.put("radius", spot.getRadius());

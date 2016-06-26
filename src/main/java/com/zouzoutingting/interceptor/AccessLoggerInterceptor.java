@@ -48,6 +48,12 @@ public class AccessLoggerInterceptor implements HandlerInterceptor {
 			Map<String, String> paramMap = RequestParamUtil.getParamMap(request);
 			
 			String token = paramMap.get("token");
+			if(token != null && !token.equals("")) {
+				token = token.replaceAll(" ", "+");
+				if(!token.endsWith("=")) {
+					token = token + "=";
+				}
+			}
 			long uid = TokenUtil.getUid(token);
 			
 			String ip = checkLogFiled(IpUtil.getClickUserIp(request));

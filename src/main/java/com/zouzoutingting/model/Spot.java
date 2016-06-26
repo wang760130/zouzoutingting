@@ -1,6 +1,11 @@
 package com.zouzoutingting.model;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * Created by zhangyong on 16/4/8.
@@ -49,6 +54,18 @@ public class Spot {
      */
     @Column(name = "audio")
     private String audio;
+    
+    /**
+     * 音频内容
+     */
+    @Column(name = "content")
+    private String content;
+    
+    /**
+     * 播放时滚动图片
+     */
+    @Column(name = "listPic")
+    private String listPic;
 
     /**
      * 经度
@@ -80,23 +97,23 @@ public class Spot {
     @Column(name = "state")
     private int state;
 
-    public long getId() {
-        return id;
-    }
+	public long getId() {
+		return id;
+	}
 
-    public void setId(long id) {
-        this.id = id;
-    }
+	public void setId(long id) {
+		this.id = id;
+	}
 
-    public int getVid() {
-        return vid;
-    }
+	public int getVid() {
+		return vid;
+	}
 
-    public void setVid(int vid) {
-        this.vid = vid;
-    }
-    
-    public short getType() {
+	public void setVid(int vid) {
+		this.vid = vid;
+	}
+
+	public short getType() {
 		return type;
 	}
 
@@ -105,74 +122,101 @@ public class Spot {
 	}
 
 	public int getSequence() {
-        return sequence;
-    }
+		return sequence;
+	}
 
-    public void setSequence(int sequence) {
-        this.sequence = sequence;
-    }
+	public void setSequence(int sequence) {
+		this.sequence = sequence;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public String getAudio() {
-        return audio;
-    }
+	public String getPic() {
+		return pic;
+	}
 
-    public void setAudio(String audio) {
-        this.audio = audio;
-    }
+	public void setPic(String pic) {
+		this.pic = pic;
+	}
 
-    public Double getLongitude() {
-        return longitude;
-    }
+	public String getAudio() {
+		return audio;
+	}
 
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
-    }
+	public void setAudio(String audio) {
+		this.audio = audio;
+	}
 
-    public Double getRadius() {
-        return radius;
-    }
+	public String getContent() {
+		return content;
+	}
 
-    public void setRadius(Double radius) {
-        this.radius = radius;
-    }
+	public void setContent(String content) {
+		this.content = content;
+	}
 
-    public int getIsfree() {
-        return isfree;
-    }
+	public String getListPic() {
+		return listPic;
+	}
 
-    public void setIsfree(int isfree) {
-        this.isfree = isfree;
-    }
+	public void setListPic(String listPic) {
+		this.listPic = listPic;
+	}
 
-    public int getState() {
-        return state;
-    }
+	public Double getLongitude() {
+		return longitude;
+	}
 
-    public void setState(int state) {
-        this.state = state;
-    }
+	public void setLongitude(Double longitude) {
+		this.longitude = longitude;
+	}
 
-    public Double getLatitude() {
-        return latitude;
-    }
+	public Double getLatitude() {
+		return latitude;
+	}
 
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
+	public void setLatitude(Double latitude) {
+		this.latitude = latitude;
+	}
 
-    public String getPic() {
-        return pic;
-    }
+	public Double getRadius() {
+		return radius;
+	}
 
-    public void setPic(String pic) {
-        this.pic = pic;
-    }
+	public void setRadius(Double radius) {
+		this.radius = radius;
+	}
+
+	public int getIsfree() {
+		return isfree;
+	}
+
+	public void setIsfree(int isfree) {
+		this.isfree = isfree;
+	}
+
+	public int getState() {
+		return state;
+	}
+
+	public void setState(int state) {
+		this.state = state;
+	}
+
+	@Override
+	public String toString() {
+		return "Spot [id=" + id + ", vid=" + vid + ", type=" + type
+				+ ", sequence=" + sequence + ", name=" + name + ", pic=" + pic
+				+ ", audio=" + audio + ", content=" + content + ", listPic="
+				+ listPic + ", longitude=" + longitude + ", latitude="
+				+ latitude + ", radius=" + radius + ", isfree=" + isfree
+				+ ", state=" + state + "]";
+	}
+
 }
