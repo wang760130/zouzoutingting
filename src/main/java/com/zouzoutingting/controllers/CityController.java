@@ -26,6 +26,10 @@ import com.zouzoutingting.utils.RequestParamUtil;
 @Controller
 public class CityController extends BaseController {
 	
+	// 默认城市 西安
+	private static final int DEFAULT_CITY_ID = 1;
+	private static final String DEFUALT_CITY_NAME = "西安";
+	
 	@Autowired
 	private ICityService cityService;
 	
@@ -61,11 +65,15 @@ public class CityController extends BaseController {
 						}
 					}
 				}
+				
 				resultMap.put("isInCitys", isInCitys);
 				if(isInCitys == true) {
 					resultMap.put("currentCityName", currentCityName);
 					resultMap.put("currentCityId", currentCityId);
 				}
+				resultMap.put("defaultCityId", DEFAULT_CITY_ID);
+				resultMap.put("defaultCityName", DEFUALT_CITY_NAME);
+				
 				resultMap.put("citys", list);
 				
 				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, resultMap, request, response);
