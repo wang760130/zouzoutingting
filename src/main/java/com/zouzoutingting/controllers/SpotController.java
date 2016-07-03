@@ -59,6 +59,7 @@ public class SpotController extends BaseController{
 	        	if(spot.getType() == EXPLAIN) {
 	        		map.put("id", spot.getId());
 	        		map.put("name", spot.getName());
+	        		map.put("vid",vid);
 	        		map.put("sequence", spot.getSequence());
 	        		map.put("pic", spot.getPic());
 	        		map.put("audio", spot.getAudio());
@@ -76,11 +77,13 @@ public class SpotController extends BaseController{
 	        		explainList.add(map);
 	        	} else if(spot.getType() == TOILET) {
 	        		map.put("id", spot.getId());
+	        		map.put("vid",vid);
 	        		map.put("longitude", spot.getLongitude());
 	        		map.put("latitude", spot.getLatitude());
 	        		toiletList.add(map);
 	        	} else if(spot.getType() == POINT) {
 	        		map.put("id", spot.getId());
+	        		map.put("vid",vid);
 	        		map.put("sequence", spot.getSequence());
 	        		map.put("longitude", spot.getLongitude());
 	        		map.put("latitude", spot.getLatitude());
