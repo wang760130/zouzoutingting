@@ -104,7 +104,6 @@ public class ViewSpotController extends BaseController {
 	        		}
         			
         			Collections.sort(viewSpotList, new Comparator<ViewSpot>() {
-
 						@Override
 						public int compare(ViewSpot viewSpot1, ViewSpot viewSpot2) {
 							double distance1 = viewSpot1.getDistance();
