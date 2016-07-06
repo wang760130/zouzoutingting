@@ -23,15 +23,15 @@ public class JuheSmsApi {
 	private static Logger logger = Logger.getLogger(JuheSmsApi.class);
 
 	private static final String APP_KEY = "a2fb4acff902ada46a95231713e1570d";
-	private static final String TPL_ID = "";
+	private static final String TPL_ID = "16159";
 	private static final String SMS_SEND_URL = "http://v.juhe.cn/sms/send?mobile=%s&tpl_id=%s&tpl_value=%s&key=%s";
 	
-	public static boolean sendVcCode(int phone, int vcCode) {
+	public static boolean sendVcCode(long phone, int vcCode) {
 		boolean result = false;
 		try {
-			String code = "#code#"+vcCode;
-			code = URLEncoder.encode(code, "utf-8");
-			String url = String.format(SMS_SEND_URL, phone, TPL_ID, code, APP_KEY);
+			String value = "#app#=走走听听旅行&#code#="+vcCode;
+			value = URLEncoder.encode(value, "utf-8");
+			String url = String.format(SMS_SEND_URL, phone, TPL_ID, value, APP_KEY);
 			String httpResult = HttpUtil.get(url);
 			logger.info("sendVcCode url :" + url + ", result :" + httpResult);
 			JSONObject json = JSON.parseObject(httpResult);

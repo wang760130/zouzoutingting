@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.zouzoutingting.api.JuheSmsApi;
 import com.zouzoutingting.model.User;
 import com.zouzoutingting.service.IUserService;
 import com.zouzoutingting.service.IVcCodeService;
@@ -50,8 +51,7 @@ public class LoginController extends BaseController {
 			
 			int vcCode = VcCodeUtil.genVcCode();
 			
-//			if(JuheSmsApi.sendVcCode(Integer.valueOf(phone), vcCode)) {
-			if(true) {
+			if(JuheSmsApi.sendVcCode(Long.valueOf(phone), vcCode)) {
 				vcCodeService.addVcCode(Long.valueOf(phone), vcCode);
 				gzipCipherResult(RETURN_CODE_SUCCESS, "验证码发送成功", NULL_ARRAY, request, response);
 			} else {
@@ -82,8 +82,7 @@ public class LoginController extends BaseController {
 				gzipCipherResult(RETURN_CODE_PARAMETER_ERROR, "验证失败", NULL_OBJECT, request, response);
 			}
 			
-//			if(vcCodeService.checkVcCode(Long.valueOf(phone), Integer.valueOf(vcCode))) {
-			if(true) {
+			if(vcCodeService.checkVcCode(Long.valueOf(phone), Integer.valueOf(vcCode))) {
 				User user = userService.getUserByPhone(Long.valueOf(phone));
 				long uid = -1L;
 				if(user != null) {
