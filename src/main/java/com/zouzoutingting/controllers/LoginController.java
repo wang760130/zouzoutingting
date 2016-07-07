@@ -46,20 +46,20 @@ public class LoginController extends BaseController {
 		
 		try {
 			if(ValidityUtil.checkPhoneNum(phone) == false) {
-				gzipCipherResult(RETURN_CODE_PARAMETER_ERROR, "手机号验证失败", NULL_ARRAY, request, response);
+				gzipCipherResult(RETURN_CODE_PARAMETER_ERROR, "手机号验证失败", NULL_OBJECT, request, response);
 			}
 			
 			int vcCode = VcCodeUtil.genVcCode();
 			
 			if(JuheSmsApi.sendVcCode(Long.valueOf(phone), vcCode)) {
 				vcCodeService.addVcCode(Long.valueOf(phone), vcCode);
-				gzipCipherResult(RETURN_CODE_SUCCESS, "验证码发送成功", NULL_ARRAY, request, response);
+				gzipCipherResult(RETURN_CODE_SUCCESS, "验证码发送成功", NULL_OBJECT, request, response);
 			} else {
-				gzipCipherResult(RETURN_CODE_EXCEPTION, "验证码发送失败", NULL_ARRAY, request, response);
+				gzipCipherResult(RETURN_CODE_EXCEPTION, "验证码发送失败", NULL_OBJECT, request, response);
 			}
 		} catch(Exception e) {
 			logger.info(e.getMessage(), e);
-			gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, NULL_ARRAY, request, response);
+			gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, NULL_OBJECT, request, response);
 		}
 	}
 	

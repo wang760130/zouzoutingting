@@ -37,7 +37,7 @@ public class JuheSmsApi {
 			JSONObject json = JSON.parseObject(httpResult);
 			if(json != null) {
 				Integer errorCode = json.getInteger("error_code");
-				if(errorCode == 1) {
+				if(errorCode == 0) {
 					result =  true;
 				}
 			}
