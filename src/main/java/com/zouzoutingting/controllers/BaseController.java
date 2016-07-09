@@ -79,7 +79,8 @@ public class BaseController {
 		map.put("code", returnCode);
 		map.put("message", returnMessage);
 		map.put("entity", entity == null ? new HashMap<String, String>() : entity);
-		map.put("token", request.getAttribute("token")); // 返回用户登录凭证
+		// 不返回用户凭证
+//		map.put("token", request.getAttribute("token")); // 返回用户登录凭证
 		
         ObjectMapper mapper = new ObjectMapper();  
         String content = null;
