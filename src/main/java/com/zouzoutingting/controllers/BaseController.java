@@ -139,7 +139,6 @@ public class BaseController {
 	                outputStream.flush();
 	            }
 	 		}
-			
 		} catch (Exception e) {
 			logger.info(e.getMessage(), e);
 		} finally {
@@ -200,26 +199,6 @@ public class BaseController {
 				}
 			}
 		}
-		
-		
-		/*
-		ServletOutputStream outputStream = null;
-		try {
-			response.setContentType("image/jpeg");
-			outputStream = response.getOutputStream();
-			outputStream.flush();
-		} catch (IOException e) {
-			logger.info(e.getMessage(), e);
-		} finally {
-			if(outputStream != null) {
-				try {
-					outputStream.close();
-				} catch (IOException e) {
-					logger.info(e.getMessage(), e);
-				}
-			}
-		}*/
-		
 	}
 	
 }

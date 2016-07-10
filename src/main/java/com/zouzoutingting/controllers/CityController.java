@@ -77,12 +77,15 @@ public class CityController extends BaseController {
 				resultMap.put("citys", list);
 				
 				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, resultMap, request, response);
+				return ;
 			} else {
 				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_NULL, NULL_ARRAY, request, response);
+				return ;
 			}
 		} catch (Exception e) {
 			logger.info(e.getMessage(), e);
 			gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, NULL_ARRAY, request, response);
+			return ;
 		}
 	}
 	
@@ -98,12 +101,15 @@ public class CityController extends BaseController {
 			City city = cityService.load(cityid);
 			if(city != null) {
 				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, city, request, response);
+				return ;
 			} else {
 				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_NULL, NULL_OBJECT, request, response);
+				return ;
 			}
 		} catch (Exception e) {
 			logger.info(e.getMessage(), e);
 			gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, NULL_OBJECT, request, response);
+			return ;
 		}
 	}
 	

@@ -69,9 +69,11 @@ public class AppVersionController extends BaseController {
 				appVersion.setForceUpdate(false);
 			}
 			gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, appVersion, request, response);
+			return ;
 		} catch (Exception e) {
 			logger.info(e.getMessage(), e);
 			gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, NULL_ARRAY, request, response);
+			return ;
 		}
 	}
 

@@ -68,12 +68,15 @@ public class ViewSpotController extends BaseController {
         		}
         		
 				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, list, request, response);
+				return ;
 			} else {
 				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_NULL, NULL_ARRAY, request, response);
+				return ;
 			}
         } catch (Exception e) {
         	logger.info(e.getMessage(), e);
 			gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, NULL_ARRAY, request, response);
+			return ;
 		}
     }
 
@@ -120,8 +123,10 @@ public class ViewSpotController extends BaseController {
 			map.put("synopsis", city.getSynopsis());
 			map.put("viewspot", viewSpotList);
 			gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, map, request, response);
+			return ;
 		} catch (Exception e) {
 			gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, NULL_OBJECT, request, response);
+			return ;
 		}
 	}
 	
@@ -144,12 +149,15 @@ public class ViewSpotController extends BaseController {
 	        		viewSpot.setDistance(distance);
 	        	}
 				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, viewSpot, request, response);
+				return ;
 			} else {
 				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_NULL, NULL_OBJECT, request, response);
+				return ;
 			}
         } catch (Exception e) {
         	logger.info(e.getMessage(), e);
 			gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, NULL_OBJECT, request, response);
+			return ;
 		}
     }
     

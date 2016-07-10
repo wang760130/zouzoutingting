@@ -35,9 +35,11 @@ public class FeedbackController extends BaseController {
 			long uid = Long.valueOf(request.getAttribute("uid") + "");
 			feedbackService.add(uid, message);
 			gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, NULL_OBJECT, request, response);
+			return ;
 		} catch (Exception e) {
 			logger.info(e.getMessage(), e);
 			gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, NULL_OBJECT, request, response);
+			return ;
 		}
 			
 	}

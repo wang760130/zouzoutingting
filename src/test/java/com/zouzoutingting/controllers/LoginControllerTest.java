@@ -24,7 +24,7 @@ public class LoginControllerTest {
 	public void loginTest() {
 		String url = Global.HOST_URL + "/login";
 		try {
-			JSONObject result = HttpTestUtils.testUrl(url, "phone=15210740626&vccode=704682");
+			JSONObject result = HttpTestUtils.testUrl(url, "phone=13500000000&vccode=704682");
 			System.out.println(JSON.toJSONString(result, true));
 		} catch (Exception e) {
 			e.printStackTrace();
