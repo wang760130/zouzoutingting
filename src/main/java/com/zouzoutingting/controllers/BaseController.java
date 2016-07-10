@@ -1,10 +1,17 @@
 package com.zouzoutingting.controllers;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -82,6 +89,7 @@ public class BaseController {
 		// 不返回用户凭证
 //		map.put("token", request.getAttribute("token")); // 返回用户登录凭证
 		
+		ServletOutputStream outputStream = null;
         ObjectMapper mapper = new ObjectMapper();  
         String content = null;
         byte[] result = null;
@@ -91,12 +99,127 @@ public class BaseController {
 			result = GZipUtils.compress(content.getBytes(Global.DEFUALT_CHARSET));
 			result = DES.encrypt(result, Global.DESKEY);
 			
+			outputStream = response.getOutputStream();
 			response.setContentType ("application/octet-stream");
-			response.getOutputStream().write(result);
-			response.getOutputStream().flush();
+			outputStream.write(result);
+			outputStream.flush();
 		} catch (Exception e) {
 			logger.info(e.getMessage(), e);
-		}  
+		} finally {
+			if(outputStream != null) {
+				try {
+					outputStream.close();
+				} catch (IOException e) {
+					logger.info(e.getMessage(), e);
+				}
+			}
+		}
+	}
+	
+	public void downloadResult(File file, HttpServletResponse response) {
+		InputStream is = null;
+		ServletOutputStream outputStream = null;
+		try {
+			if(file != null && file.exists()) {
+				outputStream = response.getOutputStream();
+				String filename = URLEncoder.encode(file.getName(), "utf-8");
+				
+				response.reset();
+	            response.setContentType("application/x-msdownload");
+	            response.addHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+	            
+	            long length = file.length();
+	            if(length != 0) {
+	                is = new FileInputStream(file);
+	                byte[] buf = new byte[4096];
+	                int readLength;
+	                while (((readLength = is.read(buf)) != -1)) {
+	                	outputStream.write(buf, 0, readLength);
+	                }
+	                outputStream.flush();
+	            }
+	 		}
+			
+		} catch (Exception e) {
+			logger.info(e.getMessage(), e);
+		} finally {
+			if(is != null) {
+				try {
+					is.close();
+				} catch (IOException e) {
+					logger.info(e.getMessage(), e);
+				}
+			} 
+			
+			if(outputStream != null) {
+				try {
+					outputStream.close();
+				} catch (IOException e) {
+					logger.info(e.getMessage(), e);
+				}
+			}
+			
+		}
+	}
+	
+	public void imgaeResult(File file, HttpServletResponse response) {
+		FileInputStream fis = null;
+		ServletOutputStream outputStream = null;
+		try {
+			
+			if(file != null && file.exists()) {
+				
+				response.reset();
+				response.setContentType("image/jpeg");
+				outputStream = response.getOutputStream();
+				
+				fis = new FileInputStream(file.getName());
+				byte[] buf = new byte[fis.available()];  
+				fis.read(buf);  
+				outputStream.write(buf); 
+				outputStream.flush();
+			}
+		} catch (FileNotFoundException e) {
+			logger.info(e.getMessage(), e);
+		} catch (IOException e) {
+			logger.info(e.getMessage(), e);
+		} finally {
+			if(outputStream != null) {
+				try {
+					outputStream.close();
+				} catch (IOException e) {
+					logger.info(e.getMessage(), e);
+				}
+			}	
+			
+			if(fis != null) {
+				try {
+					fis.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		
+		/*
+		ServletOutputStream outputStream = null;
+		try {
+			response.setContentType("image/jpeg");
+			outputStream = response.getOutputStream();
+			outputStream.flush();
+		} catch (IOException e) {
+			logger.info(e.getMessage(), e);
+		} finally {
+			if(outputStream != null) {
+				try {
+					outputStream.close();
+				} catch (IOException e) {
+					logger.info(e.getMessage(), e);
+				}
+			}
+		}*/
+		
 	}
 	
 }
