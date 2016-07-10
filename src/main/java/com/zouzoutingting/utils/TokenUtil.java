@@ -73,17 +73,17 @@ public class TokenUtil {
 	
 	
 	public static void main(String[] args) throws Exception {
-		long uid = 10000L;
+		long uid = 100000L;
 		String token = TokenUtil.generateToken(uid);
 		
 		System.out.println("token = " + token);
-		System.out.println(TokenUtil.getUid(token));
+		/*System.out.println(TokenUtil.getUid(token));
 		System.out.println(TokenUtil.getTs(token));
 		
 		for(int i = 0; i < 100000; i++) {
 			String token2 = TokenUtil.generateToken(i);
 			System.out.println(token2);
-		}
+		}*/
 	}
 	
 }	

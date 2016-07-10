@@ -36,6 +36,11 @@ public class UserServiceImpl implements IUserService {
 		}
 		return user;
 	}
+	
+	@Override
+	public User getUserById(long id) {
+		return userDao.load(id);
+	}
 
 	@Override
 	public long createUserByPhone(long phone) {
