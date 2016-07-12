@@ -26,7 +26,7 @@ public class ViewSpotServiceImpl implements IViewSpotService {
         List<ViewSpot> resultList = null;
         if(cityID > 0) {
             Page page = new Page();
-            page.setCondition("cityid = " + cityID);
+            page.setCondition("cityid = " + cityID + " and state = 1");
             page.setPageNo(1);
             page.setPageSize(100);
 
