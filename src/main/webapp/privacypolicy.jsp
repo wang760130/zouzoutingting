@@ -1,3 +1,5 @@
+<%@ page language="java" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8"%>
 <!DOCTYPE html>
 <html lang="zh-CH">
 <head>
@@ -7,8 +9,6 @@
 	<meta name="format-detection" content="telephone=no,email=no,adress=no" />
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
-	<meta name="description" content="走走听听" />
-	<meta name="keywords" content="走走听听" />
 	<style type="text/css">
 	body{
 		padding: 10px;
@@ -26,10 +26,10 @@
 		<p class="MsoNormal">
 		走走听听旅行尊重并保护所有使用服务用户的个人隐私权。为了给您提供更准确、更有个性化的服务，走走听听旅行会按照本隐私权政策的规定使用和披露您的个人信息。但走走听听旅行将以高度的勤勉、审慎义务对待这些信息。除本隐私权政策另有规定外，在未征得您事先许可的情况下，走走听听旅行不会将这些信息对外披露或向第三方提供。走走听听旅行会不时更新本隐私权政策。 您在同意走走听听旅行服务使用协议之时，即视为您已经同意本隐私权政策全部内容。本隐私权政策属于走走听听旅行服务使用协议不可分割的一部分。 
 		</p>
-		<p class="MsoNormal" style="text-indent:24.0pt;">
+		<p class="MsoNormal">
 		1. 适用范围 
 		</p>
-		<p class="MsoNormal" >
+		<p class="MsoNormal">
 		a) 在您注册走走听听旅行帐号时，您根据走走听听旅行要求提供的个人注册信息；
 		</p>
 		<p class="MsoNormal">
@@ -50,7 +50,7 @@
 		<p class="MsoNormal">
 		c) 违反法律规定或违反走走听听旅行规则行为及走走听听旅行已对您采取的措施。 
 		</p>
-		<p class="MsoNormal" style="text-indent:24.0pt;">
+		<p class="MsoNormal">
 		2. 信息使用 
 		</p>
 		<p class="MsoNormal">
@@ -62,7 +62,7 @@
 		<p class="MsoNormal">
 		c) 为服务用户的目的，走走听听旅行可能通过使用您的个人信息，向您提供您感兴趣的信息，包括但不限于向您发出产品和服务信息，或者与走走听听旅行合作伙伴共享信息以便他们向您发送有关其产品和服务的信息（后者需要您的事先同意）。 
 		</p>
-		<p class="MsoNormal" style="text-indent:24.0pt;">
+		<p class="MsoNormal">
 		3. 信息披露 
 		</p>
 		<p class="MsoNormal">
@@ -89,13 +89,12 @@
 		<p class="MsoNormal">
 		g) 其它走走听听旅行根据法律、法规或者网站政策认为合适的披露。  
 		</p>
-		<p class="MsoNormal" style="text-indent:24.0pt;">
+		<p class="MsoNormal">
 		4. 信息存储和交换  
 		</p>
 		<p class="MsoNormal">
 		走走听听旅行收集的有关您的信息和资料将保存在走走听听旅行及（或）其关联公司的服务器上，这些信息和资料可能传送至您所在国家、地区或走走听听旅行收集信息和资料所在地的境外并在境外被访问、存储和展示。 
-		</p>
-		<p class="MsoNormal" style="text-indent:24.0pt;">
+		<p class="MsoNormal">
 		5. Cookie的使用 
 		</p>
 		<p class="MsoNormal">
@@ -104,7 +103,7 @@
 		<p class="MsoNormal">
 		c) 通过走走听听旅行所设cookies所取得的有关信息，将适用本政策。  
 		</p>
-		<p class="MsoNormal" style="text-indent:24.0pt;">
+		<p class="MsoNormal">
 		6. 信息安全  
 		</p>
 		<p class="MsoNormal">

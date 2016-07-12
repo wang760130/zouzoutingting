@@ -19,7 +19,7 @@ public class PrivacypolicyController extends BaseController {
 	
 	@RequestMapping(value = "/privacypolicy", method = RequestMethod.GET)
 	public ModelAndView privacypolicy(ModelAndView model, HttpServletRequest request, HttpServletResponse response) {
-		model.setViewName("forward:privacypolicy.html");
+		model.setViewName("forward:privacypolicy.jsp");
 		return model;
 	}
 }
