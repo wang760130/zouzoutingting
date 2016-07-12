@@ -41,7 +41,7 @@ public class ViewSpotController extends BaseController {
      */
     @RequestMapping(value = "/viewspots", method = RequestMethod.POST)
     public void viewspots(HttpServletRequest request, HttpServletResponse response) {
-        int cityid = RequestParamUtil.getIntegerParam(request, "cityid", -1);
+        int cityid = RequestParamUtil.getIntegerParam(request, "cityid", 1);
         final double lon = RequestParamUtil.getDoubleParam(request, "lon", 0.0d);
         final double lat = RequestParamUtil.getDoubleParam(request, "lat", 0.0d);
 		
@@ -88,7 +88,7 @@ public class ViewSpotController extends BaseController {
 	 */
 	@RequestMapping(value = "/cityspot", method = RequestMethod.POST)
 	public void citySpot(HttpServletRequest request, HttpServletResponse response) {
-		int cityid = RequestParamUtil.getIntegerParam(request, "id", 1);
+		int cityid = RequestParamUtil.getIntegerParam(request, "cityid", 1);
 		final double lon = RequestParamUtil.getDoubleParam(request, "lon", 0.0d);
         final double lat = RequestParamUtil.getDoubleParam(request, "lat", 0.0d);
         
