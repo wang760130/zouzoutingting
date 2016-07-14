@@ -24,6 +24,7 @@
 	</head>
   
 	<body>
- 		请点击在浏览器中打开
+		<h1 align="center" style="margin-top:100px; ">点击右上角“<font color="#008B8B" id="f1">...</font>”</h1>
+		<h1 align="center">在“<font color="#008B8B" id="f2">浏览器中</font>”打开下载吧</h1>
  	</body>
 </html>
