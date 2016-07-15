@@ -57,6 +57,9 @@ public class OfflinePackage {
 	// 袁家村
 	private static final long YJC_VIEW_SPOT_ID = 20L;
 	
+	// 大雁塔
+	private static final long DYT_VIEW_SPOT_ID = 22L;
+	
 	private static final int EXPLAIN = 0;
 	private static final int TOILET = 1;
 	private static final int POINT = 2;
@@ -220,7 +223,7 @@ public class OfflinePackage {
 	
 	@Test
 	public void generate() {
-		this.generate(YJC_VIEW_SPOT_ID);
+		this.generate(DYT_VIEW_SPOT_ID);
 	}
 	
 }
