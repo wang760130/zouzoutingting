@@ -54,9 +54,13 @@ public class OfflinePackage {
 	// 华清池 景点ID
 	private static final long HQC_VIEW_SPOT_ID = 13L;
 	
+	// 袁家村
+	private static final long YJC_VIEW_SPOT_ID = 20L;
+	
 	private static final int EXPLAIN = 0;
 	private static final int TOILET = 1;
 	private static final int POINT = 2;
+	private static final int LINE = 3;		// 路线
 	
 	private String md5Url(String url) {
 		String prefix = url.substring(url.lastIndexOf(".") + 1);
@@ -130,6 +134,8 @@ public class OfflinePackage {
         	List<Map<String, Object>> toiletList = new ArrayList<Map<String, Object>>();
         	// 拐点
         	List<Map<String, Object>> pointList = new ArrayList<Map<String, Object>>();
+        	// 路线
+        	List<Map<String, Object>> lineList = new ArrayList<Map<String, Object>>();
         	
         	Map<String, Object> map = null;
 	        for(Spot spot : spotList) {
@@ -169,12 +175,20 @@ public class OfflinePackage {
 	        		map.put("longitude", spot.getLongitude());
 	        		map.put("latitude", spot.getLatitude());
 	        		pointList.add(map);
-	        	} 
+	        	} else if(spot.getType() == LINE) {
+	        		map.put("id", spot.getId());
+	        		map.put("vid",vid);
+	        		map.put("sequence", spot.getSequence());
+	        		map.put("longitude", spot.getLongitude());
+	        		map.put("latitude", spot.getLatitude());
+	        		lineList.add(map);
+	        	}
 	        }
      		
 	        spotMap.put("explain", explainList);
     		spotMap.put("toilet", toiletList);
     		spotMap.put("point", pointList);
+    		spotMap.put("line", lineList);
     		
     		viewSoptMap.put("spot", spotMap);
     		
@@ -206,7 +220,7 @@ public class OfflinePackage {
 	
 	@Test
 	public void generate() {
-		this.generate(HQC_VIEW_SPOT_ID);
+		this.generate(YJC_VIEW_SPOT_ID);
 	}
 	
 }
