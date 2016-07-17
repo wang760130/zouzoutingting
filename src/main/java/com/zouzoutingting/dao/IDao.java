@@ -15,6 +15,8 @@ public interface IDao<T> {
 	
 	public List<T> page(Page page);
 	
+	public List<T> list(String condition, String orderName);
+	
 	public int count(String condition);
 	
 	public long save(T t);

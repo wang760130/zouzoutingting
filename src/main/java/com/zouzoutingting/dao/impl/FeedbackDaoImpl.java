@@ -66,6 +66,29 @@ public class FeedbackDaoImpl implements IDao<Feedback>{
 		return query.list();
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Feedback> list(String condition, String orderName) {
+		Session session = sessionFactory.getCurrentSession();
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("select * from t_feedback");
+		
+		if(condition != null && !condition.equalsIgnoreCase("")) {
+			sb.append(" where ");
+			sb.append(condition);
+		}
+		
+		if (orderName != null && !orderName.equalsIgnoreCase("")) {
+			sb.append(" order by ");
+			sb.append(orderName);
+		}
+		
+		SQLQuery query = session.createSQLQuery(sb.toString());
+		query.addEntity(Feedback.class);
+		return query.list();
+	}
+	
 	@Override
 	public int count(String condition) {
 		

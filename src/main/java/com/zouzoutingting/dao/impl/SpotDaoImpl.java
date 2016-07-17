@@ -1,8 +1,6 @@
 package com.zouzoutingting.dao.impl;
 
-import com.zouzoutingting.dao.IDao;
-import com.zouzoutingting.model.Spot;
-import com.zouzoutingting.utils.Page;
+import java.util.List;
 
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
@@ -11,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import com.zouzoutingting.dao.IDao;
+import com.zouzoutingting.model.Spot;
+import com.zouzoutingting.utils.Page;
 
 /**
  * Created by zhangyong on 16/4/8.
@@ -61,7 +61,30 @@ public class SpotDaoImpl implements IDao<Spot> {
         query.addEntity(Spot.class);
         return query.list();
     }
-
+    
+    @SuppressWarnings("unchecked")
+	@Override
+	public List<Spot> list(String condition, String orderName) {
+		Session session = sessionFactory.getCurrentSession();
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("select * from t_spot");
+		
+		if(condition != null && !condition.equalsIgnoreCase("")) {
+			sb.append(" where ");
+			sb.append(condition);
+		}
+		
+		if (orderName != null && !orderName.equalsIgnoreCase("")) {
+			sb.append(" order by ");
+			sb.append(orderName);
+		}
+		
+		SQLQuery query = session.createSQLQuery(sb.toString());
+		query.addEntity(Spot.class);
+		return query.list();
+	}
+    
     @Override
     public int count(String condition) {
         Session session = sessionFactory.getCurrentSession();

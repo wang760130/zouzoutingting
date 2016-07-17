@@ -34,6 +34,7 @@ public class VcCodeDaoImpl implements IDao<VcCode> {
 		return (VcCode) sessionFactory.getCurrentSession().get(VcCode.class, id);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<VcCode> page(Page page) {
 		Session session = sessionFactory.getCurrentSession();
@@ -63,6 +64,29 @@ public class VcCodeDaoImpl implements IDao<VcCode> {
 		return query.list();
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<VcCode> list(String condition, String orderName) {
+		Session session = sessionFactory.getCurrentSession();
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("select * from t_vccode");
+		
+		if(condition != null && !condition.equalsIgnoreCase("")) {
+			sb.append(" where ");
+			sb.append(condition);
+		}
+		
+		if (orderName != null && !orderName.equalsIgnoreCase("")) {
+			sb.append(" order by ");
+			sb.append(orderName);
+		}
+		
+		SQLQuery query = session.createSQLQuery(sb.toString());
+		query.addEntity(VcCode.class);
+		return query.list();
+	}
+	
 	@Override
 	public int count(String condition) {
 		Session session = sessionFactory.getCurrentSession();
