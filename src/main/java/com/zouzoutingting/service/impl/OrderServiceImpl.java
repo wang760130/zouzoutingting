@@ -1,9 +1,11 @@
 package com.zouzoutingting.service.impl;
 
 import com.zouzoutingting.dao.IDao;
+import com.zouzoutingting.enums.OrderStateEnum;
 import com.zouzoutingting.model.Order;
 import com.zouzoutingting.service.IOrderService;
 import com.zouzoutingting.utils.Page;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,8 @@ import java.util.List;
  */
 @Service("orderService")
 public class OrderServiceImpl implements IOrderService{
+    private static final Logger logger = Logger.getLogger(OrderServiceImpl.class);
+
     @Autowired
     private IDao<Order> orderDao;
 
@@ -34,7 +38,11 @@ public class OrderServiceImpl implements IOrderService{
 
     @Override
     public Order getOrderByID(long oid) {
-        return orderDao.load(oid);
+        Order order = null;
+        if(oid>0){
+            order = orderDao.load(oid);
+        }
+        return order;
     }
 
     @Override
@@ -42,5 +50,24 @@ public class OrderServiceImpl implements IOrderService{
         long oid = orderDao.save(order);
         order.setOrderid(oid);
         return order;
+    }
+
+    @Override
+    public boolean CounponPay(Order order) {
+        boolean retResult = false;
+        if(order!=null && order.getState() == OrderStateEnum.Jinx.getState()){
+            order.setState(OrderStateEnum.Finish.getState());
+            orderDao.save(order);
+            logger.info("couon pay update order jinxing-->finish oid:"+order.getOrderid());
+            retResult = true;
+        }else{
+            if(order==null){
+                logger.error("coupon pay error order is null");
+            }else {
+                logger.error("coupon pay error order state is wrong oid:"+order.getOrderid()+", state:"+ order.getState
+                        ());
+            }
+        }
+        return retResult;
     }
 }

@@ -122,6 +122,84 @@ public class PayController extends BaseController {
         order.setVid(vid);
         return orderService.insertOrder(order);
     }
+
+    /**
+     * 验证码支付
+     * @param request 请求
+     * @param response 回执
+     */
+    @RequestMapping(value = "/pay/couponpay", method = RequestMethod.POST)
+    public void couponPay(HttpServletRequest request, HttpServletResponse response){
+        Long uid = RequestParamUtil.getLongParam(request, "uid", -1L);
+        Long vid = RequestParamUtil.getLongParam(request, "vid", -1L);
+        Long orderid = RequestParamUtil.getLongParam(request, "orderid", -1L);
+
+        if(uid>0 && vid>0 && orderid>0) {
+            //1.获取order
+            Order order = null;
+            order = orderService.getOrderByID(orderid);
+            if(order!=null){
+                if(order.getState() == OrderStateEnum.Finish.getState()){
+                    gzipCipherResult(1, "您已经购买了当前景点", NULL_OBJECT, request, response);
+                }else{
+                    String couponCode = order.getCode();
+                    if(couponCode!=null) {
+                        //2.获取券详情
+                        Coupon coupon = couponService.getCouponByCode(couponCode);
+                        if (coupon == null) {
+                            logger.error("无效couponcode " + couponCode + " oid:" + orderid + ", vid:" + vid + " ,uid:" + uid);
+                        } else {
+                            if (coupon.getState() != CouponStateEnum.Available.getState() || order.getTotal() > coupon
+                                    .getAmount()) {//券支付是否ok
+                                logger.error("券金额不够 couponcode:" + couponCode + " couponMoney:" + coupon.getAmount() + "," +
+                                        "orderTotal:" + order.getTotal() +
+                                        " " +
+                                        "oid:" + orderid
+                                        + ", " +
+                                        "vid:" + vid + " ," +
+                                        "uid:" + uid);
+                                gzipCipherResult(RETURN_CODE_PARAMETER_ERROR, RETUEN_MESSAGE_PARAMETER_ERROR, NULL_OBJECT, request, response);
+                            }else{
+                                //3.更新订单状态+coupon状态
+                                boolean isused = couponService.useCounpon(coupon);
+                                if(isused){
+                                    boolean ispayed = orderService.CounponPay(order);
+                                    if(!ispayed){
+                                        logger.info("order pay state not updated rollback coupon oid:" + orderid + "," +
+                                                " vid:" + vid + " ,uid:" + uid +" counid:"+coupon.getCouponid()+", " +
+                                                "couponCode:"+couponCode);
+                                        boolean rollbackRet = couponService.rollBackCouponPay(coupon);
+                                        logger.info("rollback result "+rollbackRet + "oid:" + orderid + ", vid:" +
+                                                vid + " ,uid:" + uid+" counid:"+coupon.getCouponid()+", " +
+                                                "couponCode:"+couponCode);
+                                        //
+                                        gzipCipherResult(RETURN_CODE_PARAMETER_ERROR, "支付失败,订单状态异常", NULL_OBJECT,
+                                                request,
+                                                response);
+                                    }else{
+                                        logger.info("券支付成功 oid:" + orderid + ", vid:" +
+                                        vid + " ,uid:" + uid+" counid:"+coupon.getCouponid()+", " +
+                                                "couponCode:"+couponCode);
+                                        gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, coupon.getAmount(), request,
+                                                response);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }else{//无订单
+                logger.error("orderid 无订单 oid:"+orderid +", vid:"+vid+" ,uid:"+uid);
+                gzipCipherResult(RETURN_CODE_PARAMETER_ERROR, RETUEN_MESSAGE_PARAMETER_ERROR, NULL_OBJECT, request, response);
+            }
+        }else{
+            logger.error("券支付参数错误 oid:"+orderid +", vid:"+vid+" ,uid:"+uid);
+            gzipCipherResult(RETURN_CODE_PARAMETER_ERROR, RETUEN_MESSAGE_PARAMETER_ERROR, NULL_OBJECT, request, response);
+        }
+
+    }
+
     @RequestMapping(value = "/pay/wxprepay", method = RequestMethod.POST)
     public void wxPrePay(HttpServletRequest request, HttpServletResponse response){
         Long uid = RequestParamUtil.getLongParam(request, "uid", -1L);

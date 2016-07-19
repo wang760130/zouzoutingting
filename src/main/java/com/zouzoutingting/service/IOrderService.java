@@ -13,4 +13,11 @@ public interface IOrderService {
     public Order getOrderByID(long oid);
 
     public Order insertOrder(Order order);
+
+    /**
+     * 券支付时状态更新
+     * @param order order实体
+     * @return 成功与否
+     */
+    public boolean CounponPay(Order order);
 }

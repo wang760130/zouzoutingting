@@ -8,4 +8,18 @@ import com.zouzoutingting.model.Coupon;
  */
 public interface ICouponService {
     public Coupon getCouponByCode(String code);
+
+    /**
+     * 券支付 使用该券
+     * @param coupon 券实体
+     * @return
+     */
+    public boolean useCounpon(Coupon coupon);
+
+    /**
+     * 回滚券支付
+     * @param coupon 券支付后实体
+     * @return
+     */
+    public boolean rollBackCouponPay(Coupon coupon);
 }
