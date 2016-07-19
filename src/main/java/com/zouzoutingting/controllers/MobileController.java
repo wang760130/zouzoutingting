@@ -18,7 +18,7 @@ import com.zouzoutingting.utils.ExplorerUtil;
 @Controller
 public class MobileController extends BaseController {
 	private static final String WEXIN_URL = "mobile.jsp";
-	private static final String ANDROID_URL = "http://oss.imonl.com/android/beta4.apk";
+	private static final String ANDROID_URL = "http://oss.imonl.com/android/zztt.apk";
 	private static final String IOS_URL = "https://itunes.apple.com/app/id1132634339";
 	private static final String QRCODE_URL = "http://www.imonl.com/qrcode";
 	

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.zouzoutingting.dao.IDao;
 import com.zouzoutingting.model.ViewSpot;
 import com.zouzoutingting.service.IViewSpotService;
-import com.zouzoutingting.utils.Page;
 
 /**
  * Created by zhangyong on 16/4/7.
@@ -25,12 +24,8 @@ public class ViewSpotServiceImpl implements IViewSpotService {
         List<ViewSpot> list = null;
         List<ViewSpot> resultList = null;
         if(cityID > 0) {
-            Page page = new Page();
-            page.setCondition("cityid = " + cityID + " and state = 1");
-            page.setPageNo(1);
-            page.setPageSize(100);
-
-            list = viewSpotDao.page(page);
+            String condition = "cityid = " + cityID + " and state = 1";
+            list = viewSpotDao.list(condition, null);
         }
         
         if(list != null && list.size() > 0) {

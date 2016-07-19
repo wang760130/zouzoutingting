@@ -7,11 +7,11 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.zouzoutingting.dao.IDao;
 import com.zouzoutingting.model.City;
 import com.zouzoutingting.utils.Page;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Jerry Wang
@@ -62,6 +62,29 @@ public class CityDaoImpl implements IDao<City> {
 		sb.append(offset);
 		sb.append(",");
 		sb.append(page.getPageSize());
+		
+		SQLQuery query = session.createSQLQuery(sb.toString());
+		query.addEntity(City.class);
+		return query.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<City> list(String condition, String orderName) {
+		Session session = sessionFactory.getCurrentSession();
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("select * from t_city");
+		
+		if(condition != null && !condition.equalsIgnoreCase("")) {
+			sb.append(" where ");
+			sb.append(condition);
+		}
+		
+		if (orderName != null && !orderName.equalsIgnoreCase("")) {
+			sb.append(" order by ");
+			sb.append(orderName);
+		}
 		
 		SQLQuery query = session.createSQLQuery(sb.toString());
 		query.addEntity(City.class);

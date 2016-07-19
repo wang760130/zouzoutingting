@@ -65,6 +65,29 @@ public class UserDaoImpl implements IDao<User> {
 		return query.list();
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<User> list(String condition, String orderName) {
+		Session session = sessionFactory.getCurrentSession();
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("select * from t_user");
+		
+		if(condition != null && !condition.equalsIgnoreCase("")) {
+			sb.append(" where ");
+			sb.append(condition);
+		}
+		
+		if (orderName != null && !orderName.equalsIgnoreCase("")) {
+			sb.append(" order by ");
+			sb.append(orderName);
+		}
+		
+		SQLQuery query = session.createSQLQuery(sb.toString());
+		query.addEntity(User.class);
+		return query.list();
+	}
+	
 	@Override
 	public int count(String condition) {
 		Session session = sessionFactory.getCurrentSession();

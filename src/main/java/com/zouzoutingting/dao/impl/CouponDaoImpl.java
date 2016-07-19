@@ -4,6 +4,7 @@ import com.zouzoutingting.dao.IDao;
 import com.zouzoutingting.model.City;
 import com.zouzoutingting.model.Coupon;
 import com.zouzoutingting.utils.Page;
+
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -31,7 +32,8 @@ public class CouponDaoImpl implements IDao<Coupon> {
         return (Coupon) sessionFactory.getCurrentSession().get(Coupon.class, id);
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public List<Coupon> page(Page page) {
         Session session = sessionFactory.getCurrentSession();
 
@@ -60,6 +62,29 @@ public class CouponDaoImpl implements IDao<Coupon> {
         return query.list();
     }
 
+    @SuppressWarnings("unchecked")
+	@Override
+	public List<Coupon> list(String condition, String orderName) {
+		Session session = sessionFactory.getCurrentSession();
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("select * from t_coupon");
+		
+		if(condition != null && !condition.equalsIgnoreCase("")) {
+			sb.append(" where ");
+			sb.append(condition);
+		}
+		
+		if (orderName != null && !orderName.equalsIgnoreCase("")) {
+			sb.append(" order by ");
+			sb.append(orderName);
+		}
+		
+		SQLQuery query = session.createSQLQuery(sb.toString());
+		query.addEntity(Coupon.class);
+		return query.list();
+	}
+    
     @Override
     public int count(String condition) {
         Session session = sessionFactory.getCurrentSession();

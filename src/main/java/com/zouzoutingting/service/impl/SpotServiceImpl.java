@@ -1,13 +1,13 @@
 package com.zouzoutingting.service.impl;
 
-import com.zouzoutingting.dao.IDao;
-import com.zouzoutingting.model.Spot;
-import com.zouzoutingting.service.ISpotService;
-import com.zouzoutingting.utils.Page;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.zouzoutingting.dao.IDao;
+import com.zouzoutingting.model.Spot;
+import com.zouzoutingting.service.ISpotService;
 
 /**
  * Created by zhangyong on 16/4/8.
@@ -21,14 +21,10 @@ public class SpotServiceImpl implements ISpotService {
     @Override
     public List<Spot> loadByViewIDAndType(long vid, int type) {
         List<Spot> list = null;
-        if(vid>0L && type >=0) {
-            Page page = new Page();
-            page.setCondition("vid = " + vid + " and type=" + type +" and state = 1");
-            page.setPageNo(1);
-            page.setPageSize(100);
-            page.setOrderName("sequence asc");
-
-            list = spotDao.page(page);
+        if(vid > 0L && type >= 0) {
+        	String condition = "vid = " + vid + " and type=" + type +" and state = 1";
+        	String orderName = "sequence asc";
+            list = spotDao.list(condition, orderName);
         }
         return list;
     }
@@ -37,13 +33,9 @@ public class SpotServiceImpl implements ISpotService {
 	public List<Spot> loadByViewID(long vid) {
 		List<Spot> list = null;
 		if (vid > 0L) {
-			Page page = new Page();
-			page.setCondition("vid = " + vid + " and state = 1");
-			page.setPageNo(1);
-			page.setPageSize(100);
-			page.setOrderName("sequence asc");
-
-			list = spotDao.page(page);
+			String condition = "vid = " + vid + " and state = 1";
+			String orderName = "sequence asc";
+			list = spotDao.list(condition, orderName);
 		}
 		return list;
 	}

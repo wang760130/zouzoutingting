@@ -30,7 +30,6 @@ public class AppVersionDaoImpl implements IDao<AppVersion>{
 		this.sessionFactory = sessionFactory;
 	}
 	
-	
 	@Override
 	public AppVersion load(long id) {
 		return (AppVersion) sessionFactory.getCurrentSession().get(AppVersion.class, id);
@@ -39,7 +38,6 @@ public class AppVersionDaoImpl implements IDao<AppVersion>{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<AppVersion> page(Page page) {
-		
 		Session session = sessionFactory.getCurrentSession();
 		
 		StringBuffer sb = new StringBuffer();
@@ -61,6 +59,29 @@ public class AppVersionDaoImpl implements IDao<AppVersion>{
 		sb.append(offset);
 		sb.append(",");
 		sb.append(page.getPageSize());
+		
+		SQLQuery query = session.createSQLQuery(sb.toString());
+		query.addEntity(AppVersion.class);
+		return query.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<AppVersion> list(String condition, String orderName) {
+		Session session = sessionFactory.getCurrentSession();
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("select * from t_appversion");
+		
+		if(condition != null && !condition.equalsIgnoreCase("")) {
+			sb.append(" where ");
+			sb.append(condition);
+		}
+		
+		if (orderName != null && !orderName.equalsIgnoreCase("")) {
+			sb.append(" order by ");
+			sb.append(orderName);
+		}
 		
 		SQLQuery query = session.createSQLQuery(sb.toString());
 		query.addEntity(AppVersion.class);

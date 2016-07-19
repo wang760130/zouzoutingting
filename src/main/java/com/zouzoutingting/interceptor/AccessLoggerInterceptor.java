@@ -11,6 +11,8 @@ import org.apache.log4j.Logger;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.zouzoutingting.common.Global;
 import com.zouzoutingting.utils.IpUtil;
 import com.zouzoutingting.utils.RequestParamUtil;
@@ -127,7 +129,14 @@ public class AccessLoggerInterceptor implements HandlerInterceptor {
 				sb.append("requestid=").append(requestId).append(",");
 				sb.append("executeTime=").append(executeTime).append("ms");
 				if(content != null && !"".equals(content)) {
-					sb.append(",result=").append(content);
+					// 日志打印太多了
+//					sb.append(",result=").append(content);
+					
+					JSONObject json = JSON.parseObject(content);  
+					String code = json.getString("code");
+					String message = json.getString("message");
+					sb.append(",code=").append(code);
+					sb.append(",message=").append(message);
 				}
 				logger.info(sb.toString());
 			}

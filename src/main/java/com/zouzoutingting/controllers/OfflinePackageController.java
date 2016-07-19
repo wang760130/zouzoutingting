@@ -1,4 +1,4 @@
-package com.zouzoutingting.test;
+package com.zouzoutingting.controllers;
 
 import java.beans.IntrospectionException;
 import java.io.BufferedWriter;
@@ -10,15 +10,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.ZipFile;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,41 +29,44 @@ import com.zouzoutingting.service.IViewSpotService;
 import com.zouzoutingting.utils.BeanToMapUtil;
 import com.zouzoutingting.utils.HttpUtil;
 import com.zouzoutingting.utils.MD5;
+import com.zouzoutingting.utils.ParamUtil;
+import com.zouzoutingting.utils.RequestParamUtil;
 import com.zouzoutingting.utils.ZipUtil;
 
 /**
- * 景点离线包生成
  * @author Jerry Wang
  * @Email  jerry002@126.com
- * @date   2016年6月10日
+ * @date   2016年7月15日
  */
-
-@RunWith(SpringJUnit4ClassRunner.class)  
-@ContextConfiguration(locations = {"classpath:applicationContext.xml"}) 
-public class OfflinePackage {
+@Controller
+public class OfflinePackageController extends BaseController {
 	
 	@Autowired
     private ISpotService spotService;
 	
 	@Autowired
 	private IViewSpotService viewSpotService;
-	 
-	// 大唐芙蓉园 景点ID
-	private static final long DTFRY_VIEW_SPOT_ID = 12L;
-	
-	// 华清池 景点ID
-	private static final long HQC_VIEW_SPOT_ID = 13L;
-	
-	// 袁家村
-	private static final long YJC_VIEW_SPOT_ID = 20L;
-	
-	// 大雁塔
-	private static final long DYT_VIEW_SPOT_ID = 22L;
 	
 	private static final int EXPLAIN = 0;
 	private static final int TOILET = 1;
 	private static final int POINT = 2;
-	private static final int LINE = 3;		// 路线
+	private static final int LINE = 3;		
+	
+	@RequestMapping(value = "/offlinePackage", method = RequestMethod.GET)
+	public void offlinePackage(HttpServletRequest request, HttpServletResponse response) {
+		long vid = ParamUtil.getLong(request, "vid", -1L);
+		String zipFile = this.generate(vid);
+		logger.info("zipFile = " + zipFile);
+		File file = new File(zipFile);
+		logger.info(file.getAbsolutePath());
+		try {
+			this.downloadResult(file, response);
+		} finally {
+			if(file.exists()) {
+				file.delete();
+			}
+		}
+	}
 	
 	private String md5Url(String url) {
 		String prefix = url.substring(url.lastIndexOf(".") + 1);
@@ -221,11 +224,5 @@ public class OfflinePackage {
 		}
      	return zipPath + File.separator + fileName + ".zip";
 	}
-	
-	@Test
-	public void generate() {
-		String zipPath = this.generate(DYT_VIEW_SPOT_ID);
-		System.out.println(zipPath);
-	}
-	
+
 }
