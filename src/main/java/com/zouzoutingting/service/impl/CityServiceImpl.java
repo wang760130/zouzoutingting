@@ -30,7 +30,7 @@ public class CityServiceImpl implements ICityService {
 	@Override
 	public City getCityByCode(int cityCode) {
 		City city = null;
-		String conddition = "cityCode = " + cityCode;
+		String conddition = "cityCode = " + cityCode + " and state = 1";
 		Page page = new Page();
 		page.setCondition(conddition);
 		page.setPageNo(1);
