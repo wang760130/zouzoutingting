@@ -121,7 +121,11 @@ public class ViewSpotController extends BaseController {
 			map.put("ename",city.getEname());
 			map.put("pic", city.getPic());
 			map.put("synopsis", city.getSynopsis());
-			map.put("viewspot", viewSpotList);
+			if(viewSpotList != null && viewSpotList.size() > 0) {
+				map.put("viewspot", viewSpotList);
+			} else {
+				map.put("viewspot", NULL_ARRAY);
+			}
 			gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, map, request, response);
 			return ;
 		} catch (Exception e) {
