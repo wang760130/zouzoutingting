@@ -16,7 +16,9 @@ public class Global {
 	
 	public static final String DEFUALT_CHARSET = "utf-8";
 	
-	public final static String HOST_URL = "http://api.imonl.com";
+	public static final String HOST_URL = "http://api.imonl.com";
+	
+	public static final String TEST_HOST_URL = "http://api.test.imonl.com";
 
 	public static final String WX_Trade_Type = "APP";//后续扩展,目前写死
 
