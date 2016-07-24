@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zouzoutingting.enums.SpotEnum;
 import com.zouzoutingting.model.Spot;
 import com.zouzoutingting.model.ViewSpot;
 import com.zouzoutingting.service.ISpotService;
@@ -30,7 +31,6 @@ import com.zouzoutingting.utils.BeanToMapUtil;
 import com.zouzoutingting.utils.HttpUtil;
 import com.zouzoutingting.utils.MD5;
 import com.zouzoutingting.utils.ParamUtil;
-import com.zouzoutingting.utils.RequestParamUtil;
 import com.zouzoutingting.utils.ZipUtil;
 
 /**
@@ -47,18 +47,11 @@ public class OfflinePackageController extends BaseController {
 	@Autowired
 	private IViewSpotService viewSpotService;
 	
-	private static final int EXPLAIN = 0;
-	private static final int TOILET = 1;
-	private static final int POINT = 2;
-	private static final int LINE = 3;		
-	
 	@RequestMapping(value = "/offlinePackage", method = RequestMethod.GET)
 	public void offlinePackage(HttpServletRequest request, HttpServletResponse response) {
 		long vid = ParamUtil.getLong(request, "vid", -1L);
 		String zipFile = this.generate(vid);
-		logger.info("zipFile = " + zipFile);
 		File file = new File(zipFile);
-		logger.info(file.getAbsolutePath());
 		try {
 			this.downloadResult(file, response);
 		} finally {
@@ -142,11 +135,13 @@ public class OfflinePackageController extends BaseController {
         	List<Map<String, Object>> pointList = new ArrayList<Map<String, Object>>();
         	// 路线
         	List<Map<String, Object>> lineList = new ArrayList<Map<String, Object>>();
+        	// 图片
+        	List<Map<String, Object>> picList = new ArrayList<Map<String, Object>>();
         	
         	Map<String, Object> map = null;
 	        for(Spot spot : spotList) {
 	        	map = new HashMap<String, Object>();
-	        	if(spot.getType() == EXPLAIN) {
+	        	if(spot.getType() == SpotEnum.EXPLAIN.getType()) {
 	        		map.put("id", spot.getId());
 	        		map.put("name", spot.getName());
 	        		map.put("sequence", spot.getSequence());
@@ -170,24 +165,28 @@ public class OfflinePackageController extends BaseController {
 	        		map.put("radius", spot.getRadius());
 	        		map.put("isfree", spot.getIsfree());
 	        		explainList.add(map);
-	        	} else if(spot.getType() == TOILET) {
+	        	} else if(spot.getType() == SpotEnum.TOILET.getType()) {
 	        		map.put("id", spot.getId());
 	        		map.put("longitude", spot.getLongitude());
 	        		map.put("latitude", spot.getLatitude());
 	        		toiletList.add(map);
-	        	} else if(spot.getType() == POINT) {
+	        	} else if(spot.getType() == SpotEnum.POINT.getType()) {
 	        		map.put("id", spot.getId());
 	        		map.put("sequence", spot.getSequence());
 	        		map.put("longitude", spot.getLongitude());
 	        		map.put("latitude", spot.getLatitude());
 	        		pointList.add(map);
-	        	} else if(spot.getType() == LINE) {
+	        	} else if(spot.getType() == SpotEnum.LINE.getType()) {
 	        		map.put("id", spot.getId());
 	        		map.put("vid",vid);
 	        		map.put("sequence", spot.getSequence());
 	        		map.put("longitude", spot.getLongitude());
 	        		map.put("latitude", spot.getLatitude());
 	        		lineList.add(map);
+	        	} else if(spot.getType() == SpotEnum.PICTURE.getType()) {
+	        		map.put("id", spot.getId());
+	        		map.put("vid",vid);
+	        		map.put("pic", spot.getPic());
 	        	}
 	        }
      		
@@ -195,13 +194,13 @@ public class OfflinePackageController extends BaseController {
     		spotMap.put("toilet", toiletList);
     		spotMap.put("point", pointList);
     		spotMap.put("line", lineList);
+    		spotMap.put("pic", picList);
     		
     		viewSoptMap.put("spot", spotMap);
     		
      		ObjectMapper mapper = new ObjectMapper();  
      		String json = mapper.writeValueAsString(viewSoptMap);
      		
-     		System.out.println(json);
      		this.writeToFile(tempPath + fileName + File.separator + "data.json", json);
      		
      		ZipUtil.zip(tempPath + fileName + File.separator, zipPath, fileName + ".zip");

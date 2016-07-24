@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.zouzoutingting.enums.SpotEnum;
 import com.zouzoutingting.model.Spot;
 import com.zouzoutingting.service.ISpotService;
 import com.zouzoutingting.utils.RequestParamUtil;
@@ -27,21 +28,14 @@ public class SpotController extends BaseController{
     @Autowired
     private ISpotService spotService;
     
-    private static final int EXPLAIN = 0; 	// 讲解点
-    private static final int TOILET = 1;	// 厕所
-    private static final int POINT = 2;		// 拐点(推荐路线)
-    private static final int LINE = 3;		// 路线
-    
     /**
-     * 依据vid + type 获取 spot数据列表
+     * 依据vid 获取 spot数据列表
      * @param request http请求servlet
      * @param response http返回servlet
      */
     @RequestMapping(value = "/spots", method = RequestMethod.POST)
     public void spots(HttpServletRequest request, HttpServletResponse response) {
         long vid = RequestParamUtil.getLongParam(request, "vid", -1L);
-        //  类型  0:讲解  1:厕所  2 拐点(推荐路线) 3 路线
-        int type = RequestParamUtil.getIntegerParam(request, "type", -1);
         
         try {
 	        Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -55,11 +49,13 @@ public class SpotController extends BaseController{
         	List<Map<String, Object>> pointList = new ArrayList<Map<String, Object>>();
         	// 路线
         	List<Map<String, Object>> lineList = new ArrayList<Map<String, Object>>();
+        	// 图片
+        	List<Map<String, Object>> picList = new ArrayList<Map<String, Object>>();
         	
         	Map<String, Object> map = null;
 	        for(Spot spot : spotList) {
 	        	map = new HashMap<String, Object>();
-	        	if(spot.getType() == EXPLAIN) {
+	        	if(spot.getType() == SpotEnum.EXPLAIN.getType()) {
 	        		map.put("id", spot.getId());
 	        		map.put("name", spot.getName());
 	        		map.put("vid",vid);
@@ -78,43 +74,38 @@ public class SpotController extends BaseController{
 	        		map.put("radius", spot.getRadius());
 	        		map.put("isfree", spot.getIsfree());
 	        		explainList.add(map);
-	        	} else if(spot.getType() == TOILET) {
+	        	} else if(spot.getType() == SpotEnum.TOILET.getType()) {
 	        		map.put("id", spot.getId());
 	        		map.put("vid",vid);
 	        		map.put("longitude", spot.getLongitude());
 	        		map.put("latitude", spot.getLatitude());
 	        		toiletList.add(map);
-	        	} else if(spot.getType() == POINT) {
+	        	} else if(spot.getType() == SpotEnum.POINT.getType()) {
 	        		map.put("id", spot.getId());
 	        		map.put("vid",vid);
 	        		map.put("sequence", spot.getSequence());
 	        		map.put("longitude", spot.getLongitude());
 	        		map.put("latitude", spot.getLatitude());
 	        		pointList.add(map);
-	        	} else if(spot.getType() == LINE) {
+	        	} else if(spot.getType() == SpotEnum.LINE.getType()) {
 	        		map.put("id", spot.getId());
 	        		map.put("vid",vid);
 	        		map.put("sequence", spot.getSequence());
 	        		map.put("longitude", spot.getLongitude());
 	        		map.put("latitude", spot.getLatitude());
 	        		lineList.add(map);
+	        	} else if(spot.getType() == SpotEnum.PICTURE.getType()) {
+	        		map.put("id", spot.getId());
+	        		map.put("vid",vid);
+	        		map.put("pic", spot.getPic());
 	        	}
 	        }
 	        
-	        if(type == EXPLAIN) {
-	        	resultMap.put("explain", explainList);
-        	} else if(type == TOILET) {
-        		resultMap.put("toilet", toiletList);
-        	} else if(type == POINT) {
-        		resultMap.put("point", pointList);
-        	} else if(type == LINE) {
-        		resultMap.put("line", lineList);
-        	} else {
-        		resultMap.put("explain", explainList);
-        		resultMap.put("toilet", toiletList);
-        		resultMap.put("point", pointList);
-        		resultMap.put("line", lineList);
-        	}
+    		resultMap.put("explain", explainList);
+    		resultMap.put("toilet", toiletList);
+    		resultMap.put("point", pointList);
+    		resultMap.put("line", lineList);
+	        resultMap.put("pic", picList);
 	        
 	        gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, resultMap, request, response);
 	        return ;

@@ -57,9 +57,12 @@ public class ViewSpot {
  
     @Column(name = "price")
     private double price;
-
+    
+    @Column(name = "type")
+    private short type; 	// 景点类型
+    
     @Column(name = "state")
-    private int state;//状态
+    private short state;//状态
     
     @Transient
     private String[] pic;//详情页轮播图片地址数组
@@ -171,11 +174,19 @@ public class ViewSpot {
 		this.price = price;
 	}
 
-	public int getState() {
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
+	}
+
+	public short getState() {
 		return state;
 	}
 
-	public void setState(int state) {
+	public void setState(short state) {
 		this.state = state;
 	}
 

@@ -42,32 +42,15 @@ public class ViewSpotController extends BaseController {
     @RequestMapping(value = "/viewspots", method = RequestMethod.POST)
     public void viewspots(HttpServletRequest request, HttpServletResponse response) {
         int cityid = RequestParamUtil.getIntegerParam(request, "cityid", 1);
-        final double lon = RequestParamUtil.getDoubleParam(request, "lon", 0.0d);
-        final double lat = RequestParamUtil.getDoubleParam(request, "lat", 0.0d);
+        double lon = RequestParamUtil.getDoubleParam(request, "lon", 0.0d);
+        double lat = RequestParamUtil.getDoubleParam(request, "lat", 0.0d);
 		
         try {
-        	List<ViewSpot> list = viewSpotService.getViewSpotByCity(cityid);
-        	if(list != null && list.size() > 0) {
+        	List<ViewSpot> viewSpotList = viewSpotService.getViewSpotByCity(cityid);
+        	if(viewSpotList != null && viewSpotList.size() > 0) {
+        		viewSpotList = this.sortViewSpotList(viewSpotList, lon, lat);
         		
-        		if(lon != 0.0d && lat != 0.0d) {
-        			// 经纬度不为空时，增加距离字段，并且按距离排序
-	        		for(ViewSpot viewSpot : list) {
-	        			double distance = calculateDistance(viewSpot, lon, lat);
-	        			viewSpot.setDistance(distance);
-	        		}
-        			
-        			Collections.sort(list, new Comparator<ViewSpot>() {
-
-						@Override
-						public int compare(ViewSpot viewSpot1, ViewSpot viewSpot2) {
-							double distance1 = viewSpot1.getDistance();
-							double distance2 = viewSpot2.getDistance();
-							return (int)(distance1 - distance2);
-						}
-        			});
-        		}
-        		
-				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, list, request, response);
+				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, viewSpotList, request, response);
 				return ;
 			} else {
 				gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_NULL, NULL_ARRAY, request, response);
@@ -89,33 +72,15 @@ public class ViewSpotController extends BaseController {
 	@RequestMapping(value = "/cityspot", method = RequestMethod.POST)
 	public void citySpot(HttpServletRequest request, HttpServletResponse response) {
 		int cityid = RequestParamUtil.getIntegerParam(request, "cityid", 1);
-		final double lon = RequestParamUtil.getDoubleParam(request, "lon", 0.0d);
-        final double lat = RequestParamUtil.getDoubleParam(request, "lat", 0.0d);
+		double lon = RequestParamUtil.getDoubleParam(request, "lon", 0.0d);
+        double lat = RequestParamUtil.getDoubleParam(request, "lat", 0.0d);
         
 		try {
 			Map<String, Object> map = new HashMap<String, Object>();
 			City city = cityService.load(cityid);
 			List<ViewSpot> viewSpotList = viewSpotService.getViewSpotByCity(cityid);
+			viewSpotList = this.sortViewSpotList(viewSpotList, lon, lat);
 			
-			if(viewSpotList != null && viewSpotList.size() > 0) {
-        		
-        		if(lon != 0.0d && lat != 0.0d) {
-        			// 经纬度不为空时，增加距离字段，并且按距离排序
-	        		for(ViewSpot viewSpot : viewSpotList) {
-	        			double distance = calculateDistance(viewSpot, lon, lat);
-	        			viewSpot.setDistance(distance);
-	        		}
-        			
-        			Collections.sort(viewSpotList, new Comparator<ViewSpot>() {
-						@Override
-						public int compare(ViewSpot viewSpot1, ViewSpot viewSpot2) {
-							double distance1 = viewSpot1.getDistance();
-							double distance2 = viewSpot2.getDistance();
-							return (int)(distance1 - distance2);
-						}
-        			});
-        		}
-			}
 			map.put("id", city.getId());
 			map.put("name", city.getName());
 			map.put("ename",city.getEname());
@@ -164,6 +129,28 @@ public class ViewSpotController extends BaseController {
 			return ;
 		}
     }
+    
+    private List<ViewSpot> sortViewSpotList(List<ViewSpot> viewSpotList, final double lon, final double lat) {
+		if(viewSpotList != null && viewSpotList.size() > 0) {
+    		if(lon != 0.0d && lat != 0.0d) {
+    			// 经纬度不为空时，增加距离字段，并且按距离排序
+        		for(ViewSpot viewSpot : viewSpotList) {
+        			double distance = calculateDistance(viewSpot, lon, lat);
+        			viewSpot.setDistance(distance);
+        		}
+    			
+    			Collections.sort(viewSpotList, new Comparator<ViewSpot>() {
+					@Override
+					public int compare(ViewSpot viewSpot1, ViewSpot viewSpot2) {
+						double distance1 = viewSpot1.getDistance();
+						double distance2 = viewSpot2.getDistance();
+						return (int)(distance1 - distance2);
+					}
+    			});
+    		}
+		} 
+		return viewSpotList;
+	}
     
     private double calculateDistance(ViewSpot viewSpot, double lon, double lat) {
     	String centercoord = viewSpot.getCentercoord();

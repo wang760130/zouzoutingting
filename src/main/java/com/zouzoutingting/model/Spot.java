@@ -26,7 +26,7 @@ public class Spot {
     private int vid;
 
     /**
-     * 类型  0:讲解  1:厕所  2 拐点
+     * 类型  0:讲解  1:厕所  2 拐点 3 线路
      */
     @Column(name = "type")
     private short type;
