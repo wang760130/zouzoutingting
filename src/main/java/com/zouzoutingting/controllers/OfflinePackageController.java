@@ -187,6 +187,7 @@ public class OfflinePackageController extends BaseController {
 	        		map.put("id", spot.getId());
 	        		map.put("vid",vid);
 	        		map.put("pic", spot.getPic());
+	        		picList.add(map);
 	        	}
 	        }
      		
