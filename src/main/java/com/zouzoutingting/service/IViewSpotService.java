@@ -12,9 +12,10 @@ public interface IViewSpotService {
     /**
      * 一句城市获取景点列表
      * @param cityID 城市id
+     * @param uid 用户id
      * @return list
      */
-    public List<ViewSpot> getViewSpotByCity(int cityID);
+    public List<ViewSpot> getViewSpotByCity(int cityID, long uid);
 
     /**
      * 通过id命中景点

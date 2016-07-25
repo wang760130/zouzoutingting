@@ -44,9 +44,11 @@ public class ViewSpotController extends BaseController {
         int cityid = RequestParamUtil.getIntegerParam(request, "cityid", 1);
         double lon = RequestParamUtil.getDoubleParam(request, "lon", 0.0d);
         double lat = RequestParamUtil.getDoubleParam(request, "lat", 0.0d);
-		
+
         try {
-        	List<ViewSpot> viewSpotList = viewSpotService.getViewSpotByCity(cityid);
+			long uid = Long.valueOf(request.getAttribute("uid") + "");
+
+        	List<ViewSpot> viewSpotList = viewSpotService.getViewSpotByCity(cityid, uid);
         	if(viewSpotList != null && viewSpotList.size() > 0) {
         		viewSpotList = this.sortViewSpotList(viewSpotList, lon, lat);
         		
@@ -76,9 +78,11 @@ public class ViewSpotController extends BaseController {
         double lat = RequestParamUtil.getDoubleParam(request, "lat", 0.0d);
         
 		try {
+			long uid = Long.valueOf(request.getAttribute("uid") + "");
+
 			Map<String, Object> map = new HashMap<String, Object>();
 			City city = cityService.load(cityid);
-			List<ViewSpot> viewSpotList = viewSpotService.getViewSpotByCity(cityid);
+			List<ViewSpot> viewSpotList = viewSpotService.getViewSpotByCity(cityid, uid);
 			viewSpotList = this.sortViewSpotList(viewSpotList, lon, lat);
 			
 			map.put("id", city.getId());
