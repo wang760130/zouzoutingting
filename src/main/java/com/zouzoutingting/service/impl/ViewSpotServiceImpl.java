@@ -43,11 +43,15 @@ public class ViewSpotServiceImpl implements IViewSpotService {
     				viewSpot.setPic(listPic.split(","));
     			}
                 //处理是否支付逻辑
-                if(uid>0 && viewSpot.getPrice()>0.0){
-                    Order order = orderService.getOrderByUidAndVid(uid, viewSpot.getId());
-                    if(order!=null && order.getState()!= OrderStateEnum.Finish.getState()){
+                if(viewSpot.getPrice()>0.0){
+                    if(uid>0L) {
+                        Order order = orderService.getOrderByUidAndVid(uid, viewSpot.getId());
+                        if (!(order != null && order.getState() == OrderStateEnum.Finish.getState())) {
+                            viewSpot.setOfflinepackage("");
+                            logger.info("uid:" + uid + " vid:" + viewSpot.getId() + " not payed");
+                        }
+                    }else{
                         viewSpot.setOfflinepackage("");
-                        logger.info("uid:"+uid+" vid:"+viewSpot.getId() +" not payed");
                     }
                 }
     			resultList.add(viewSpot);
