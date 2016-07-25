@@ -6,6 +6,7 @@ import java.util.List;
 import com.zouzoutingting.enums.OrderStateEnum;
 import com.zouzoutingting.model.Order;
 import com.zouzoutingting.service.IOrderService;
+import com.zouzoutingting.utils.Page;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,22 @@ public class ViewSpotServiceImpl implements IViewSpotService {
 
     @Autowired
     private IDao<ViewSpot> viewSpotDao = null;
+    @Autowired
+    private IDao<Order> orderDao = null;
+
+    private Order getOrderByUidAndVid(long uid, long vid) {
+        Order order = null;
+        String condition = "uid = " + uid + " and vid= "+vid;
+        Page page = new Page();
+        page.setCondition(condition);
+        page.setPageNo(1);
+        page.setPageSize(1);
+        List<Order> list = orderDao.page(page);
+        if(list!=null && list.size()>0){
+            order = list.get(0);
+        }
+        return order;
+    }
 
     @Override
     public List<ViewSpot> getViewSpotByCity(int cityID, long uid) {
@@ -36,7 +53,6 @@ public class ViewSpotServiceImpl implements IViewSpotService {
         
         if(list != null && list.size() > 0) {
         	resultList = new ArrayList<ViewSpot>();
-            IOrderService orderService = new OrderServiceImpl();
     		for(ViewSpot viewSpot : list) {
     			String listPic = viewSpot.getListPic();
     			if(listPic != null && !"".equals(listPic)) {
@@ -45,7 +61,7 @@ public class ViewSpotServiceImpl implements IViewSpotService {
                 //处理是否支付逻辑
                 if(viewSpot.getPrice()>0.0){
                     if(uid>0L) {
-                        Order order = orderService.getOrderByUidAndVid(uid, viewSpot.getId());
+                        Order order = getOrderByUidAndVid(uid, viewSpot.getId());
                         if (!(order != null && order.getState() == OrderStateEnum.Finish.getState())) {
                             viewSpot.setOfflinepackage("");
                             logger.info("uid:" + uid + " vid:" + viewSpot.getId() + " not payed");

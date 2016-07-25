@@ -58,7 +58,7 @@ public class PayController extends BaseController {
 
     @RequestMapping(value = "/createorder", method = RequestMethod.POST)
     public void createorder(HttpServletRequest request, HttpServletResponse response){
-        Long uid = RequestParamUtil.getLongParam(request, "uid", -1L);
+        Long uid = Long.valueOf(request.getAttribute("uid") + "");
         Integer cityid = RequestParamUtil.getIntegerParam(request, "cityid", -1);
         Long vid = RequestParamUtil.getLongParam(request, "vid", -1L);
         String couponCode = RequestParamUtil.getParam(request, "couponcode", "");//优惠码
@@ -130,7 +130,7 @@ public class PayController extends BaseController {
      */
     @RequestMapping(value = "/pay/couponpay", method = RequestMethod.POST)
     public void couponPay(HttpServletRequest request, HttpServletResponse response){
-        Long uid = RequestParamUtil.getLongParam(request, "uid", -1L);
+        Long uid = Long.valueOf(request.getAttribute("uid") + "");
         Long vid = RequestParamUtil.getLongParam(request, "vid", -1L);
         Long orderid = RequestParamUtil.getLongParam(request, "orderid", -1L);
 
@@ -202,7 +202,7 @@ public class PayController extends BaseController {
 
     @RequestMapping(value = "/pay/wxprepay", method = RequestMethod.POST)
     public void wxPrePay(HttpServletRequest request, HttpServletResponse response){
-        Long uid = RequestParamUtil.getLongParam(request, "uid", -1L);
+        Long uid = Long.valueOf(request.getAttribute("uid") + "");
         Long vid = RequestParamUtil.getLongParam(request, "vid", -1L);
         Long orderid = RequestParamUtil.getLongParam(request, "orderid", -1L);
 
@@ -230,7 +230,7 @@ public class PayController extends BaseController {
 
     @RequestMapping(value = "/pay/aliprepay", method = RequestMethod.POST)
     public void aliPrePay(HttpServletRequest request, HttpServletResponse response){
-        Long uid = RequestParamUtil.getLongParam(request, "uid", -1L);
+        Long uid = Long.valueOf(request.getAttribute("uid") + "");
         Long vid = RequestParamUtil.getLongParam(request, "vid", -1L);
         Long orderid = RequestParamUtil.getLongParam(request, "orderid", -1L);
 
