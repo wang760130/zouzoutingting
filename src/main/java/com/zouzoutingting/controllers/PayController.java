@@ -48,7 +48,12 @@ public class PayController extends BaseController {
                 logger.error("券码无效:"+couponCode);
                 gzipCipherResult(-3, "券码错误", NULL_OBJECT, request, response);
             }else{
-                gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, coupon, request, response);
+                if(coupon.getState()==CouponStateEnum.Available.getState()) {
+                    gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, coupon, request, response);
+                }else{
+                    logger.error("券码已使用:"+couponCode);
+                    gzipCipherResult(-3, "券码已使用:", NULL_OBJECT, request, response);
+                }
             }
         }else{//参数错误
             logger.error("参数错误,couponcode 为 null");

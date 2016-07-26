@@ -1,7 +1,6 @@
 package com.zouzoutingting.dao.impl;
 
 import com.zouzoutingting.dao.IDao;
-import com.zouzoutingting.model.City;
 import com.zouzoutingting.model.Coupon;
 import com.zouzoutingting.utils.Page;
 
@@ -58,7 +57,7 @@ public class CouponDaoImpl implements IDao<Coupon> {
         sb.append(page.getPageSize());
 
         SQLQuery query = session.createSQLQuery(sb.toString());
-        query.addEntity(City.class);
+        query.addEntity(Coupon.class);
         return query.list();
     }
 
