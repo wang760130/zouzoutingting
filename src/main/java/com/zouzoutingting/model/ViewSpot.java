@@ -70,6 +70,9 @@ public class ViewSpot {
     @Transient
     private double distance; // 距离
 
+	@Transient
+	private boolean ispayed = true;//是否支付
+
 	public long getId() {
 		return id;
 	}
@@ -206,6 +209,14 @@ public class ViewSpot {
 		this.distance = distance;
 	}
 
+	public boolean ispayed() {
+		return ispayed;
+	}
+
+	public void setIspayed(boolean ispayed) {
+		this.ispayed = ispayed;
+	}
+
 	@Override
 	public String toString() {
 		return "ViewSpot [id=" + id + ", cityid=" + cityid + ", name=" + name
@@ -215,7 +226,7 @@ public class ViewSpot {
 				+ introduce + ", defualtPic=" + defualtPic + ", listPic="
 				+ listPic + ", offlinepackage=" + offlinepackage + ", price="
 				+ price + ", state=" + state + ", pic=" + Arrays.toString(pic)
-				+ ", distance=" + distance + "]";
+				+ ", distance=" + distance + ", ispayed=" + ispayed +"]";
 	}
 
 }

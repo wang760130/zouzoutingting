@@ -70,4 +70,9 @@ public class OrderServiceImpl implements IOrderService{
         }
         return retResult;
     }
+
+    @Override
+    public void save(Order order) {
+       orderDao.save(order);
+    }
 }

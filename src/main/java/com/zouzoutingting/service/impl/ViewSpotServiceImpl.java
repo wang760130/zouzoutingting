@@ -63,11 +63,11 @@ public class ViewSpotServiceImpl implements IViewSpotService {
                     if(uid>0L) {
                         Order order = getOrderByUidAndVid(uid, viewSpot.getId());
                         if (!(order != null && order.getState() == OrderStateEnum.Finish.getState())) {
-                            viewSpot.setOfflinepackage("");
+                            viewSpot.setIspayed(false);
                             logger.info("uid:" + uid + " vid:" + viewSpot.getId() + " not payed");
                         }
                     }else{
-                        viewSpot.setOfflinepackage("");
+                       viewSpot.setIspayed(false);
                     }
                 }
     			resultList.add(viewSpot);
