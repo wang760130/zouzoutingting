@@ -11,6 +11,8 @@ public class Global {
 	 * 全局加密密钥
 	 */
 	public static final String DESKEY = "zouzoutingting";
+
+	public static final String OFFLINE_DESKEY = "offlineUrl_zztt";
 	
 	public static final String RESULT_CONTENT = "resultcontent";
 	

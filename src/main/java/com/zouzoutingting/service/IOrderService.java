@@ -19,4 +19,6 @@ public interface IOrderService {
      * @return 成功与否
      */
     public boolean CounponPay(Order order);
+
+    public void save(Order order);
 }

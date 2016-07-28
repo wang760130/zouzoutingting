@@ -5,16 +5,22 @@ import com.zouzoutingting.enums.OrderStateEnum;
 import com.zouzoutingting.model.Coupon;
 import com.zouzoutingting.model.Order;
 import com.zouzoutingting.model.PrePayResult;
+import com.zouzoutingting.model.ViewSpot;
 import com.zouzoutingting.service.ICouponService;
 import com.zouzoutingting.service.IOrderService;
 import com.zouzoutingting.service.IPayService;
+import com.zouzoutingting.service.IViewSpotService;
+import com.zouzoutingting.utils.MemcacheClient;
 import com.zouzoutingting.utils.RequestParamUtil;
 import com.zouzoutingting.utils.XMLUtil;
+import net.rubyeye.xmemcached.exception.MemcachedException;
+import org.apache.commons.beanutils.converters.DoubleConverter;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -22,8 +28,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by zhangyong on 16/6/18.
@@ -32,33 +41,78 @@ import java.util.Map;
 @Controller
 public class PayController extends BaseController {
     private static final Logger logger = Logger.getLogger(PayController.class);
+    private static final int TOTAL_TIMES = 5;
     @Autowired
     private ICouponService couponService;
     @Autowired
     private IOrderService orderService;
     @Autowired
     private IPayService payService;
+    @Autowired
+    private IViewSpotService viewSpotService;
 
     @RequestMapping(value = "/couponcheck", method = RequestMethod.POST)
     public void couponCheck(HttpServletRequest request, HttpServletResponse response){
         String couponCode = RequestParamUtil.getParam(request, "couponcode", "");//优惠码
-        if(StringUtils.isNotBlank(couponCode)){
+        Long uid = Long.valueOf(request.getAttribute("uid") + "");
+        int code = -3;//错误
+        String msg = "";
+        Object entity = NULL_OBJECT;
+        //校验次数
+        int checkTimes = 0;
+        String key = "couponCheckTimes_"+uid;
+
+        if(StringUtils.isNotBlank(couponCode) && uid>0L){
+            try {
+                String value = MemcacheClient.getInstance().getMc().get(key);
+                if(value!=null && StringUtils.isNumeric(value)){
+                    checkTimes = Integer.valueOf(value);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if(checkTimes>=TOTAL_TIMES){
+                code = -3;
+                msg = "您输入次数已达上限,请一小时后重试";
+                gzipCipherResult(code, msg, entity, request, response);
+                return;
+            }
             Coupon coupon = couponService.getCouponByCode(couponCode);
             if(coupon==null){//券为null
                 logger.error("券码无效:"+couponCode);
-                gzipCipherResult(-3, "券码错误", NULL_OBJECT, request, response);
+                msg = "券码错误,";
             }else{
                 if(coupon.getState()==CouponStateEnum.Available.getState()) {
-                    gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, coupon, request, response);
+                    code =RETURN_CODE_SUCCESS;
+                    msg = RETURN_MESSAGE_SUCCESS;
+                    entity = coupon;
                 }else{
                     logger.error("券码已使用:"+couponCode);
-                    gzipCipherResult(-3, "券码已使用:", NULL_OBJECT, request, response);
+                    msg = "券码已使用,";
                 }
             }
         }else{//参数错误
-            logger.error("参数错误,couponcode 为 null");
-            gzipCipherResult(RETURN_CODE_PARAMETER_ERROR, RETUEN_MESSAGE_PARAMETER_ERROR, NULL_OBJECT, request, response);
+            logger.error("参数错误,couponcode 为 "+couponCode+" uid:"+uid);
+            code = RETURN_CODE_PARAMETER_ERROR;
+            msg = RETUEN_MESSAGE_PARAMETER_ERROR+",";
         }
+
+        if(code==RETURN_CODE_SUCCESS){
+            try {
+                MemcacheClient.getInstance().getMc().delete(key);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else{
+            try {
+                int leftTime = TOTAL_TIMES - checkTimes;
+                msg += "剩余"+((leftTime>0)?leftTime:0)+"次输入机会";
+                MemcacheClient.getInstance().getMc().set(key, 3600,String.valueOf(checkTimes+1));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        gzipCipherResult(code, msg, entity, request, response);
     }
 
     @RequestMapping(value = "/createorder", method = RequestMethod.POST)
@@ -67,26 +121,41 @@ public class PayController extends BaseController {
         Integer cityid = RequestParamUtil.getIntegerParam(request, "cityid", -1);
         Long vid = RequestParamUtil.getLongParam(request, "vid", -1L);
         String couponCode = RequestParamUtil.getParam(request, "couponcode", "");//优惠码
-        Double money = RequestParamUtil.getDoubleParam(request, "money", 0.0);//订单总价
-        Double cash = RequestParamUtil.getDoubleParam(request, "cash", 0.0);//支付金额
+//        Double money = RequestParamUtil.getDoubleParam(request, "money", 0.0);//订单总价
+//        Double cash = RequestParamUtil.getDoubleParam(request, "cash", 0.0);//支付金额
 
-        boolean isillegle = checkcreateorder(uid, cityid, vid, couponCode, money, cash);
+        Map<String, String> resultMap = new HashMap<String, String>();
+
+
+        List<Double> moneyList = new ArrayList<Double>();
+        boolean isillegle = checkcreateorder(uid, cityid, vid, couponCode, moneyList);
         if(isillegle){//非法
             gzipCipherResult(RETURN_CODE_PARAMETER_ERROR, RETUEN_MESSAGE_PARAMETER_ERROR, NULL_OBJECT, request, response);
         }else{
+            Double money = moneyList.get(0);//总量
+            Double cash = moneyList.get(1);//需支付
             //1.校验是否已经有订单
             Order order = orderService.getOrderByUidAndVid(uid, vid);
             if(order!=null){
+                resultMap.put("orderid", order.getOrderid()+"");
                 if(order.getState()==OrderStateEnum.Finish.getState()){
-                    gzipCipherResult(1, "您已经购买了当前景点", NULL_OBJECT, request, response);
+                    gzipCipherResult(1, "您已经购买了当前景点", resultMap, request, response);
                     return;
+                }else {//校验是否换券
+                    if(order.getCode()!=null && !order.getCode().equals(couponCode))
+                    order.setCode(couponCode);
+                    order.setNeedpay(cash);
+                    order.setState(OrderStateEnum.Jinx.getState());
+                    order.setTotal(money);
+                    order.setUid(uid);
+                    order.setVid(vid);
+                    orderService.save(order);
                 }
             }else{
                 //生成订单
                 order = buildOrder(uid, cityid, vid, couponCode, money, cash);
             }
             if(order!=null) {
-                Map<String, String> resultMap = new HashMap<String, String>();
                 resultMap.put("orderid", order.getOrderid()+"");
                 gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, resultMap, request, response);
             }else{
@@ -94,23 +163,27 @@ public class PayController extends BaseController {
             }
         }
     }
-    private boolean checkcreateorder(Long uid, Integer cityid, Long vid, String couponCode, Double money, Double cash){
+    private boolean checkcreateorder(Long uid, Integer cityid, Long vid, String couponCode, List<Double> out){
         boolean isillegle = false;
-        if(uid<0 || cityid<0 || vid<0 || cash<=0.0 || money<=0.0){
+        if(uid<0 || cityid<0 || vid<0){
             isillegle = true;
         }else{
             if(!StringUtils.isEmpty(couponCode)){
                 Coupon coupon = couponService.getCouponByCode(couponCode);
-                if(coupon==null){
-                    logger.error("coupon code illegle "+couponCode);
+                ViewSpot viewSpot = viewSpotService.getViewSpotByID(vid);
+                if(coupon==null || viewSpot==null){
+                    logger.error("coupon code illegle "+couponCode +" or viewspot is null vid:"+vid);
                     isillegle = true;
                 }else {
-                    if(coupon.getState()!= CouponStateEnum.Available.getState() || !money.equals(coupon.getAmount() +
-                            cash)){//0代表可用
-                        logger.error("money amount is wrong or coupon state wrong. total money:"+money +", " +
-                                "cash:"+cash+", " +
+                    if(coupon.getState()!= CouponStateEnum.Available.getState() && viewSpot.getPrice()<coupon
+                            .getAmount())
+                    {//0代表可用
+                        logger.error("money amount is wrong or coupon state wrong. total money:"+viewSpot.getPrice() +", " +
                                 "couponAmount:"+coupon.getAmount()+"; coupon state:"+coupon.getState());
                         isillegle = true;
+                    }else {
+                        out.add(viewSpot.getPrice());
+                        out.add(viewSpot.getPrice()-coupon.getAmount());
                     }
                 }
             }
@@ -185,8 +258,10 @@ public class PayController extends BaseController {
                                         logger.info("券支付成功 oid:" + orderid + ", vid:" +
                                         vid + " ,uid:" + uid+" counid:"+coupon.getCouponid()+", " +
                                                 "couponCode:"+couponCode);
-                                        gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, coupon.getAmount(), request,
-                                                response);
+                                        gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, order,
+                                                    request,
+                                                    response);
+
                                     }
                                 }
                             }
