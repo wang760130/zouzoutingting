@@ -51,7 +51,8 @@ public class ViewSpot {
     
     @Column(name = "listPic")
     private String listPic;//详情页轮播图片地址
-    
+
+	@Transient
     @Column(name = "offlinepackage")
     private String offlinepackage; // 离线下载包地址
  
