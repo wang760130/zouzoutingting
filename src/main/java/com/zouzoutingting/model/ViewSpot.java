@@ -210,7 +210,7 @@ public class ViewSpot {
 		this.distance = distance;
 	}
 
-	public boolean ispayed() {
+	public boolean isIspayed() {
 		return ispayed;
 	}
 
