@@ -25,7 +25,7 @@ public class PayControllerTest {
         String url = Global.TEST_HOST_URL + "/createorder";
         try {
             JSONObject result = HttpTestUtils.testUrl(url,
-                    "couponcode=3F8DAC9R&token=/v8F00YWcAenQAcot9amZ8O3wDbfeVgzzPJcKdf/WWw=&vid=22");
+                    "couponcode=3F8DAC9R&token=/v8F00YWcAenQAcot9amZ8O3wDbfeVgzzPJcKdf/WWw=&vid=22&cityid=1");
             System.out.println(result);
         }catch (Exception e){
             e.printStackTrace();

@@ -40,26 +40,25 @@ public class ViewSpot {
     @Column(name = "scaling")
     private double scaling;  // 缩放比例
     
-    @Column(name = "synopsis")
+    @Column(name = "synopsis", updatable = false)
     private String synopsis;//简介
 
-    @Column(name = "introduce")
+    @Column(name = "introduce", updatable = false)
     private String introduce;//详细介绍
 
-    @Column(name = "defualtPic")
+    @Column(name = "defualtPic", updatable = false)
     private String defualtPic;//列表页图片
     
-    @Column(name = "listPic")
+    @Column(name = "listPic", updatable = false)
     private String listPic;//详情页轮播图片地址
 
-	@Transient
-    @Column(name = "offlinepackage")
+    @Column(name = "offlinepackage", updatable = false)
     private String offlinepackage; // 离线下载包地址
  
-    @Column(name = "price")
+    @Column(name = "price", updatable = false)
     private double price;
     
-    @Column(name = "type")
+    @Column(name = "type", updatable = false)
     private short type; 	// 景点类型
     
     @Column(name = "state")
