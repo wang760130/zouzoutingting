@@ -16,7 +16,7 @@ public class OfflinePackageUtil {
      * @return
      * @throws Exception
      */
-    public static String generateToken(String data) {
+    public static String generateOffline(String data) {
 
         byte[] bytes = new byte[0];
         try {

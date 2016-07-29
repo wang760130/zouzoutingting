@@ -31,7 +31,7 @@ public class ViewSpotDaoImpl implements IDao<ViewSpot> {
     public ViewSpot load(long id) {
         ViewSpot viewSpot = (ViewSpot)sessionFactory.getCurrentSession().get(ViewSpot.class, id);
         if(viewSpot!=null){
-            viewSpot.setOfflinepackage(OfflinePackageUtil.generateToken(viewSpot.getOfflinepackage()));
+            viewSpot.setOfflinepackage(OfflinePackageUtil.generateOffline(viewSpot.getOfflinepackage()));
         }
         return viewSpot;
     }
@@ -65,7 +65,7 @@ public class ViewSpotDaoImpl implements IDao<ViewSpot> {
         query.addEntity(ViewSpot.class);
         List<ViewSpot> list = query.list();
         for(ViewSpot viewSpot : list){
-            viewSpot.setOfflinepackage(OfflinePackageUtil.generateToken(viewSpot.getOfflinepackage()));
+            viewSpot.setOfflinepackage(OfflinePackageUtil.generateOffline(viewSpot.getOfflinepackage()));
         }
         return list;
     }
@@ -92,7 +92,7 @@ public class ViewSpotDaoImpl implements IDao<ViewSpot> {
 		query.addEntity(ViewSpot.class);
         List<ViewSpot> list = query.list();
         for(ViewSpot viewSpot : list){
-            viewSpot.setOfflinepackage(OfflinePackageUtil.generateToken(viewSpot.getOfflinepackage()));
+            viewSpot.setOfflinepackage(OfflinePackageUtil.generateOffline(viewSpot.getOfflinepackage()));
         }
         return list;
 	}

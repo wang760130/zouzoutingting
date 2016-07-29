@@ -16,7 +16,7 @@ public class SpotControllerTest {
 
 	@Test
 	public void spotsTest() {
-		String url = Global.HOST_URL + "/spots";
+		String url = Global.TEST_HOST_URL + "/spots";
 		try {
 			JSONObject result = HttpTestUtils.testUrl(url,"vid=12");
 			System.out.println(JSON.toJSONString(result, true));

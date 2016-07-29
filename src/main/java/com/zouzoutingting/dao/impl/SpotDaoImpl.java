@@ -2,6 +2,7 @@ package com.zouzoutingting.dao.impl;
 
 import java.util.List;
 
+import com.zouzoutingting.utils.OfflinePackageUtil;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -29,7 +30,11 @@ public class SpotDaoImpl implements IDao<Spot> {
 
     @Override
     public Spot load(long id) {
-        return (Spot)sessionFactory.getCurrentSession().get(Spot.class, id);
+        Spot spot = (Spot)sessionFactory.getCurrentSession().get(Spot.class, id);
+        if(spot!=null){
+            spot.setAudio(OfflinePackageUtil.generateOffline(spot.getAudio()));
+        }
+        return spot;
     }
 
     @SuppressWarnings("unchecked")
@@ -59,7 +64,13 @@ public class SpotDaoImpl implements IDao<Spot> {
 
         SQLQuery query = session.createSQLQuery(sb.toString());
         query.addEntity(Spot.class);
-        return query.list();
+        List<Spot> list = query.list();
+        if(list!=null) {
+            for (Spot spot : list) {
+                spot.setAudio(OfflinePackageUtil.generateOffline(spot.getAudio()));
+            }
+        }
+        return list;
     }
     
     @SuppressWarnings("unchecked")
@@ -82,7 +93,13 @@ public class SpotDaoImpl implements IDao<Spot> {
 		
 		SQLQuery query = session.createSQLQuery(sb.toString());
 		query.addEntity(Spot.class);
-		return query.list();
+		List<Spot> list = query.list();
+        if(list!=null) {
+            for (Spot spot : list) {
+                spot.setAudio(OfflinePackageUtil.generateOffline(spot.getAudio()));
+            }
+        }
+        return list;
 	}
     
     @Override

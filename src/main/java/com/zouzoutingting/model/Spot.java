@@ -52,7 +52,7 @@ public class Spot {
     /**
      * 音频地址
      */
-    @Column(name = "audio")
+    @Column(name = "audio", updatable = false)
     private String audio;
     
     /**
