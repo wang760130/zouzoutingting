@@ -22,4 +22,6 @@ public interface ICouponService {
      * @return
      */
     public boolean rollBackCouponPay(Coupon coupon);
+
+    public long save(Coupon coupon);
 }

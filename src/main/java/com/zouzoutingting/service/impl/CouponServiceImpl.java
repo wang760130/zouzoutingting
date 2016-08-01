@@ -22,7 +22,7 @@ public class CouponServiceImpl implements ICouponService{
         boolean retResult = false;
         if(coupon!=null && coupon.getState()== CouponStateEnum.Available.getState()){
             coupon.setState(CouponStateEnum.Used.getState());
-            couponDao.save(coupon);
+            couponDao.update(coupon);
             logger.info("counp "+coupon.getCouponid()+", "+coupon.getCode()+" avilable--> used");
             retResult = true;
         }
@@ -35,11 +35,16 @@ public class CouponServiceImpl implements ICouponService{
         boolean retResult = false;
         if(coupon!=null && coupon.getState()== CouponStateEnum.Used.getState()){
             coupon.setState(CouponStateEnum.Available.getState());
-            couponDao.save(coupon);
+            couponDao.update(coupon);
             logger.info("counp "+coupon.getCouponid()+", "+coupon.getCode()+" used-->avilable");
             retResult = true;
         }
         return retResult;
+    }
+
+    @Override
+    public long save(Coupon coupon) {
+        return couponDao.save(coupon);
     }
 
     @Autowired

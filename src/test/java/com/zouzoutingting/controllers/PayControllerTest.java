@@ -31,4 +31,28 @@ public class PayControllerTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void couponPayTest(){
+        String url = Global.TEST_HOST_URL + "/pay/couponpay";
+        try {
+            JSONObject result = HttpTestUtils.testUrl(url,
+                    "orderid=83&token=/v8F00YWcAenQAcot9amZ8O3wDbfeVgzzPJcKdf/WWw=&vid=22&cityid=1");
+            System.out.println(result);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void CouponGeneralTest(){
+        String url = Global.TEST_HOST_URL + "/test/generalCode";
+        try {
+            JSONObject result = HttpTestUtils.testUrl(url,
+                    "nunm=10&amount=10&begin=2016-07-31 00:00:00&end=2016-09-31 00:00:00");
+            System.out.println(result);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 }

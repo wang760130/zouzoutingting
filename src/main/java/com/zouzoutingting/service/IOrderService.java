@@ -20,5 +20,5 @@ public interface IOrderService {
      */
     public boolean CounponPay(Order order);
 
-    public void save(Order order);
+    public void update(Order order);
 }

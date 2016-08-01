@@ -10,6 +10,7 @@ import com.zouzoutingting.service.ICouponService;
 import com.zouzoutingting.service.IOrderService;
 import com.zouzoutingting.service.IPayService;
 import com.zouzoutingting.service.IViewSpotService;
+import com.zouzoutingting.utils.CouponCodeUtil;
 import com.zouzoutingting.utils.MemcacheClient;
 import com.zouzoutingting.utils.RequestParamUtil;
 import com.zouzoutingting.utils.XMLUtil;
@@ -28,10 +29,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -41,7 +41,10 @@ import java.util.concurrent.TimeoutException;
 @Controller
 public class PayController extends BaseController {
     private static final Logger logger = Logger.getLogger(PayController.class);
-    private static final int TOTAL_TIMES = 5;
+    private static final int TOTAL_TIMES = 50;
+    private static final int COUPON_LENGTH = 8;
+    private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
     @Autowired
     private ICouponService couponService;
     @Autowired
@@ -72,7 +75,7 @@ public class PayController extends BaseController {
                 e.printStackTrace();
             }
             if(checkTimes>=TOTAL_TIMES){
-                code = -3;
+                code = -4;
                 msg = "您输入次数已达上限,请一小时后重试";
                 gzipCipherResult(code, msg, entity, request, response);
                 return;
@@ -149,7 +152,7 @@ public class PayController extends BaseController {
                     order.setTotal(money);
                     order.setUid(uid);
                     order.setVid(vid);
-                    orderService.save(order);
+                    orderService.update(order);
                 }
             }else{
                 //生成订单
@@ -165,6 +168,7 @@ public class PayController extends BaseController {
     }
     private boolean checkcreateorder(Long uid, Integer cityid, Long vid, String couponCode, List<Double> out){
         boolean isillegle = false;
+        logger.info("uid:"+uid+",cityid:"+cityid+",vid:"+vid+",couponcode:"+couponCode);
         if(uid<0 || cityid<0 || vid<0){
             isillegle = true;
         }else{
@@ -391,6 +395,55 @@ public class PayController extends BaseController {
         }else {
             gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, NULL_OBJECT, request, response);
         }
+    }
+
+    @RequestMapping(value = "/test/generalCode")
+    public void GeneralCode(HttpServletRequest request, HttpServletResponse response) {
+        Integer num = RequestParamUtil.getIntegerParam(request, "nunm", 0);//数量
+        Double amount = RequestParamUtil.getDoubleParam(request, "amount", 0.0);
+        String beginDateStr = RequestParamUtil.getParam(request, "begin", "");
+        String endDateStr = RequestParamUtil.getParam(request, "end", "");
+
+        if(num>0 && StringUtils.isNotBlank(beginDateStr) && StringUtils.isNotBlank(endDateStr) && amount>0.0){
+            Date startDate = null;
+            Date endDate = null;
+
+            try {
+                startDate = sdf.parse(beginDateStr);
+                endDate = sdf.parse(endDateStr);
+            } catch (ParseException e) {
+                logger.error("日期参数传入错误", e);
+            }
+
+            int successLen = 0;
+            StringBuilder stringBuilder = new StringBuilder();
+            if(startDate!=null && endDate!=null){
+                for(int i = 0; i<amount; i++) {
+                    Coupon coupon = new Coupon();
+                    coupon.setAmount(amount);
+                    coupon.setEndtime(endDate);
+                    coupon.setStarttime(startDate);
+                    String code = CouponCodeUtil.generateString(COUPON_LENGTH);
+                    coupon.setCode(code);
+                    coupon.setState(CouponStateEnum.Available.getState());
+                    try {
+                        long id = couponService.save(coupon);
+                        if(id>0){
+                            successLen++;
+                            stringBuilder.append(code+",");
+                        }
+                    } catch (Exception e) {
+                        logger.error("插入失败", e);
+                    }
+                }
+            }
+            stringBuilder.append("||数量:"+successLen);
+
+            gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, stringBuilder.toString(), request, response);
+        }else {
+            gzipCipherResult(RETURN_CODE_PARAMETER_ERROR, RETUEN_MESSAGE_PARAMETER_ERROR, NULL_OBJECT, request, response);
+        }
+
     }
 
 }

@@ -57,7 +57,7 @@ public class OrderServiceImpl implements IOrderService{
         boolean retResult = false;
         if(order!=null && order.getState() == OrderStateEnum.Jinx.getState()){
             order.setState(OrderStateEnum.Finish.getState());
-            orderDao.save(order);
+            orderDao.update(order);
             logger.info("couon pay update order jinxing-->finish oid:"+order.getOrderid());
             retResult = true;
         }else{
@@ -72,7 +72,7 @@ public class OrderServiceImpl implements IOrderService{
     }
 
     @Override
-    public void save(Order order) {
-       orderDao.save(order);
+    public void update(Order order) {
+       orderDao.update(order);
     }
 }

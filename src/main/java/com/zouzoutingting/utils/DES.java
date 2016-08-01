@@ -8,6 +8,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 
 import com.zouzoutingting.common.Global;
+import org.apache.commons.codec.binary.Base64;
 
 /**
  * DES加密
@@ -42,5 +43,12 @@ public class DES {
 		Cipher cipher = Cipher.getInstance("DES");
 		cipher.init(Cipher.DECRYPT_MODE, securekey, random);
 		return cipher.doFinal(src);
+	}
+
+	public static void main(String[] args) throws Exception{
+		String data = "6CWEvKZBXHw=";
+		byte[] ss = Base64.decodeBase64(data);
+		byte[] ss1 = decrypt(ss, "offlineUrl_zztt");
+		System.out.println(ss1);
 	}
 }
