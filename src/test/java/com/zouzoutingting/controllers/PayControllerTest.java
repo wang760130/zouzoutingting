@@ -49,7 +49,7 @@ public class PayControllerTest {
         String url = Global.TEST_HOST_URL + "/test/generalCode";
         try {
             JSONObject result = HttpTestUtils.testUrl(url,
-                    "nunm=10&amount=10&begin=2016-07-31 00:00:00&end=2016-09-31 00:00:00");
+                    "nunm=2000&amount=30&begin=2016-08-03 00:00:00&end=2017-08-03 00:00:00");
             System.out.println(result);
         }catch (Exception e){
             e.printStackTrace();

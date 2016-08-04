@@ -418,7 +418,7 @@ public class PayController extends BaseController {
             int successLen = 0;
             StringBuilder stringBuilder = new StringBuilder();
             if(startDate!=null && endDate!=null){
-                for(int i = 0; i<amount; i++) {
+                for(int i = 0; i<num; i++) {
                     Coupon coupon = new Coupon();
                     coupon.setAmount(amount);
                     coupon.setEndtime(endDate);
