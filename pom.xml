@@ -151,6 +151,12 @@
 			<artifactId>spring-jdbc</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
 
 		<!-- hibernate -->
 		<dependency>
@@ -174,12 +180,26 @@
 			<systemPath>${project.basedir}/lib/com.swetake.util.qrcode-1.1.jar</systemPath>
 		</dependency>
 		
+		<!-- oss -->
 		<dependency>
     		<groupId>com.aliyun.oss</groupId>
     		<artifactId>aliyun-sdk-oss</artifactId>
     		<version>2.2.3</version>
 		</dependency>
 		
+		<!-- velocity -->
+		 <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+            <version>1.6.2</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity-tools</artifactId>
+            <version>2.0</version>
+        </dependency>  
+
 		<!-- httpclient 这个httpclient比较旧，以后有空再更新 -->
 		<dependency>
     		<groupId>org.apache.httpcomponents</groupId>

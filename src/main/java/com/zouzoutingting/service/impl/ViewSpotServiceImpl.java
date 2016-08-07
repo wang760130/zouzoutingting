@@ -93,4 +93,10 @@ public class ViewSpotServiceImpl implements IViewSpotService {
         
         return viewSpot;
     }
+    
+    @Override
+    public List<ViewSpot> getViewSpotList() {
+    	String condition = "state = 1";
+        return viewSpotDao.list(condition, "id asc");
+    }
 }

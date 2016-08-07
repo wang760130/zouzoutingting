@@ -23,4 +23,11 @@ public interface IViewSpotService {
      * @return viewspot
      */
     public ViewSpot getViewSpotByID(long vid);
+
+    /**
+     * 获取景点列表
+     * @return
+     */
+    public List<ViewSpot> getViewSpotList();
 }
+	

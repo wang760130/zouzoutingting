@@ -17,8 +17,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,7 +49,18 @@ public class OfflinePackageController extends BaseController {
 	@Autowired
 	private IViewSpotService viewSpotService;
 	
-	@RequestMapping(value = "/offlinePackage", method = RequestMethod.GET)
+	@RequestMapping(value = "/offlinepackage/list", method = RequestMethod.GET)
+	public String offlinePackageList(Model model, HttpServletRequest request, HttpServletResponse response) {
+		List<ViewSpot> viewSpotList = viewSpotService.getViewSpotList();
+		/*Map<String, Object> map = new HashMap<String, Object>();
+		map.put("viewSpotList", viewSpotList);*/
+		model.addAttribute("viewSpotList", viewSpotList);
+		model.addAttribute("hello", "hello");
+//		return new ModelAndView("offlinepackage/list", map);  
+		return "offlinepackage/list";
+	}
+	
+	@RequestMapping(value = "/offlinepackage", method = RequestMethod.GET)
 	public void offlinePackage(HttpServletRequest request, HttpServletResponse response) {
 		long vid = ParamUtil.getLong(request, "vid", -1L);
 		String zipFile = this.generate(vid);
