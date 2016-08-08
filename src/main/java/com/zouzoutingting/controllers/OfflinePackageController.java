@@ -50,14 +50,12 @@ public class OfflinePackageController extends BaseController {
 	private IViewSpotService viewSpotService;
 	
 	@RequestMapping(value = "/offlinepackage/list", method = RequestMethod.GET)
-	public String offlinePackageList(Model model, HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView offlinePackageList(Model model, HttpServletRequest request, HttpServletResponse response) {
 		List<ViewSpot> viewSpotList = viewSpotService.getViewSpotList();
-		/*Map<String, Object> map = new HashMap<String, Object>();
-		map.put("viewSpotList", viewSpotList);*/
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("viewSpotList", viewSpotList);
 		model.addAttribute("viewSpotList", viewSpotList);
-		model.addAttribute("hello", "hello");
-//		return new ModelAndView("offlinepackage/list", map);  
-		return "offlinepackage/list";
+		return new ModelAndView("offlinepackage", map);  
 	}
 	
 	@RequestMapping(value = "/offlinepackage", method = RequestMethod.GET)

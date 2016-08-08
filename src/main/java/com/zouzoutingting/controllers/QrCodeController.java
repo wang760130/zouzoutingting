@@ -34,8 +34,7 @@ public class QrCodeController extends BaseController {
 	
 	@RequestMapping(value = "/qrcode", method = RequestMethod.GET)
 	public ModelAndView qrcode(ModelAndView model, HttpServletRequest request, HttpServletResponse response) {
-		model.setViewName("forward:qrcode.jsp");
-	    return model;
+	    return new ModelAndView("qrcode");
 	}
 	
 	@RequestMapping(value = "/generateqrcode", method = RequestMethod.GET)

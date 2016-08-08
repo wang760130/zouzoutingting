@@ -19,7 +19,6 @@ public class IndexController extends BaseController {
 	
 	@RequestMapping(value={"", "/"}, method = RequestMethod.GET)
 	public ModelAndView index(ModelAndView model, HttpServletRequest request, HttpServletResponse response) {
-		model.setViewName("forward:index.jsp");
-	    return model;
+	    return new ModelAndView("index");
 	}
 }
