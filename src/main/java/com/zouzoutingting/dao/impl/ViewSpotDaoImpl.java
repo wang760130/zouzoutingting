@@ -2,7 +2,6 @@ package com.zouzoutingting.dao.impl;
 
 import java.util.List;
 
-import com.zouzoutingting.utils.OfflinePackageUtil;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -29,11 +28,7 @@ public class ViewSpotDaoImpl implements IDao<ViewSpot> {
 
     @Override
     public ViewSpot load(long id) {
-        ViewSpot viewSpot = (ViewSpot)sessionFactory.getCurrentSession().get(ViewSpot.class, id);
-        if(viewSpot!=null){
-            viewSpot.setOfflinepackage(OfflinePackageUtil.generateOffline(viewSpot.getOfflinepackage()));
-        }
-        return viewSpot;
+        return (ViewSpot)sessionFactory.getCurrentSession().get(ViewSpot.class, id);
     }
 
     @SuppressWarnings("unchecked")
@@ -63,11 +58,7 @@ public class ViewSpotDaoImpl implements IDao<ViewSpot> {
 
         SQLQuery query = session.createSQLQuery(sb.toString());
         query.addEntity(ViewSpot.class);
-        List<ViewSpot> list = query.list();
-        for(ViewSpot viewSpot : list){
-            viewSpot.setOfflinepackage(OfflinePackageUtil.generateOffline(viewSpot.getOfflinepackage()));
-        }
-        return list;
+        return query.list();
     }
 
     @SuppressWarnings("unchecked")
@@ -90,11 +81,7 @@ public class ViewSpotDaoImpl implements IDao<ViewSpot> {
 		
 		SQLQuery query = session.createSQLQuery(sb.toString());
 		query.addEntity(ViewSpot.class);
-        List<ViewSpot> list = query.list();
-        for(ViewSpot viewSpot : list){
-            viewSpot.setOfflinepackage(OfflinePackageUtil.generateOffline(viewSpot.getOfflinepackage()));
-        }
-        return list;
+        return query.list();
 	}
     
     @Override

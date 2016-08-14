@@ -30,11 +30,7 @@ public class SpotDaoImpl implements IDao<Spot> {
 
     @Override
     public Spot load(long id) {
-        Spot spot = (Spot)sessionFactory.getCurrentSession().get(Spot.class, id);
-        if(spot!=null){
-            spot.setAudio(OfflinePackageUtil.generateOffline(spot.getAudio()));
-        }
-        return spot;
+        return (Spot)sessionFactory.getCurrentSession().get(Spot.class, id);
     }
 
     @SuppressWarnings("unchecked")
@@ -64,13 +60,7 @@ public class SpotDaoImpl implements IDao<Spot> {
 
         SQLQuery query = session.createSQLQuery(sb.toString());
         query.addEntity(Spot.class);
-        List<Spot> list = query.list();
-        if(list!=null) {
-            for (Spot spot : list) {
-                spot.setAudio(OfflinePackageUtil.generateOffline(spot.getAudio()));
-            }
-        }
-        return list;
+        return query.list();
     }
     
     @SuppressWarnings("unchecked")
@@ -93,13 +83,7 @@ public class SpotDaoImpl implements IDao<Spot> {
 		
 		SQLQuery query = session.createSQLQuery(sb.toString());
 		query.addEntity(Spot.class);
-		List<Spot> list = query.list();
-        if(list!=null) {
-            for (Spot spot : list) {
-                spot.setAudio(OfflinePackageUtil.generateOffline(spot.getAudio()));
-            }
-        }
-        return list;
+		return query.list();
 	}
     
     @Override

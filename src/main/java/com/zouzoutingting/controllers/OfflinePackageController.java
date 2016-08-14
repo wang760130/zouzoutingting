@@ -32,6 +32,7 @@ import com.zouzoutingting.service.IViewSpotService;
 import com.zouzoutingting.utils.BeanToMapUtil;
 import com.zouzoutingting.utils.HttpUtil;
 import com.zouzoutingting.utils.MD5;
+import com.zouzoutingting.utils.OfflinePackageUtil;
 import com.zouzoutingting.utils.ParamUtil;
 import com.zouzoutingting.utils.ZipUtil;
 
@@ -90,13 +91,13 @@ public class OfflinePackageController extends BaseController {
 			bufferedWriter.write(data);
 			bufferedWriter.flush();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.info(e.getMessage(), e);
 		} finally {
 			if(bufferedWriter != null) {
 				try {
 					bufferedWriter.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.info(e.getMessage(), e);
 				}
 			}
 			
@@ -104,7 +105,7 @@ public class OfflinePackageController extends BaseController {
 				try {
 					fileWriter.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.info(e.getMessage(), e);
 				}
 			}
 		}
@@ -161,6 +162,7 @@ public class OfflinePackageController extends BaseController {
 	        		HttpUtil.downloadFile(tempPath + fileName + File.separator + picFile, pic);
 	        		map.put("pic", pic);
 	        		String audio = spot.getAudio();
+	        		audio = OfflinePackageUtil.decryptOffline(audio);
 	        		String audioFile = this.md5Url(audio);
 	        		HttpUtil.downloadFile(tempPath + fileName + File.separator + audioFile, audio);
 	        		map.put("audio", audio);
@@ -217,21 +219,21 @@ public class OfflinePackageController extends BaseController {
      		
      		ZipUtil.zip(tempPath + fileName + File.separator, zipPath, fileName + ".zip");
 		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
+			logger.info(e.getMessage(), e);
 		} catch (IntrospectionException e) {
-			e.printStackTrace();
+			logger.info(e.getMessage(), e);
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			logger.info(e.getMessage(), e);
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			logger.info(e.getMessage(), e);
 		} catch (JsonProcessingException e) {
-			e.printStackTrace();
+			logger.info(e.getMessage(), e);
 		} catch (ClientProtocolException e) {
-			e.printStackTrace();
+			logger.info(e.getMessage(), e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.info(e.getMessage(), e);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.info(e.getMessage(), e);
 		}
      	return zipPath + File.separator + fileName + ".zip";
 	}

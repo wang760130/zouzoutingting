@@ -5,14 +5,16 @@ import java.util.List;
 
 import com.zouzoutingting.enums.OrderStateEnum;
 import com.zouzoutingting.model.Order;
-import com.zouzoutingting.service.IOrderService;
+import com.zouzoutingting.utils.OfflinePackageUtil;
 import com.zouzoutingting.utils.Page;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zouzoutingting.dao.IDao;
 import com.zouzoutingting.model.ViewSpot;
+import com.zouzoutingting.service.IOrderService;
 import com.zouzoutingting.service.IViewSpotService;
 
 /**
@@ -28,20 +30,9 @@ public class ViewSpotServiceImpl implements IViewSpotService {
     @Autowired
     private IDao<Order> orderDao = null;
 
-    private Order getOrderByUidAndVid(long uid, long vid) {
-        Order order = null;
-        String condition = "uid = " + uid + " and vid= "+vid;
-        Page page = new Page();
-        page.setCondition(condition);
-        page.setPageNo(1);
-        page.setPageSize(1);
-        List<Order> list = orderDao.page(page);
-        if(list!=null && list.size()>0){
-            order = list.get(0);
-        }
-        return order;
-    }
-
+    @Autowired
+    private IOrderService orderService;
+    
     @Override
     public List<ViewSpot> getViewSpotByCity(int cityID, long uid) {
         List<ViewSpot> list = null;
@@ -54,6 +45,9 @@ public class ViewSpotServiceImpl implements IViewSpotService {
         if(list != null && list.size() > 0) {
         	resultList = new ArrayList<ViewSpot>();
     		for(ViewSpot viewSpot : list) {
+    			
+    			viewSpot.setOfflinepackage(OfflinePackageUtil.generateOffline(viewSpot.getOfflinepackage()));
+    			
     			String listPic = viewSpot.getListPic();
     			if(listPic != null && !"".equals(listPic)) {
     				viewSpot.setPic(listPic.split(","));
@@ -61,7 +55,7 @@ public class ViewSpotServiceImpl implements IViewSpotService {
                 //处理是否支付逻辑
                 if(viewSpot.getPrice()>0.0){
                     if(uid>0L) {
-                        Order order = getOrderByUidAndVid(uid, viewSpot.getId());
+                        Order order = orderService.getOrderByUidAndVid(uid, viewSpot.getId());
                         if (!(order != null && order.getState() == OrderStateEnum.Finish.getState())) {
                             viewSpot.setIspayed(false);
                             logger.info("uid:" + uid + " vid:" + viewSpot.getId() + " not payed");
@@ -85,6 +79,9 @@ public class ViewSpotServiceImpl implements IViewSpotService {
         }
         
         if(viewSpot != null) {
+        	
+        	viewSpot.setOfflinepackage(OfflinePackageUtil.generateOffline(viewSpot.getOfflinepackage()));
+        	
         	String listPic = viewSpot.getListPic();
         	if(listPic != null && !"".equals(listPic)) {
         		viewSpot.setPic(listPic.split(","));
@@ -97,6 +94,12 @@ public class ViewSpotServiceImpl implements IViewSpotService {
     @Override
     public List<ViewSpot> getViewSpotList() {
     	String condition = "state = 1";
-        return viewSpotDao.list(condition, "id asc");
+        List<ViewSpot> list =  viewSpotDao.list(condition, "id asc");
+        if(list != null && list.size() > 0) {
+        	for(ViewSpot viewSpot : list) {
+        		 viewSpot.setOfflinepackage(OfflinePackageUtil.generateOffline(viewSpot.getOfflinepackage()));
+        	}
+        }
+        return list;
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.zouzoutingting.dao.IDao;
 import com.zouzoutingting.model.Spot;
 import com.zouzoutingting.service.ISpotService;
+import com.zouzoutingting.utils.OfflinePackageUtil;
 
 /**
  * Created by zhangyong on 16/4/8.
@@ -25,6 +26,11 @@ public class SpotServiceImpl implements ISpotService {
         	String condition = "vid = " + vid + " and type=" + type +" and state = 1";
         	String orderName = "sequence asc";
             list = spotDao.list(condition, orderName);
+            if(list != null && list.size() > 0) {
+            	for(Spot spot : list) {
+            		spot.setAudio(OfflinePackageUtil.generateOffline(spot.getAudio()));
+            	}
+            }
         }
         return list;
     }
@@ -36,6 +42,11 @@ public class SpotServiceImpl implements ISpotService {
 			String condition = "vid = " + vid + " and state = 1";
 			String orderName = "sequence asc";
 			list = spotDao.list(condition, orderName);
+			if(list != null && list.size() > 0) {
+            	for(Spot spot : list) {
+            		spot.setAudio(OfflinePackageUtil.generateOffline(spot.getAudio()));
+            	}
+            }
 		}
 		return list;
 	}

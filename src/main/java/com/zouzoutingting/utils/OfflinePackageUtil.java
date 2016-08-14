@@ -1,8 +1,9 @@
 package com.zouzoutingting.utils;
 
-import com.zouzoutingting.common.Global;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
+
+import com.zouzoutingting.common.Global;
 
 /**
  * Created by zhangyong on 16/7/28.
@@ -22,9 +23,25 @@ public class OfflinePackageUtil {
         try {
             bytes = DES.encrypt(String.valueOf(data).getBytes(Global.DEFUALT_CHARSET),Global.OFFLINE_DESKEY);
         } catch (Exception e) {
-            logger.error("des 加密 offline error "+data, e);
+            logger.error("des encrypt offline error "+data, e);
         }
         return new String(Base64.encodeBase64(bytes));
     }
-
+    
+    /**
+     * 解密
+     * @param data
+     * @return
+     */
+    public static String decryptOffline(String data) {
+    	
+    	byte[] bytes = Base64.decodeBase64(data);
+    	try {
+    		bytes = DES.decrypt(bytes, Global.OFFLINE_DESKEY);
+		} catch (Exception e) {
+			 logger.error("des decrypt offline error "+data, e);
+		}
+    	return new String(bytes);
+    }
+    
 }
