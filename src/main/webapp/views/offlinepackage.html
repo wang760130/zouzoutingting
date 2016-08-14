@@ -8,7 +8,7 @@
 	</head>
 	<body>
 		#foreach($!viewSpot in $!viewSpotList)
-			$!{viewSpot.id} - $!{viewSpot.name}		<br />
+			$!{viewSpot.name}	<input type="button" onclick="javascrtpt:window.location.href='/offlinepackage?vid=$!{viewSpot.id}'" value="下载离线包"/>	<br />
 		#end
 	</body>
 </html>
