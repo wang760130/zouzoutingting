@@ -1,5 +1,25 @@
 package com.zouzoutingting.controllers;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
 import com.zouzoutingting.enums.CouponStateEnum;
 import com.zouzoutingting.enums.OrderStateEnum;
 import com.zouzoutingting.model.Coupon;
@@ -13,26 +33,6 @@ import com.zouzoutingting.service.IViewSpotService;
 import com.zouzoutingting.utils.CouponCodeUtil;
 import com.zouzoutingting.utils.MemcacheClient;
 import com.zouzoutingting.utils.RequestParamUtil;
-import com.zouzoutingting.utils.XMLUtil;
-import net.rubyeye.xmemcached.exception.MemcachedException;
-import org.apache.commons.beanutils.converters.DoubleConverter;
-import org.apache.commons.collections.map.HashedMap;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.concurrent.TimeoutException;
 
 /**
  * Created by zhangyong on 16/6/18.
@@ -41,7 +41,7 @@ import java.util.concurrent.TimeoutException;
 @Controller
 public class PayController extends BaseController {
     private static final Logger logger = Logger.getLogger(PayController.class);
-    private static final int TOTAL_TIMES = 50;
+    private static final int TOTAL_TIMES = 5;
     private static final int COUPON_LENGTH = 8;
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
