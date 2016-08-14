@@ -174,7 +174,7 @@ public class PayController extends BaseController {
         }else{
             if(!StringUtils.isEmpty(couponCode)){
                 Coupon coupon = couponService.getCouponByCode(couponCode);
-                ViewSpot viewSpot = viewSpotService.getViewSpotByID(vid);
+                ViewSpot viewSpot = viewSpotService.getViewSpotByID(vid, uid);
                 if(coupon==null || viewSpot==null){
                     logger.error("coupon code illegle "+couponCode +" or viewspot is null vid:"+vid);
                     isillegle = true;

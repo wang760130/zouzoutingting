@@ -116,7 +116,8 @@ public class ViewSpotController extends BaseController {
         double lat = RequestParamUtil.getDoubleParam(request, "lat", 0.0d);
         
         try {
-	        ViewSpot viewSpot = viewSpotService.getViewSpotByID(vid);
+        	long uid = Long.valueOf(request.getAttribute("uid") + "");
+	        ViewSpot viewSpot = viewSpotService.getViewSpotByID(vid, uid);
 	        if(viewSpot != null) {
 	        	if(lon != 0.0d && lat != 0.0d) {
 	        		double distance = calculateDistance(viewSpot, lon, lat);

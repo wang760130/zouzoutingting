@@ -11,10 +11,10 @@ import org.junit.Test;
 public class PayControllerTest {
     @Test
     public void couponcheckTest() {
-        String url = Global.TEST_HOST_URL + "/couponcheck";
+        String url = Global.HOST_URL + "/couponcheck";
         try {
             JSONObject result = HttpTestUtils.testUrl(url,
-                    "couponcode=T0121D87&token=/v8F00YWcAenQAcot9amZ8O3wDbfeVgzzPJcKdf/WWw=");
+                    "couponcode=3JDBDJTS&token=/v8F00YWcAenQAcot9amZ8O3wDbfeVgzzPJcKdf/WWw=");
             System.out.println(result);
         }catch (Exception e){
             e.printStackTrace();

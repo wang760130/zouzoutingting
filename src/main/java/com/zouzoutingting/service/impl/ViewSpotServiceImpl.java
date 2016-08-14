@@ -72,7 +72,7 @@ public class ViewSpotServiceImpl implements IViewSpotService {
     }
 
     @Override
-    public ViewSpot getViewSpotByID(long vid) {
+    public ViewSpot getViewSpotByID(long vid, long uid) {
         ViewSpot viewSpot = null;
         if(vid > 0L) {
             viewSpot = viewSpotDao.load(vid);
@@ -86,6 +86,19 @@ public class ViewSpotServiceImpl implements IViewSpotService {
         	if(listPic != null && !"".equals(listPic)) {
         		viewSpot.setPic(listPic.split(","));
         	}
+        	
+        	//处理是否支付逻辑
+            if(viewSpot.getPrice() > 0.0){
+                if(uid > 0L) {
+                    Order order = orderService.getOrderByUidAndVid(uid, viewSpot.getId());
+                    if (!(order != null && order.getState() == OrderStateEnum.Finish.getState())) {
+                        viewSpot.setIspayed(false);
+                        logger.info("uid:" + uid + " vid:" + viewSpot.getId() + " not payed");
+                    }
+                }else{
+                   viewSpot.setIspayed(false);
+                }
+            }
         }
         
         return viewSpot;

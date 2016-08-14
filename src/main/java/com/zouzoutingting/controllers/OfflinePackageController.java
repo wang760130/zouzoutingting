@@ -117,7 +117,7 @@ public class OfflinePackageController extends BaseController {
 		String zipPath = basePath + "offlinepackage";
 
 		String fileName = "viewspot_" + vid + "_" + System.currentTimeMillis();
-		ViewSpot viewSpot = viewSpotService.getViewSpotByID(vid);
+		ViewSpot viewSpot = viewSpotService.getViewSpotByID(vid, 0);
      	List<Spot> spotList = spotService.loadByViewID(vid);
      	
      	try {

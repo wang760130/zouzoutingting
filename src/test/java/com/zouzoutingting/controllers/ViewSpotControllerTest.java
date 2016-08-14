@@ -30,7 +30,7 @@ public class ViewSpotControllerTest {
 	public void viewspotTest() {
 		String url = Global.HOST_URL + "/viewspot";
 		try {
-			JSONObject result = HttpTestUtils.testUrl(url,"vid=12");
+			JSONObject result = HttpTestUtils.testUrl(url,"/viewspot?imei=69131E02-A517-4717-A17A-AB085926408D&os=ios&token=%2Fv8F00YWcAeTjVHT1Jrp2Ygk3TIEqg4oqgLhkhf9WqA%3D&version=1.1.1&vid=26");
 			System.out.println(JSON.toJSONString(result, true));
 		} catch (Exception e) {
 			e.printStackTrace();

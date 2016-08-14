@@ -20,9 +20,10 @@ public interface IViewSpotService {
     /**
      * 通过id命中景点
      * @param vid 景点id
+     * @param uid 用户id
      * @return viewspot
      */
-    public ViewSpot getViewSpotByID(long vid);
+    public ViewSpot getViewSpotByID(long vid, long uid);
 
     /**
      * 获取景点列表

@@ -1,5 +1,7 @@
 package com.zouzoutingting.utils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -25,8 +27,8 @@ public class CouponCodeUtil {
     }
 
     public static void main(String[] args) {
-        for(int i = 0;i<100; i++) {
-            System.out.println("返回一个定长的随机字符串(只包含大小写字母、数字):" + generateString(8));
+        for(int i = 0;i < 99; i++) {
+        	System.out.println("INSERT INTO `zouzoutingting`.`t_coupon` (`couponid`, `code`, `amount`, `state`, `starttime`, `endtime`) VALUES (NULL, '"+generateString(8)+"', '30', '0', '2016-08-14 00:00:00', '2017-08-14 00:00:00');");
         }
     }
 }
