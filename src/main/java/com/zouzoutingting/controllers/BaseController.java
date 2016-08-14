@@ -15,6 +15,8 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.json.JSONObject;
+
 import org.apache.log4j.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -117,6 +119,27 @@ public class BaseController {
 				}
 			}
 		}
+	}
+	
+	public void jsonResult(boolean isSuccess, String returnMessage, Object entity, HttpServletResponse response) {
+		try {
+			if(entity == null)
+				entity = new HashMap<String,Object>();
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("success", isSuccess);
+			map.put("message", returnMessage);
+			map.put("entity", entity);
+			JSONObject jsonObject = JSONObject.fromObject(map);  
+			
+			response.setCharacterEncoding("utf-8");
+			response.setContentType("application/json;charset=utf-8");
+			response.getWriter().print(jsonObject.toString());
+			response.getWriter().flush();
+			response.getWriter().close();
+		} catch (IOException e) {
+			logger.info(e.getMessage(), e);
+		}
+		
 	}
 	
 	public void downloadResult(File file, HttpServletResponse response) {

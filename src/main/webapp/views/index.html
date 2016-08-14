@@ -3,11 +3,16 @@
 	<head>
 		<title>走走听听</title>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-		<meta name="description" content="走走听听" />
-		<meta name="keywords" content="走走听听" />
+		<meta name="description" content="$!{description}" />
+		<meta name="keywords" content="$!{keywords}" />
 		<!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
 		<script type="text/javascript" src="js/skel.min.js"></script>
 		<script type="text/javascript" src="js/init.js"></script>
+		
+		<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+    	<script type="text/javascript" src="js/jquery.barrager.js"></script>
+    	
+    	<link rel="stylesheet" href="css/barrager.css" />
 		<noscript>
 			<link rel="stylesheet" href="css/skel.css" />
 			<link rel="stylesheet" href="css/style.css" />
@@ -29,6 +34,7 @@
 		</script>
 				
 		<!-- 百度统计 -->
+		<!-- imonl.com -->
 		<script>
 		var _hmt = _hmt || [];
 		(function() {
@@ -38,17 +44,56 @@
 		  s.parentNode.insertBefore(hm, s);
 		})();
 		</script>
+		
+		<!-- zouzoutingting.net -->
+		<script>
+		var _hmt = _hmt || [];
+		(function() {
+		  var hm = document.createElement("script");
+		  hm.src = "//hm.baidu.com/hm.js?2e6c11aa41efa5c3a50e1763de62002c";
+		  var s = document.getElementsByTagName("script")[0]; 
+		  s.parentNode.insertBefore(hm, s);
+		})();
+		</script>
+		
 	</head>
 	<body class="loading">
 		<div id="wrapper">
 			<div id="bg"></div>
 			<div id="overlay"></div>
 			<div id="main">
-
-					<header id="header">
-						<h1>走走听听</h1>									
-					</header>				
+				<header id="header">
+					<h1>走走听听</h1>									
+				</header>				
 			</div>
 		</div>
+		
+		<script type="text/javascript">
+  			jQuery.ajaxSettings.async = false;
+			jQuery.getJSON('barrager',function(data){
+			 
+			//每条弹幕发送间隔
+			var looper_time=1000;
+			var items=data.entity;
+			//弹幕总数
+			var total=data.entity.length;
+			//是否首次执行
+			var run_once=true;
+			//弹幕索引
+			var index=0;
+			//先执行一次
+			barrager();
+			function barrager(){
+				if(run_once){
+			    	//如果是首次执行,则设置一个定时器,并且把首次执行置为false
+			      	looper=setInterval(barrager,looper_time);                
+			      	run_once=false;
+			  	}
+			  	//发布一个弹幕
+			  	jQuery('body').barrager(items[index]);
+				  	index = parseInt(Math.random() * total);
+				}
+			});
+  		</script>
 	</body>
 </html>
