@@ -59,7 +59,7 @@ public class ViewSpotController extends BaseController {
 				return ;
 			}
         } catch (Exception e) {
-        	e.printStackTrace();
+        	logger.info(e.getMessage(), e);
 			gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, NULL_ARRAY, request, response);
 			return ;
 		}
@@ -98,7 +98,7 @@ public class ViewSpotController extends BaseController {
 			gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, map, request, response);
 			return ;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.info(e.getMessage(), e);
 			gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, NULL_OBJECT, request, response);
 			return ;
 		}
@@ -130,7 +130,7 @@ public class ViewSpotController extends BaseController {
 				return ;
 			}
         } catch (Exception e) {
-			e.printStackTrace();
+        	logger.info(e.getMessage(), e);
 			gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, NULL_OBJECT, request, response);
 			return ;
 		}

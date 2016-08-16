@@ -104,7 +104,7 @@ public class PayController extends BaseController {
             try {
                 MemcacheClient.getInstance().getMc().delete(key);
             } catch (Exception e) {
-                e.printStackTrace();
+            	logger.info(e.getMessage(), e);
             }
         }else{
             try {
@@ -112,7 +112,7 @@ public class PayController extends BaseController {
                 msg += "剩余"+((leftTime>0)?leftTime:0)+"次输入机会";
                 MemcacheClient.getInstance().getMc().set(key, 3600,String.valueOf(checkTimes+1));
             } catch (Exception e) {
-                e.printStackTrace();
+            	logger.info(e.getMessage(), e);
             }
         }
         gzipCipherResult(code, msg, entity, request, response);
