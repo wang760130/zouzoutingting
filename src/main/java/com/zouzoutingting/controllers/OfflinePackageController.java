@@ -30,6 +30,7 @@ import com.zouzoutingting.model.ViewSpot;
 import com.zouzoutingting.service.ISpotService;
 import com.zouzoutingting.service.IViewSpotService;
 import com.zouzoutingting.utils.BeanToMapUtil;
+import com.zouzoutingting.utils.FileUtil;
 import com.zouzoutingting.utils.HttpUtil;
 import com.zouzoutingting.utils.MD5;
 import com.zouzoutingting.utils.OfflinePackageUtil;
@@ -215,9 +216,12 @@ public class OfflinePackageController extends BaseController {
      		ObjectMapper mapper = new ObjectMapper();  
      		String json = mapper.writeValueAsString(viewSoptMap);
      		
-     		this.writeToFile(tempPath + fileName + File.separator + "data.json", json);
+     		String fileNamePath = tempPath + fileName + File.separator;
+     		this.writeToFile(fileNamePath + "data.json", json);
+     		ZipUtil.zip(fileNamePath, zipPath, fileName + ".zip");
      		
-     		ZipUtil.zip(tempPath + fileName + File.separator, zipPath, fileName + ".zip");
+     		FileUtil.deleteDir(new File(fileNamePath));
+     		
 		} catch (IllegalArgumentException e) {
 			logger.info(e.getMessage(), e);
 		} catch (IntrospectionException e) {
