@@ -64,7 +64,7 @@ public class ExplorerUtil {
 			return false;
 		}
 		
-		String[] keywords = { "Android", "iPhone", "iPod", "iPad" };
+		String[] keywords = {"iPhone", "iPod", "iPad" };
 		for (String item : keywords) {  
             if (ua.contains(item)) {  
             	return true;

@@ -25,29 +25,25 @@ public class MobileController extends BaseController {
 	@RequestMapping(value = "/mobile", method = RequestMethod.GET)
 	public ModelAndView index(ModelAndView model, HttpServletRequest request, HttpServletResponse response) {
 		
+		if(ExplorerUtil.isIos(request)) {
+			// IOS 跳应用宝
+			model.setViewName("redirect:" + APP_QQ_URL);
+			return model;
+		}
+		
 		if(ExplorerUtil.isWeixinExporer(request)) {
 			// 在微信中
 			return new ModelAndView("mobile");
 		} else {
-			if(ExplorerUtil.isMobile(request)) {
-				
-				if(ExplorerUtil.isAndroid(request)) {
-					// Android直接下载
-					model.setViewName("redirect:" + ANDROID_URL);
-				} else if(ExplorerUtil.isIos(request)) {
-					// // IOS跳苹果应用市场
-					// IOS 跳应用宝
-					model.setViewName("redirect:" + APP_QQ_URL);
-				} else {
-					// 其他跳到二维码页面
-				    model.setViewName("redirect:" + QRCODE_URL);
-				}
-	 			
+			if(ExplorerUtil.isAndroid(request)) {
+				// Android直接下载
+				model.setViewName("redirect:" + ANDROID_URL);
+				return model;
 			} else {
-				// 不在手机中，跳到二维码页面
-				model.setViewName("redirect:" + QRCODE_URL);
+				// 其他跳到二维码页面
+			    model.setViewName("redirect:" + QRCODE_URL);
+			    return model;
 			}
-			return model;
 		}
 	}
 
