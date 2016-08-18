@@ -19,6 +19,7 @@ import com.zouzoutingting.utils.ExplorerUtil;
 public class MobileController extends BaseController {
 	private static final String ANDROID_URL = "http://oss.imonl.com/android/zztt.apk";
 	private static final String IOS_URL = "https://itunes.apple.com/app/id1132634339";
+	private static final String APP_QQ_URL = "http://a.app.qq.com/o/simple.jsp?pkgname=com.five.zztt";
 	private static final String QRCODE_URL = "http://www.imonl.com/qrcode";
 	
 	@RequestMapping(value = "/mobile", method = RequestMethod.GET)
@@ -34,8 +35,9 @@ public class MobileController extends BaseController {
 					// Android直接下载
 					model.setViewName("redirect:" + ANDROID_URL);
 				} else if(ExplorerUtil.isIos(request)) {
-					// IOS跳苹果应用市场
-					 model.setViewName("redirect:" + IOS_URL);
+					// // IOS跳苹果应用市场
+					// IOS 跳应用宝
+					model.setViewName("redirect:" + APP_QQ_URL);
 				} else {
 					// 其他跳到二维码页面
 				    model.setViewName("redirect:" + QRCODE_URL);
