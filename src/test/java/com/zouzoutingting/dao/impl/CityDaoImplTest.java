@@ -27,14 +27,14 @@ public class CityDaoImplTest {
 	
 	@Test
 	public void loadTest() {
-		City city = cityDao.load(4);
+		City city = cityDao.load(1);
 		System.out.println(city);
 	}
 	
 	@Test
 	public void pageTest() {
 		Page page = new Page();
-		page.setPageNo(2);
+		page.setPageNo(1);
 		page.setPageSize(10);
 		List<City> cityList = cityDao.page(page);
 		for(City city : cityList) {
