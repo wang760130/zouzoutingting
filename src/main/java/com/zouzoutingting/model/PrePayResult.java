@@ -1,6 +1,7 @@
 package com.zouzoutingting.model;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * 预付返回前端结果
@@ -26,7 +27,7 @@ public class PrePayResult implements Serializable{
   /**
    * 拼接参数结果字符串
    */
-  private String paramStr;
+  private String params;
   
   public boolean getResult() {
     return result;
@@ -40,11 +41,11 @@ public class PrePayResult implements Serializable{
   public void setErrMsg(String errMsg) {
     this.errMsg = errMsg;
   }
-  public String getParamStr() {
-    return paramStr;
+  public String getParams() {
+    return params;
   }
-  public void setParamStr(String paramStr) {
-    this.paramStr = paramStr;
+  public void setParamMap(String param) {
+    this.params = param;
   }
 
   public long getOrderid() {

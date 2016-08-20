@@ -1,6 +1,7 @@
 package com.zouzoutingting.model;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Created by zhangyong on 16/6/19.
@@ -33,6 +34,15 @@ public class Order {
 
     @Column(name = "comment")
     private String comment;
+
+    @Column(name = "createTime")
+    private Date createTime;
+
+    @Column(name = "updateTime")
+    private Date updateTime;
+
+    @Column(name = "payTime")
+    private Date payTime;
 
     public long getOrderid() {
         return orderid;
@@ -96,5 +106,29 @@ public class Order {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public Date getPayTime() {
+        return payTime;
+    }
+
+    public void setPayTime(Date payTime) {
+        this.payTime = payTime;
     }
 }

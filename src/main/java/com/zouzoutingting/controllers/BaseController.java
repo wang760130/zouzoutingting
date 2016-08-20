@@ -141,6 +141,28 @@ public class BaseController {
 		}
 		
 	}
+
+	/**
+	 * 阿里回调返回plain数据
+	 * @param data 返回数据
+	 * @param response
+     */
+	public void plainResult(String data, HttpServletResponse response) {
+		try {
+			if(data == null){
+				data = "";
+			}
+
+			response.setCharacterEncoding("utf-8");
+			response.setContentType("text/plain");
+			response.getWriter().print(data);
+			response.getWriter().flush();
+			response.getWriter().close();
+		} catch (IOException e) {
+			logger.info(e.getMessage(), e);
+		}
+
+	}
 	
 	public void downloadResult(File file, HttpServletResponse response) {
 		InputStream is = null;

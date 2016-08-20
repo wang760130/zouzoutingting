@@ -13,6 +13,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.druid.support.json.JSONUtils;
+import com.zouzoutingting.utils.ParamUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -202,6 +204,8 @@ public class PayController extends BaseController {
         order.setTotal(money);
         order.setUid(uid);
         order.setVid(vid);
+        order.setCreateTime(new Date());
+        order.setUpdateTime(new Date());
         return orderService.insertOrder(order);
     }
 
@@ -293,22 +297,29 @@ public class PayController extends BaseController {
         //1.获取order
         Order order = null;
         order = orderService.getOrderByID(orderid);
-        //2.调用微信
-        PrePayResult prePayResult = null;
-        try {
-            prePayResult = payService.getWxPreyPayInfo(order);
-        } catch (Exception e) {
-            logger.error("调用微信预付Error uid:"+uid+",vid:"+vid+",orderid:"+orderid, e);
-        }
-        //返回结果
-        if(prePayResult!=null){
-            if(prePayResult.getResult()){
-                gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, prePayResult, request, response);
-            }else{
-                gzipCipherResult(RETURN_CODE_EXCEPTION, "支付异常", prePayResult, request, response);
+        if(order!=null && order.getState()!=OrderStateEnum.Finish.getState() && order.getUid()==uid) {
+            //2.调用微信
+            PrePayResult prePayResult = null;
+            try {
+                prePayResult = payService.getWxPreyPayInfo(order);
+            } catch (Exception e) {
+                logger.error("调用微信预付Error uid:" + uid + ",vid:" + vid + ",orderid:" + orderid, e);
             }
+            //返回结果
+            returnPrePayResult(prePayResult, request, response);
         }else{
-            gzipCipherResult(RETURN_CODE_EXCEPTION, "支付异常,请重试", NULL_OBJECT, request, response);
+            if(order==null){
+                logger.error("wxprepay 支付参数错误 oid:"+orderid +", vid:"+vid+" ,uid:"+uid);
+                gzipCipherResult(RETURN_CODE_PARAMETER_ERROR, RETUEN_MESSAGE_PARAMETER_ERROR, NULL_OBJECT, request, response);
+            }else {
+                if(order.getState()==OrderStateEnum.Finish.getState()) {
+                    logger.error("wxprepay 已支付 oid:" + orderid + ", vid:" + vid + " ,uid:" + uid);
+                    gzipCipherResult(1, "您已经购买了当前景点", NULL_OBJECT, request, response);
+                }else{
+                    logger.error("wxprepay 非本人 oid:" + orderid + ", vid:" + vid + " ,uid:" + uid);
+                    gzipCipherResult(RETURN_CODE_PARAMETER_ERROR, RETUEN_MESSAGE_PARAMETER_ERROR, NULL_OBJECT, request, response);
+                }
+            }
         }
     }
 
@@ -321,23 +332,101 @@ public class PayController extends BaseController {
         //1.获取order
         Order order = null;
         order = orderService.getOrderByID(orderid);
-        //2.调用微信
-        PrePayResult prePayResult = null;
-        try {
-            prePayResult = payService.getAliPreyPayInfo(order);
-        } catch (Exception e) {
-            logger.error("调用微信预付Error uid:"+uid+",vid:"+vid+",orderid:"+orderid, e);
+        if(order!=null && order.getState()!=OrderStateEnum.Finish.getState() && order.getUid()==uid) {
+            //2.拼接参数
+            PrePayResult prePayResult = null;
+            try {
+                prePayResult = payService.getAliPreyPayInfo(order);
+            } catch (Exception e) {
+                logger.error("调用微信预付Error uid:" + uid + ",vid:" + vid + ",orderid:" + orderid, e);
+            }
+            //返回结果
+            returnPrePayResult(prePayResult, request, response);
+        }else{
+            if(order==null){
+                logger.error("aliprey支付参数错误 oid:"+orderid +", vid:"+vid+" ,uid:"+uid);
+                gzipCipherResult(RETURN_CODE_PARAMETER_ERROR, RETUEN_MESSAGE_PARAMETER_ERROR, NULL_OBJECT, request, response);
+            }else {
+                if(order.getState()==OrderStateEnum.Finish.getState()) {
+                    logger.error("aliprey 已支付 oid:" + orderid + ", vid:" + vid + " ,uid:" + uid);
+                    gzipCipherResult(1, "您已经购买了当前景点", NULL_OBJECT, request, response);
+                }else{
+                    logger.error("aliprey 非本人 oid:" + orderid + ", vid:" + vid + " ,uid:" + uid);
+                    gzipCipherResult(RETURN_CODE_PARAMETER_ERROR, RETUEN_MESSAGE_PARAMETER_ERROR, NULL_OBJECT, request, response);
+                }
+            }
         }
-        //返回结果
-        if(prePayResult!=null){
-            if(prePayResult.getResult()){
+    }
+    private void returnPrePayResult(PrePayResult prePayResult, HttpServletRequest request, HttpServletResponse response){
+        if (prePayResult != null) {
+            if (prePayResult.getResult()) {
                 gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, prePayResult, request, response);
-            }else{
+            } else {
                 gzipCipherResult(RETURN_CODE_EXCEPTION, "支付异常", prePayResult, request, response);
             }
-        }else{
+        } else {
             gzipCipherResult(RETURN_CODE_EXCEPTION, "支付异常,请重试", NULL_OBJECT, request, response);
         }
+    }
+
+    /**
+     * ali回调
+     * @param request
+     * @param response
+     */
+    @RequestMapping(value = "/notify/ali")
+    public void AliNotify(HttpServletRequest request, HttpServletResponse response){
+
+        boolean ret = false;
+        try{
+            String param = ParamUtil.getString(request, "zztt_info", "");// orderid_uid_vid_couponcode
+            Map<String, String[]> requestParams = request.getParameterMap();
+            Map<String,String> params = new HashMap<String,String>();
+            logger.info("ali notify:zztt_info "+param);
+            String[] pArray = param.split("_");
+            params.put("orderid", pArray[0]);
+            params.put("uid", pArray[1]);
+            params.put("vid", pArray[2]);
+            params.put("couponcode", pArray[3]);
+
+            ret = payService.AliPayNotify(requestParams, params);
+        }catch (Exception e){
+            logger.error("ali notify controller error", e);
+        }
+        String result = "fail";
+        if(ret){
+            result = "success";
+        }
+        plainResult(result, response);
+    }
+
+    @RequestMapping(value = "pay/checkresult", method = RequestMethod.POST)
+    public void AliCheckResult(HttpServletRequest request, HttpServletResponse response){
+        Long uid = Long.valueOf(request.getAttribute("uid") + "");
+        Long orderid = RequestParamUtil.getLongParam(request, "orderid", -1L);
+
+        if(uid>0 && orderid>0){
+
+            Order order = orderService.getOrderByID(orderid);
+            if(order!=null && order.getUid() == uid){
+                boolean payed = false;
+                if(order.getState()==OrderStateEnum.Finish.getState()){
+                    payed = true;
+                    logger.info("uid:"+uid+",orderid:"+orderid+" 已支付");
+                }else{
+                    logger.info("uid:"+uid+",orderid:"+orderid+" 未支付 "+ JSONUtils.toJSONString(order));
+                }
+                gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, payed, request, response);
+            }else {
+                logger.error("checkresult 非本人 参数错误 uid" + uid + ", orderid:" + orderid);
+                gzipCipherResult(RETURN_CODE_PARAMETER_ERROR, RETUEN_MESSAGE_PARAMETER_ERROR, NULL_OBJECT, request, response);
+            }
+
+        }else{
+            logger.error("checkresult 参数错误 uid" + uid + ", orderid:" + orderid);
+            gzipCipherResult(RETURN_CODE_PARAMETER_ERROR, RETUEN_MESSAGE_PARAMETER_ERROR, NULL_OBJECT, request, response);
+        }
+
     }
 
     /**
@@ -362,35 +451,6 @@ public class PayController extends BaseController {
             logger.error("wx notify controller error", e);
         }
         if(result){
-            gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, NULL_OBJECT, request, response);
-        }else {
-            gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, NULL_OBJECT, request, response);
-        }
-    }
-
-    /**
-     * ali回调
-     * @param request
-     * @param response
-     */
-    @RequestMapping(value = "/notify/ali")
-    public void AliNotify(HttpServletRequest request, HttpServletResponse response){
-        boolean ret = false;
-        try{
-            String param = RequestParamUtil.getParam(request, "zztt_info", "");// orderid_uid_vid_couponcode
-            Map<String, String[]> requestParams = request.getParameterMap();
-            Map<String,String> params = new HashMap<String,String>();
-            String[] pArray = param.split("_");
-            params.put("orderid", pArray[0]);
-            params.put("uid", pArray[1]);
-            params.put("vid", pArray[2]);
-            params.put("couponcode", pArray[3]);
-
-            ret = payService.AliPayNotify(requestParams, params);
-        }catch (Exception e){
-            logger.error("ali notify controller error", e);
-        }
-        if(ret){
             gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, NULL_OBJECT, request, response);
         }else {
             gzipCipherResult(RETURN_CODE_EXCEPTION, RETURN_MESSAGE_EXCEPTION, NULL_OBJECT, request, response);

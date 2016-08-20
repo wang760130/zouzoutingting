@@ -124,5 +124,13 @@ public class RequestParamUtil {
 		}
 		return retDouble;
 	}
-	
+
+	public static String getParamDirect(HttpServletRequest request, String name, String defaultVal) {
+		String paramValue = (String) request.getAttribute(name);
+		if (paramValue != null) {
+			return paramValue;
+		} else {
+			return defaultVal;
+		}
+	}
 }
