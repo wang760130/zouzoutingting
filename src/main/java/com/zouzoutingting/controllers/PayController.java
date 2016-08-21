@@ -397,7 +397,7 @@ public class PayController extends BaseController {
         if(ret){
             result = "success";
         }
-        plainResult(result, response);
+        stringResult(result, response);
     }
 
     @RequestMapping(value = "pay/checkresult", method = RequestMethod.POST)

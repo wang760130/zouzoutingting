@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONObject;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -86,6 +88,14 @@ public class BaseController {
 	public static final Map<String, String> NULL_OBJECT = new HashMap<String, String>();
 	public static final List<String> NULL_ARRAY = new ArrayList<String>();
 	
+	/**
+	 * 对App返回数据，将结果gzip压缩，des加密，并使用IO流的方式输出结果。
+	 * @param returnCode
+	 * @param returnMessage
+	 * @param entity
+	 * @param request
+	 * @param response
+	 */
 	public void gzipCipherResult(int returnCode, String returnMessage, Object entity, HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("code", returnCode);
@@ -121,7 +131,27 @@ public class BaseController {
 		}
 	}
 	
+	/**
+	 * JSON统一回调
+	 * @param isSuccess
+	 * @param returnMessage
+	 * @param entity
+	 * @param response
+	 */
 	public void jsonResult(boolean isSuccess, String returnMessage, Object entity, HttpServletResponse response) {
+		this.jsonResult(isSuccess, returnMessage, entity, "", response);
+	}
+	
+	/**
+	 * JSON统一回调
+	 * @param isSuccess
+	 * @param returnMessage
+	 * @param callback
+	 * @param entity
+	 * @param response
+	 */
+	public void jsonResult(boolean isSuccess, String returnMessage, Object entity, String callback, HttpServletResponse response) {
+		PrintWriter printWriter = null;
 		try {
 			if(entity == null)
 				entity = new HashMap<String,Object>();
@@ -130,40 +160,57 @@ public class BaseController {
 			map.put("message", returnMessage);
 			map.put("entity", entity);
 			JSONObject jsonObject = JSONObject.fromObject(map);  
+			String jsonStr = jsonObject.toString();
+			
+			if(StringUtils.isNotBlank(callback)) {
+				jsonStr = callback + "(" + jsonStr + ")";
+            } 
 			
 			response.setCharacterEncoding("utf-8");
 			response.setContentType("application/json;charset=utf-8");
-			response.getWriter().print(jsonObject.toString());
-			response.getWriter().flush();
-			response.getWriter().close();
+			printWriter = response.getWriter();
+			printWriter.print(jsonStr);
+			printWriter.flush();
 		} catch (IOException e) {
 			logger.info(e.getMessage(), e);
+		} finally {
+			if(printWriter != null) {
+				printWriter.close();
+			}
 		}
-		
 	}
 
 	/**
-	 * 阿里回调返回plain数据
+	 * 返回字符串
 	 * @param data 返回数据
 	 * @param response
      */
-	public void plainResult(String data, HttpServletResponse response) {
+	public void stringResult(String data, HttpServletResponse response) {
+		PrintWriter printWriter = null;
 		try {
 			if(data == null){
 				data = "";
 			}
-
 			response.setCharacterEncoding("utf-8");
-			response.setContentType("text/plain");
-			response.getWriter().print(data);
-			response.getWriter().flush();
-			response.getWriter().close();
+			response.setContentType("text/plain;charset=\"UTF-8\"");
+			printWriter = response.getWriter();
+			printWriter.print(data);
+			printWriter.flush();
 		} catch (IOException e) {
 			logger.info(e.getMessage(), e);
+		} finally {
+			if(printWriter != null) {
+				printWriter.close();
+			}
 		}
 
 	}
 	
+	/**
+	 * 文件下载
+	 * @param file
+	 * @param response
+	 */
 	public void downloadResult(File file, HttpServletResponse response) {
 		InputStream is = null;
 		ServletOutputStream outputStream = null;
@@ -209,6 +256,11 @@ public class BaseController {
 		}
 	}
 	
+	/**
+	 * 显示图片
+	 * @param file
+	 * @param response
+	 */
 	public void imgaeResult(File file, HttpServletResponse response) {
 		FileInputStream fis = null;
 		ServletOutputStream outputStream = null;
@@ -243,7 +295,7 @@ public class BaseController {
 				try {
 					fis.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.info(e.getMessage(), e);
 				}
 			}
 		}
