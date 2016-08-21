@@ -71,8 +71,10 @@ public class PayController extends BaseController {
         String key = "couponCheckTimes_"+uid;
 
         if(StringUtils.isNotBlank(couponCode) && uid > 0L){
-        	
         	checkTimes = timesCache.get(key);
+        	if(checkTimes == null) {
+        		checkTimes = 0;
+        	}
             if(checkTimes >= TOTAL_TIMES){
                 code = -4;
                 msg = "您输入次数已达上限,请一小时后重试";
@@ -102,9 +104,10 @@ public class PayController extends BaseController {
         if(code==RETURN_CODE_SUCCESS){
         	timesCache.delete(key);
         }else{
+        	checkTimes ++;
             int leftTime = TOTAL_TIMES - checkTimes;
-            msg += "剩余"+((leftTime>0)?leftTime:0)+"次输入机会";
-            timesCache.put(key, checkTimes + 1);
+            msg += "剩余"+((leftTime > 0) ? leftTime : 0)+"次输入机会";
+            timesCache.put(key, checkTimes);
         }
         gzipCipherResult(code, msg, entity, request, response);
     }
