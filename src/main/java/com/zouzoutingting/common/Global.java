@@ -44,10 +44,13 @@ public class Global {
 
 	public static final String ALI_PAY_PAYMENT_TYPE = "1";
 
-	public static final String ALI_PAY_PARTNER_ID= "2088321043087101";//TODO
+	public static final String ALI_PAY_INTERFACE_VERSION = "1.0";
 
-	public static final String ALI_PAY_SELLER_ID = "2088321043087101";//TODO
+	public static final String ALI_PAY_PARTNER_ID= "2088321043087101";//TODO 沙箱:2088102169325432 online:2088321043087101
 
+	public static final String ALI_PAY_SELLER_ID = "2088321043087101";//TODO 沙箱:2088102169325432 online:2088321043087101
+
+	private static final String ALI_APP_ID = "2016070801594335";//阿里appid  沙箱:2016073100134649  online:2016070801594335
 	public static String
 			ALI_PAY_PARTNER_PRIVATE_KEY="MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBALb1uL28eDYDyDG9\n" +
 			"1xZMOdJB2ebtaPIw4pDyaoQw2jNxPOOS1/0aI2aykLvK8vVqAQMFzAG9hOXAZe8f\n" +
@@ -66,7 +69,7 @@ public class Global {
 	public static String ALI_PAY_PARTNER_PUB_KEY="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC29bi9vHg2A8gxvdcWTDnSQdnm7WjyMOKQ8mqEMNozcTzjktf9GiNmspC7yvL1agEDBcwBvYTlwGXvH9DXy2yhVCdds1o6tz5C5GUJijvc+mbZbr8T1/xH8+9zpQXWVRD1EQToJrU+1HqCSeJunCA2Vt+K3OXtvwleABwdLlYKLQIDAQAB";// TODO
 
 	//支付宝提供给商户的服务接入网关URL
-	public static final String ALI_PAY_GATEWAY_URL = "https://mapi.alipay.com/gateway.do?";
+	private static final String ALI_PAY_GATEWAY_URL = "https://mapi.alipay.com/gateway.do?";
 	public static final String ALI_PAY_SELLER_MAIL = "zouzoutingting@aliyun.com";//TODO
 	public static String getAliPayParterID(){
 		String aliparterid = PropManager.getSingletonInstance().getProperty("ALI_PAY_PARTNER_ID");
@@ -81,5 +84,22 @@ public class Global {
 			alipaySellid = ALI_PAY_SELLER_ID;
 		}
 		return alipaySellid;
+	}
+
+	public static String getAliPayGatewayUrl(){
+		String ali_pay_gateway_url = PropManager.getSingletonInstance().getProperty("ALI_PAY_GATEWAY_URL");
+		if(ali_pay_gateway_url==null){
+			ali_pay_gateway_url = ALI_PAY_GATEWAY_URL;
+		}
+		return ali_pay_gateway_url;
+	}
+
+
+	public static String getAliAppID(){
+		String appid = PropManager.getSingletonInstance().getProperty("ALI_APP_ID");
+		if(appid==null){
+			appid = ALI_APP_ID;
+		}
+		return appid;
 	}
 }

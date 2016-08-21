@@ -13,7 +13,6 @@ import com.zouzoutingting.utils.alipay.AliParamCore;
 import com.zouzoutingting.utils.alipay.AlipayCore;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionContext;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,10 +32,6 @@ public class PayServiceImpl implements IPayService{
     private static final Logger logger = Logger.getLogger(PayServiceImpl.class);
     private static SimpleDateFormat sdf_Ali = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private static SimpleDateFormat sdf_Wx = new SimpleDateFormat("yyyyMMddHHmmss");
-    /**
-     * 支付宝消息验证地址
-     */
-    private static final String HTTPS_VERIFY_URL = "https://mapi.alipay.com/gateway.do?service=notify_verify&";
 
     @Autowired
     private IDao<Order> orderDao;
@@ -197,13 +192,6 @@ public class PayServiceImpl implements IPayService{
         return resultDto;
     }
 
-    public static void main(String[] args) throws Exception{
-        String data = "{\"a\":\"123\" }";
-        Map<String,String> map = new HashMap<String, String>();
-        map.put("a","123");
-        System.out.println(AliParamCore.AppBuildAliRequestStr(map,Global.ALI_PAY_PARTNER_PRIVATE_KEY));
-    }
-
     @Override
     public boolean AliPayNotify(Map requestMap, Map params) {
         boolean ret = false;
@@ -307,7 +295,7 @@ public class PayServiceImpl implements IPayService{
         //获取远程服务器ATN结果，验证是否是支付宝服务器发来的请求
 
         String partner = Global.getAliPayParterID();
-        String veryfy_url = HTTPS_VERIFY_URL + "partner=" + partner + "&notify_id=" + notify_id;
+        String veryfy_url = Global.getAliPayGatewayUrl() + "service=notify_verify&partner=" + partner + "&notify_id=" + notify_id;
 
         return checkUrl(veryfy_url);
     }

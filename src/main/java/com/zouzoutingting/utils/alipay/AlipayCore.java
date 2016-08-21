@@ -231,7 +231,7 @@ public class AlipayCore {
 			if (i < keys.size() - 1)
 				ret.append("&");
 		}
-		return Global.ALI_PAY_GATEWAY_URL + ret.toString();
+		return Global.getAliPayGatewayUrl() + ret.toString();
 	}
 	
 	

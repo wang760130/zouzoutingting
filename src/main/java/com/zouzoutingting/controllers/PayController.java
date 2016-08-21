@@ -181,6 +181,14 @@ public class PayController extends BaseController {
                         out.add(viewSpot.getPrice()-coupon.getAmount());
                     }
                 }
+            }else{//不使用券支付
+                ViewSpot viewSpot = viewSpotService.getViewSpotByID(vid, uid);
+                if(viewSpot!=null){
+                    out.add(viewSpot.getPrice());
+                    out.add(viewSpot.getPrice());
+                }else {
+                    isillegle = true;//不合法
+                }
             }
         }
         return isillegle;
@@ -403,7 +411,9 @@ public class PayController extends BaseController {
                     payed = true;
                     logger.info("uid:"+uid+",orderid:"+orderid+" 已支付");
                 }else{
-                    logger.info("uid:"+uid+",orderid:"+orderid+" 未支付 "+ JSONUtils.toJSONString(order));
+                    logger.info("uid:"+uid+",orderid:"+orderid+" db未支付 "+ JSONUtils.toJSONString(order));
+                    //查询第三方后台
+
                 }
                 gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, payed, request, response);
             }else {

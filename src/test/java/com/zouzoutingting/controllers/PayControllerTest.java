@@ -116,4 +116,28 @@ public class PayControllerTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void wxNotifyTest(){
+        String url = Global.TEST_HOST_URL + "/notify/wechat";
+        try {
+            String data = "zztt_info=\"135_100008_17_DZUXHO2E\"&partner=\"2016073100134649\"&seller_id" +
+                    "=\"20881021693254322088102169325432" +
+                    "\"&out_trade_no=\"135" +
+                    "\"&subject=\"走走听听语音包\"&body=\"走走听听语音包\"&total_fee=\"0.0\"&notify_url=\"http://api.imonl" +
+                    ".com/notify/wechat?zztt_info=135_100008_17_DZUXHO2E\"&service=\"alipay.wap.create.direct.pay.by" +
+                    ".user\"&_input_charset=\"utf-8\"&payment_type=\"1\"";
+            Map<String, String> map = new HashMap<String, String>();
+            String[] args = data.split("&");
+            for(String k : args) {
+                String[] k1 = k.split("=");
+                map.put(k1[0], k1[1]);
+            }
+
+            String result = HttpTestUtils.httpClientPost(url, map, null);
+            System.out.println(result);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 }
