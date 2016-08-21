@@ -423,7 +423,8 @@ public class PayServiceImpl implements IPayService{
         sParaTemp.put("nonce_str", WXUtil.getNonceStr());
         sParaTemp.put("notify_url", notifyUrl);
         sParaTemp.put("out_trade_no", String.valueOf(order.getOrderid()));//用订单id即可
-        sParaTemp.put("total_fee",order.getNeedpay()*1000 + "");
+
+        sParaTemp.put("total_fee",Integer.parseInt((int)order.getNeedpay()*100 + "")+"");
         //合作id
         sParaTemp.put("appid", Global.WX_APPID);
         //帐号
@@ -448,39 +449,40 @@ public class PayServiceImpl implements IPayService{
      * @return
      */
     private String AppBuildWxRequestStr(String prepayid, Order order){
-//        String result = "";
-//        Map<String,String> retMap = new HashMap<String, String>();
-//        List<NameValuePair> payMap = new LinkedList<NameValuePair>();
-//        payMap.add(new NameValuePair("appid", Global.WX_APPID));
-//        retMap.put("appid", Global.WX_APPID);
-//        payMap.add(new NameValuePair("noncestr", WXUtil.getNonceStr()));
-//        retMap.put("noncestr", WXUtil.getNonceStr());
-//        payMap.add(new NameValuePair("package", "Sign=WXPay"));
-//        retMap.put("package", "Sign=WXPay");
-//        payMap.add(new NameValuePair("partnerid", Global.WX_PAY_MCH_ID));
-//        retMap.put("partnerid", Global.WX_PAY_MCH_ID);
-//        payMap.add(new NameValuePair("prepayid", prepayid));
-//        retMap.put("prepayid", prepayid);
-//        payMap.add(new NameValuePair("timestamp", WXUtil.getTimeStamp()));
-//        retMap.put("timestamp", WXUtil.getTimeStamp());
-//        String resultsign = WXUtil.wxSignByNvPair(Global.WX_PAY_INPUT_CHARSET,payMap,Global.WX_PAY_PARTER_KEY);
-//        payMap.add(new NameValuePair("sign", resultsign));
-//        retMap.put("sign", resultsign);
-//        result = JSON.toJSONString(payMap);
-//        logger.info("app wecaht 加密后:"+result);
-//        return retMap;
         String result = "";
+        Map<String,String> retMap = new HashMap<String, String>();
         List<NameValuePair> payMap = new LinkedList<NameValuePair>();
         payMap.add(new NameValuePair("appid", Global.WX_APPID));
+        retMap.put("appid", Global.WX_APPID);
         payMap.add(new NameValuePair("noncestr", WXUtil.getNonceStr()));
+        retMap.put("noncestr", WXUtil.getNonceStr());
         payMap.add(new NameValuePair("package", "Sign=WXPay"));
+        retMap.put("package", "Sign=WXPay");
         payMap.add(new NameValuePair("partnerid", Global.WX_PAY_MCH_ID));
+        retMap.put("partnerid", Global.WX_PAY_MCH_ID);
         payMap.add(new NameValuePair("prepayid", prepayid));
+        retMap.put("prepayid", prepayid);
         payMap.add(new NameValuePair("timestamp", WXUtil.getTimeStamp()));
+        retMap.put("timestamp", WXUtil.getTimeStamp());
         String resultsign = WXUtil.wxSignByNvPair(Global.WX_PAY_INPUT_CHARSET,payMap,Global.WX_PAY_PARTER_KEY);
         payMap.add(new NameValuePair("sign", resultsign));
-        result = JSON.toJSONString(payMap);
-        logger.info("app wechat 加密后:"+result);
+        retMap.put("sign", resultsign);
+        result = JSON.toJSONString(retMap);
+        logger.info("app wecaht 加密后:"+result);
         return result;
+
+//        String result = "";
+//        List<NameValuePair> payMap = new LinkedList<NameValuePair>();
+//        payMap.add(new NameValuePair("appid", Global.WX_APPID));
+//        payMap.add(new NameValuePair("noncestr", WXUtil.getNonceStr()));
+//        payMap.add(new NameValuePair("package", "Sign=WXPay"));
+//        payMap.add(new NameValuePair("partnerid", Global.WX_PAY_MCH_ID));
+//        payMap.add(new NameValuePair("prepayid", prepayid));
+//        payMap.add(new NameValuePair("timestamp", WXUtil.getTimeStamp()));
+//        String resultsign = WXUtil.wxSignByNvPair(Global.WX_PAY_INPUT_CHARSET,payMap,Global.WX_PAY_PARTER_KEY);
+//        payMap.add(new NameValuePair("sign", resultsign));
+//        result = JSON.toJSONString(payMap);
+//        logger.info("app wechat 加密后:"+result);
+//        return result;
     }
 }
