@@ -2,6 +2,7 @@ package com.zouzoutingting.interceptor;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Enumeration;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -61,6 +62,14 @@ public class AccessLoggerInterceptor implements HandlerInterceptor {
 			String ip = checkLogFiled(IpUtil.getClickUserIp(request));
 			String userAgent = checkLogFiled(request.getHeader("user-agent"));
 			String referer = checkLogFiled(request.getHeader("referer"));
+			
+			StringBuffer heaeders = new StringBuffer();
+			Enumeration<String> headerNames = request.getHeaderNames();
+			while (headerNames.hasMoreElements()) {
+                String key = (String) headerNames.nextElement();
+                String value = request.getHeader(key);
+                heaeders.append(key).append(":").append(value).append(",");
+            }
 			
 			StringBuffer sb = new StringBuffer();
 	
