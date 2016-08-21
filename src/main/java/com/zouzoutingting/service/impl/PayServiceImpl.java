@@ -423,7 +423,7 @@ public class PayServiceImpl implements IPayService{
         sParaTemp.put("nonce_str", WXUtil.getNonceStr());
         sParaTemp.put("notify_url", notifyUrl);
         sParaTemp.put("out_trade_no", String.valueOf(order.getOrderid()));//用订单id即可
-        sParaTemp.put("total_fee",order.getNeedpay() + "");
+        sParaTemp.put("total_fee",order.getNeedpay()*1000 + "");
         //合作id
         sParaTemp.put("appid", Global.WX_APPID);
         //帐号
