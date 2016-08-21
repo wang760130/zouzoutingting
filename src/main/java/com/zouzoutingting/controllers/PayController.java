@@ -13,8 +13,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.alibaba.druid.support.json.JSONUtils;
-import com.zouzoutingting.utils.ParamUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +20,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.alibaba.druid.support.json.JSONUtils;
+import com.zouzoutingting.components.cache.CacheMap;
 import com.zouzoutingting.enums.CouponStateEnum;
 import com.zouzoutingting.enums.OrderStateEnum;
 import com.zouzoutingting.model.Coupon;
@@ -33,7 +33,7 @@ import com.zouzoutingting.service.IOrderService;
 import com.zouzoutingting.service.IPayService;
 import com.zouzoutingting.service.IViewSpotService;
 import com.zouzoutingting.utils.CouponCodeUtil;
-import com.zouzoutingting.utils.MemcacheClient;
+import com.zouzoutingting.utils.ParamUtil;
 import com.zouzoutingting.utils.RequestParamUtil;
 
 /**
@@ -47,6 +47,9 @@ public class PayController extends BaseController {
     private static final int COUPON_LENGTH = 8;
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+    // 缓存用户使用优惠券错误次数，60 * 60 * 1000
+    private static final CacheMap<String, Integer> timesCache = new CacheMap<String, Integer>(60*60*1000);
+    
     @Autowired
     private ICouponService couponService;
     @Autowired
@@ -64,19 +67,13 @@ public class PayController extends BaseController {
         String msg = "";
         Object entity = NULL_OBJECT;
         //校验次数
-        int checkTimes = 0;
+        Integer checkTimes = 0;
         String key = "couponCheckTimes_"+uid;
 
-        if(StringUtils.isNotBlank(couponCode) && uid>0L){
-            try {
-                String value = MemcacheClient.getInstance().getMc().get(key);
-                if(value!=null && StringUtils.isNumeric(value)){
-                    checkTimes = Integer.valueOf(value);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            if(checkTimes>=TOTAL_TIMES){
+        if(StringUtils.isNotBlank(couponCode) && uid > 0L){
+        	
+        	checkTimes = timesCache.get(key);
+            if(checkTimes >= TOTAL_TIMES){
                 code = -4;
                 msg = "您输入次数已达上限,请一小时后重试";
                 gzipCipherResult(code, msg, entity, request, response);
@@ -103,19 +100,11 @@ public class PayController extends BaseController {
         }
 
         if(code==RETURN_CODE_SUCCESS){
-            try {
-                MemcacheClient.getInstance().getMc().delete(key);
-            } catch (Exception e) {
-            	logger.info(e.getMessage(), e);
-            }
+        	timesCache.delete(key);
         }else{
-            try {
-                int leftTime = TOTAL_TIMES - checkTimes;
-                msg += "剩余"+((leftTime>0)?leftTime:0)+"次输入机会";
-                MemcacheClient.getInstance().getMc().set(key, 3600,String.valueOf(checkTimes+1));
-            } catch (Exception e) {
-            	logger.info(e.getMessage(), e);
-            }
+            int leftTime = TOTAL_TIMES - checkTimes;
+            msg += "剩余"+((leftTime>0)?leftTime:0)+"次输入机会";
+            timesCache.put(key, checkTimes + 1);
         }
         gzipCipherResult(code, msg, entity, request, response);
     }
