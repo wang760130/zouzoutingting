@@ -98,7 +98,7 @@ public class PayControllerTest {
         String url = Global.TEST_HOST_URL + "/pay/checkresult";
         try {
             JSONObject result = HttpTestUtils.testUrl(url,
-                    "orderid=1&token=/v8F00YWcAdWea+DHZHq14o+SATaZ+KWsZfG6AcjNAI=");
+                    "orderid=152&token=/v8F00YWcAefaGAfUrCT63zkQONwVCWXyioO6YPIZ5c=");
             System.out.println(result);
         }catch (Exception e){
             e.printStackTrace();

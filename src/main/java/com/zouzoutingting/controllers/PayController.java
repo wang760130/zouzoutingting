@@ -13,14 +13,15 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.zouzoutingting.components.cache.CacheMap;
 import com.zouzoutingting.enums.CouponStateEnum;
 import com.zouzoutingting.enums.OrderStateEnum;
@@ -374,20 +375,30 @@ public class PayController extends BaseController {
      * @param request
      * @param response
      */
-    @RequestMapping(value = "/notify/ali")
-    public void AliNotify(HttpServletRequest request, HttpServletResponse response){
+    @RequestMapping(value = "/notify/ali/{couponcode}/{orderid}/{uid}/{vid}")
+    public void AliNotify(@PathVariable(value="orderid") long orderid, @PathVariable(value = "uid") long uid,
+                          @PathVariable(value = "vid") long vid, @PathVariable(value = "couponcode") String couponcode,HttpServletRequest request, HttpServletResponse response){
 
         boolean ret = false;
         try{
-            String param = ParamUtil.getString(request, "zztt_info", "");// orderid_uid_vid_couponcode
+//            String param = ParamUtil.getString(request, "zztt_info", "");// orderid_uid_vid_couponcode
+//            logger.info("ali param:"+param);
             Map<String, String[]> requestParams = request.getParameterMap();
             Map<String,String> params = new HashMap<String,String>();
-            logger.info("ali notify:zztt_info "+param);
-            String[] pArray = param.split("_");
-            params.put("orderid", pArray[0]);
-            params.put("uid", pArray[1]);
-            params.put("vid", pArray[2]);
-            params.put("couponcode", pArray[3]);
+//            logger.info("ali notify:zztt_info "+param);
+//            String[] pArray = param.split("_");
+//            params.put("orderid", pArray[0]);
+//            params.put("uid", pArray[1]);
+//            params.put("vid", pArray[2]);
+//            params.put("couponcode", pArray[3]);
+
+            params.put("orderid", orderid+"");
+            params.put("uid", uid+"");
+            params.put("vid", vid+"");
+            if(couponcode.equals("null")){
+                couponcode = "";
+            }
+            params.put("couponcode", couponcode);
 
             ret = payService.AliPayNotify(requestParams, params);
         }catch (Exception e){
@@ -414,11 +425,14 @@ public class PayController extends BaseController {
                     payed = true;
                     logger.info("uid:"+uid+",orderid:"+orderid+" 已支付");
                 }else{
-                    logger.info("uid:"+uid+",orderid:"+orderid+" db未支付 "+ JSONUtils.toJSONString(order));
+                    logger.info("uid:"+uid+",orderid:"+orderid+" db未支付 "+ JSON.toJSONString(order));
                     //查询第三方后台
 
                 }
-                gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, payed, request, response);
+                //
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("result", payed);
+                gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, map, request, response);
             }else {
                 logger.error("checkresult 非本人 参数错误 uid" + uid + ", orderid:" + orderid);
                 gzipCipherResult(RETURN_CODE_PARAMETER_ERROR, RETUEN_MESSAGE_PARAMETER_ERROR, NULL_OBJECT, request, response);
@@ -436,18 +450,24 @@ public class PayController extends BaseController {
      * @param request
      * @param response
      */
-    @RequestMapping(value = "/notify/wechat")
-    public void WxNotify(HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = "/notify/wechat/{couponcode}/{orderid}/{uid}/{vid}")
+    public void WxNotify(@PathVariable(value="orderid") long orderid, @PathVariable(value = "uid") long uid,
+                         @PathVariable(value = "vid") long vid, @PathVariable(value = "couponcode") String couponcode,
+                         HttpServletRequest request, HttpServletResponse response) {
         boolean result = false;
         try{
-            String param = RequestParamUtil.getParam(request, "zztt_info", "");// orderid_uid_vid_couponcode
+//            String param = RequestParamUtil.getParam(request, "zztt_info", "");// orderid_uid_vid_couponcode
+//            logger.info("wechat param:"+param);
             BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
-            String[] pArray = param.split("_");
+//            String[] pArray = param.split("_");
             Map<String,String> params = new HashMap<String,String>();
-            params.put("orderid", pArray[0]);
-            params.put("uid", pArray[1]);
-            params.put("vid", pArray[2]);
-            params.put("couponcode", pArray[3]);
+            params.put("orderid", orderid+"");
+            params.put("uid", uid+"");
+            params.put("vid", vid+"");
+            if(couponcode.equals("null")){
+                couponcode = "";
+            }
+            params.put("couponcode", couponcode);
             result = payService.wxPayNotify(br, params);
         }catch (Exception e){
             logger.error("wx notify controller error", e);
