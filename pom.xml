@@ -254,6 +254,13 @@
 			<version>2.8.1</version>
 		</dependency>
 		
+		<!-- mail -->
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4.1</version>
+		</dependency>
+		
 	</dependencies>
 
 	<build>
