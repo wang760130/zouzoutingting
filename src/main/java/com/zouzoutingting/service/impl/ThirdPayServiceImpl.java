@@ -6,6 +6,7 @@ import com.zouzoutingting.common.Global;
 import com.zouzoutingting.model.Order;
 import com.zouzoutingting.service.IThirdPayService;
 import com.zouzoutingting.utils.alipay.AliParamCore;
+import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -15,6 +16,7 @@ import java.util.*;
 /**
  * Created by zhangyong on 16/8/21.
  */
+@Service("thirdPayService")
 public class ThirdPayServiceImpl implements IThirdPayService {
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     @Override

@@ -2,6 +2,7 @@ package com.zouzoutingting.controllers;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSON;
+import com.zouzoutingting.service.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +31,7 @@ import com.zouzoutingting.model.Coupon;
 import com.zouzoutingting.model.Order;
 import com.zouzoutingting.model.PrePayResult;
 import com.zouzoutingting.model.ViewSpot;
-import com.zouzoutingting.service.ICouponService;
-import com.zouzoutingting.service.IOrderService;
-import com.zouzoutingting.service.IPayService;
-import com.zouzoutingting.service.IViewSpotService;
 import com.zouzoutingting.utils.CouponCodeUtil;
-import com.zouzoutingting.utils.ParamUtil;
 import com.zouzoutingting.utils.RequestParamUtil;
 
 /**
@@ -59,6 +56,8 @@ public class PayController extends BaseController {
     private IPayService payService;
     @Autowired
     private IViewSpotService viewSpotService;
+    @Autowired
+    private IThirdPayService thirdPayService;
 
     @RequestMapping(value = "/couponcheck", method = RequestMethod.POST)
     public void couponCheck(HttpServletRequest request, HttpServletResponse response){
@@ -182,7 +181,9 @@ public class PayController extends BaseController {
                         isillegle = true;
                     }else {
                         out.add(viewSpot.getPrice());
-                        out.add(viewSpot.getPrice()-coupon.getAmount());
+                        BigDecimal total = new BigDecimal(Double.toString(viewSpot.getPrice()));
+                        BigDecimal counprice = new BigDecimal(Double.toString(coupon.getAmount()));
+                        out.add(total.subtract(counprice).doubleValue());
                     }
                 }
             }else{//不使用券支付
@@ -248,9 +249,9 @@ public class PayController extends BaseController {
                                 gzipCipherResult(RETURN_CODE_PARAMETER_ERROR, RETUEN_MESSAGE_PARAMETER_ERROR, NULL_OBJECT, request, response);
                             }else{
                                 //3.更新订单状态+coupon状态
-                                boolean isused = couponService.useCounpon(coupon);
+                                boolean isused = couponService.useCounpon(coupon, orderid);
                                 if(isused){
-                                    boolean ispayed = orderService.CounponPay(order);
+                                    boolean ispayed = orderService.CounponPay(order, coupon.getCouponid());
                                     if(!ispayed){
                                         logger.info("order pay state not updated rollback coupon oid:" + orderid + "," +
                                                 " vid:" + vid + " ,uid:" + uid +" counid:"+coupon.getCouponid()+", " +
@@ -381,16 +382,8 @@ public class PayController extends BaseController {
 
         boolean ret = false;
         try{
-//            String param = ParamUtil.getString(request, "zztt_info", "");// orderid_uid_vid_couponcode
-//            logger.info("ali param:"+param);
             Map<String, String[]> requestParams = request.getParameterMap();
             Map<String,String> params = new HashMap<String,String>();
-//            logger.info("ali notify:zztt_info "+param);
-//            String[] pArray = param.split("_");
-//            params.put("orderid", pArray[0]);
-//            params.put("uid", pArray[1]);
-//            params.put("vid", pArray[2]);
-//            params.put("couponcode", pArray[3]);
 
             params.put("orderid", orderid+"");
             params.put("uid", uid+"");
@@ -415,9 +408,9 @@ public class PayController extends BaseController {
     public void AliCheckResult(HttpServletRequest request, HttpServletResponse response){
         Long uid = Long.valueOf(request.getAttribute("uid") + "");
         Long orderid = RequestParamUtil.getLongParam(request, "orderid", -1L);
+        Integer count = RequestParamUtil.getIntegerParam(request, "count", 1);
 
         if(uid>0 && orderid>0){
-
             Order order = orderService.getOrderByID(orderid);
             if(order!=null && order.getUid() == uid){
                 boolean payed = false;
@@ -456,10 +449,7 @@ public class PayController extends BaseController {
                          HttpServletRequest request, HttpServletResponse response) {
         boolean result = false;
         try{
-//            String param = RequestParamUtil.getParam(request, "zztt_info", "");// orderid_uid_vid_couponcode
-//            logger.info("wechat param:"+param);
             BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
-//            String[] pArray = param.split("_");
             Map<String,String> params = new HashMap<String,String>();
             params.put("orderid", orderid+"");
             params.put("uid", uid+"");
@@ -527,5 +517,11 @@ public class PayController extends BaseController {
         }
 
     }
-
+    public static void main(String[] args){
+        Double total = 0.03;
+        Double amount = 0.02;
+        BigDecimal total1 = new BigDecimal(Double.toString(total));
+        BigDecimal counprice = new BigDecimal(Double.toString(amount));
+        System.out.println(total1.subtract(counprice).doubleValue());
+    }
 }

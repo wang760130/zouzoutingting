@@ -3,13 +3,16 @@ package com.zouzoutingting.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.zouzoutingting.common.Global;
 import com.zouzoutingting.dao.IDao;
+import com.zouzoutingting.enums.CouponStateEnum;
 import com.zouzoutingting.enums.OrderStateEnum;
+import com.zouzoutingting.model.Coupon;
 import com.zouzoutingting.model.Order;
 import com.zouzoutingting.model.PrePayResult;
 import com.zouzoutingting.service.IPayService;
 import com.zouzoutingting.utils.*;
 import com.zouzoutingting.utils.alipay.AliParamCore;
 import com.zouzoutingting.utils.alipay.AlipayCore;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -34,6 +37,9 @@ public class PayServiceImpl implements IPayService{
 
     @Autowired
     private IDao<Order> orderDao;
+
+    @Autowired
+    private IDao<Coupon> couponDao;
 
     @Override
     public PrePayResult getWxPreyPayInfo(Order order) throws Exception{
@@ -110,9 +116,12 @@ public class PayServiceImpl implements IPayService{
                     Map<String,String> map = new HashMap<String, String>();
                     map.put("paytype","wx");
                     map.put("trade_no",transaction_id);
+                    order.setComment(JSON.toJSONString(map));
                     order.setPayTime(getPayDate(paytime, sdf_Wx));
                     order.setUpdateTime(new Date());
                     orderDao.save(order);
+                    //处理券状态
+                    dealCouponUse(orderidStr, params, "wx");
                     logger.info("order:"+JSON.toJSONString(order)+" wx 支付 ok");
                     //TODO纪录日志
                 }
@@ -124,6 +133,40 @@ public class PayServiceImpl implements IPayService{
             logger.error("orderID:"+orderidStr+" wxNotify param Wrong!!");
         }
         return result;
+    }
+
+    private void dealCouponUse(String orderidStr, Map<String,String> params, String payType){
+        //处理券状态
+        String couponCode = params.get("couponcode");
+        if(StringUtils.isNotBlank(couponCode)&& !couponCode.equals("null")){
+            Coupon coupon = getCouponByCode(couponCode.trim().toUpperCase());
+            if(coupon.getState()== CouponStateEnum.Used.getState()){
+                logger.error("!!!!!!!券已使用,多次使用!!!! code:"+couponCode+", orderid:"+orderidStr);
+            }else{
+                coupon.setState(CouponStateEnum.Used.getState());
+                coupon.setUpdatetime(new Date());
+                Map<String,String> coupmap = new HashMap<String, String>();
+                coupmap.put("orderid", orderidStr);
+                coupmap.put("paytype", payType);
+                coupon.setComment(JSON.toJSONString(coupmap));
+                couponDao.save(coupon);
+                logger.info(payType + " orderid:"+orderidStr+" 使用 券:"+couponCode+" ok");
+            }
+        }
+    }
+
+    private Coupon getCouponByCode(String code) {
+        Coupon coupon = null;
+        String condition = "code = '" + code+"'";
+        Page page = new Page();
+        page.setCondition(condition);
+        page.setPageNo(1);
+        page.setPageSize(1);
+        List<Coupon> list = couponDao.page(page);
+        if(list!=null && list.size()>0){
+            coupon = list.get(0);
+        }
+        return coupon;
     }
 
     private Date getPayDate(String paytime, SimpleDateFormat sdf){
@@ -173,26 +216,25 @@ public class PayServiceImpl implements IPayService{
         bizMap.put("product_code", "QUICK_MSECURITY_PAY");
         sParaTemp.put("biz_content",JSON.toJSONString(bizMap));
 
-        //商品名称
-//        if(StringUtils.isNotBlank(prePayDto.getSubject())){
-//            sParaTemp.put("subject", prePayDto.getSubject());
-//        }else{
-//        }
-//        if(StringUtils.isNotBlank(prePayDto.getReturnUrl())){
-//            sParaTemp.put("return_url", prePayDto.getReturnUrl());
-//        }
-//        if(StringUtils.isNotBlank(prePayDto.getShowUrl())){
-//            sParaTemp.put("show_url", prePayDto.getShowUrl());
-//        }
+        String params = null;
         try {
-            String params = AliParamCore.getFullUrlParam(sParaTemp);
-            logger.info("ali ret is : " + params);
-            resultDto.setResult(true);
+            params = AliParamCore.getFullUrlParam(sParaTemp);
             resultDto.setParamMap(params);
-            logger.info("ali jointPayParams success,orderid=" + order.getOrderid());
+            logger.info("ali jointPayParams success,orderid=" + order.getOrderid() +" data:"+params);
         } catch (Exception e) {
             logger.error("ali buildRequestStr err,date=" + JSON.toJSONString(sParaTemp),e);
             resultDto.setErrMsg("加签失败");
+        }
+        try{
+            String url = Global.getAliPayGatewayUrl() + params;
+            String body = HttpUtil.get(url);
+            if(StringUtils.isNotBlank(body)){
+                resultDto.setResult(true);
+            }else {
+                logger.info("ali prepay: "+ url+" return null");
+            }
+        }catch (Exception e){
+            resultDto.setErrMsg("向支付宝创建订单失败");
         }
         return resultDto;
     }
@@ -268,6 +310,7 @@ public class PayServiceImpl implements IPayService{
                             order.setComment(JSON.toJSONString(map));
                             order.setPayTime(getPayDate(paytime, sdf_Ali));
                             orderDao.save(order);
+                            dealCouponUse(orderidStr, params, "ali");
                             logger.info("order:"+JSON.toJSONString(order)+" ali 支付 ok");
                         }
                         result = true;

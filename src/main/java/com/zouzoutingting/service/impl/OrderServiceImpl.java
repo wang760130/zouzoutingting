@@ -1,5 +1,6 @@
 package com.zouzoutingting.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.zouzoutingting.dao.IDao;
 import com.zouzoutingting.enums.OrderStateEnum;
 import com.zouzoutingting.model.Order;
@@ -10,7 +11,10 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by zhangyong on 16/6/19.
@@ -54,10 +58,16 @@ public class OrderServiceImpl implements IOrderService{
     }
 
     @Override
-    public boolean CounponPay(Order order) {
+    public boolean CounponPay(Order order, long couponid) {
         boolean retResult = false;
         if(order!=null && order.getState() == OrderStateEnum.Jinx.getState()){
             order.setState(OrderStateEnum.Finish.getState());
+            Map<String,String> map = new HashMap<String, String>();
+            map.put("paytype","coupon");
+            map.put("trade_no",""+couponid);
+            order.setComment(JSON.toJSONString(map));
+            order.setPayTime(new Date());
+            order.setUpdateTime(new Date());
             orderDao.update(order);
             logger.info("couon pay update order jinxing-->finish oid:"+order.getOrderid());
             retResult = true;

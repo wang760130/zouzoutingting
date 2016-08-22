@@ -16,9 +16,10 @@ public interface IOrderService {
     /**
      * 券支付时状态更新
      * @param order order实体
+     * @param counponId 券id
      * @return 成功与否
      */
-    public boolean CounponPay(Order order);
+    public boolean CounponPay(Order order, long counponId);
 
     public void update(Order order);
 }

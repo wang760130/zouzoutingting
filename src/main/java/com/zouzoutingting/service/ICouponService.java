@@ -12,9 +12,10 @@ public interface ICouponService {
     /**
      * 券支付 使用该券
      * @param coupon 券实体
+     * @param orderid 订单id
      * @return
      */
-    public boolean useCounpon(Coupon coupon);
+    public boolean useCounpon(Coupon coupon, Long orderid);
 
     /**
      * 回滚券支付
