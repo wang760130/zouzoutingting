@@ -226,14 +226,24 @@ public class PayServiceImpl implements IPayService{
             resultDto.setErrMsg("加签失败");
         }
         try{
-            String url = Global.getAliPayGatewayUrl() + params;
-            String body = HttpUtil.get(url);
+            String[] pair = params.split("&");
+            Map<String, String> postMap = new HashMap<String, String>();
+            for(String pp : pair){
+                String[] kv = pp.split("=");
+                if(kv.length==2) {
+                    postMap.put(kv[0], kv[1]);
+                }
+            }
+            String url = Global.getAliPayGatewayUrl();
+            String body = HttpUtil.post(url, postMap);
             if(StringUtils.isNotBlank(body)){
+                logger.info("ali prepay http "+url+" ---invoke result:"+body);
                 resultDto.setResult(true);
             }else {
                 logger.info("ali prepay: "+ url+" return null");
             }
         }catch (Exception e){
+            logger.error("向支付宝创建订单失败", e);
             resultDto.setErrMsg("向支付宝创建订单失败");
         }
         return resultDto;

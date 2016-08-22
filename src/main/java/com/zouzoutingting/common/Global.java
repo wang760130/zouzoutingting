@@ -50,7 +50,7 @@ public class Global {
 
 	public static final String ALI_PAY_SELLER_ID = "2088321043087101";//TODO 沙箱:2088102169325432 online:2088321043087101
 
-	private static final String ALI_APP_ID = "2016073100134649";//阿里appid  沙箱:2016073100134649  online:2016070801594335
+	private static final String ALI_APP_ID = "2016070801594335";//阿里appid  沙箱:2016073100134649  online:2016070801594335
 	public static String
 			ALI_PAY_PARTNER_PRIVATE_KEY="MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBALb1uL28eDYDyDG9\n" +
 			"1xZMOdJB2ebtaPIw4pDyaoQw2jNxPOOS1/0aI2aykLvK8vVqAQMFzAG9hOXAZe8f\n" +
