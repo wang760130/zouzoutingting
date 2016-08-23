@@ -1,9 +1,10 @@
-package com.zouzoutingting.dao.impl;
+package com.zouzoutingting.dao;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.zouzoutingting.dao.IDao;
+import com.zouzoutingting.components.dao.DaoImpl;
+import com.zouzoutingting.components.dao.IDao;
 import com.zouzoutingting.model.Feedback;
 
 /**

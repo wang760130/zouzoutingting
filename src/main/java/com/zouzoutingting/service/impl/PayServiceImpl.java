@@ -2,7 +2,7 @@ package com.zouzoutingting.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.zouzoutingting.common.Global;
-import com.zouzoutingting.dao.IDao;
+import com.zouzoutingting.components.dao.IDao;
 import com.zouzoutingting.enums.CouponStateEnum;
 import com.zouzoutingting.enums.OrderStateEnum;
 import com.zouzoutingting.model.Coupon;
@@ -12,6 +12,7 @@ import com.zouzoutingting.service.IPayService;
 import com.zouzoutingting.utils.*;
 import com.zouzoutingting.utils.alipay.AliParamCore;
 import com.zouzoutingting.utils.alipay.AlipayCore;
+
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.lang3.StringUtils;

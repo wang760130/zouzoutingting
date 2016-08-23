@@ -1,4 +1,4 @@
-package com.zouzoutingting.dao.impl;
+package com.zouzoutingting.components.dao;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -12,7 +12,6 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.zouzoutingting.dao.IDao;
 import com.zouzoutingting.utils.Page;
 
 /**

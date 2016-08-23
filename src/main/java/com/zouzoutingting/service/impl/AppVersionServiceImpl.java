@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.zouzoutingting.dao.IDao;
+import com.zouzoutingting.components.dao.IDao;
 import com.zouzoutingting.model.AppVersion;
 import com.zouzoutingting.service.IAppVersionService;
 import com.zouzoutingting.utils.Page;

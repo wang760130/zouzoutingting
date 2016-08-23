@@ -1,7 +1,7 @@
 package com.zouzoutingting.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.zouzoutingting.dao.IDao;
+import com.zouzoutingting.components.dao.IDao;
 import com.zouzoutingting.enums.OrderStateEnum;
 import com.zouzoutingting.model.Order;
 import com.zouzoutingting.service.IOrderService;

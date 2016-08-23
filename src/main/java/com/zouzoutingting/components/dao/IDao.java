@@ -1,4 +1,4 @@
-package com.zouzoutingting.dao;
+package com.zouzoutingting.components.dao;
 
 import java.util.List;
 
