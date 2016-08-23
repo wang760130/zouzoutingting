@@ -2,8 +2,6 @@ package com.zouzoutingting.components.dao;
 
 import java.util.List;
 
-import com.zouzoutingting.utils.Page;
-
 /**
  * @author Jerry Wang
  * @Email  jerry002@126.com

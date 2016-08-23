@@ -2,8 +2,8 @@ package com.zouzoutingting.service;
 
 import java.util.List;
 
+import com.zouzoutingting.components.dao.Page;
 import com.zouzoutingting.model.City;
-import com.zouzoutingting.utils.Page;
 
 /**
  * @author Jerry Wang

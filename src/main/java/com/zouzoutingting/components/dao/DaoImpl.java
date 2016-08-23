@@ -12,8 +12,6 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.zouzoutingting.utils.Page;
-
 /**
  * 所有Dao均实现此类
  * @author Jerry Wang

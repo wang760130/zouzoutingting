@@ -2,10 +2,10 @@ package com.zouzoutingting.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.zouzoutingting.components.dao.IDao;
+import com.zouzoutingting.components.dao.Page;
 import com.zouzoutingting.enums.OrderStateEnum;
 import com.zouzoutingting.model.Order;
 import com.zouzoutingting.service.IOrderService;
-import com.zouzoutingting.utils.Page;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
