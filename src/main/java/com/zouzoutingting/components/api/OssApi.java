@@ -1,4 +1,4 @@
-package com.zouzoutingting.api;
+package com.zouzoutingting.components.api;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

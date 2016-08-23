@@ -24,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zouzoutingting.components.encrypt.MD5;
 import com.zouzoutingting.enums.SpotEnum;
 import com.zouzoutingting.model.Spot;
 import com.zouzoutingting.model.ViewSpot;
@@ -32,7 +33,6 @@ import com.zouzoutingting.service.IViewSpotService;
 import com.zouzoutingting.utils.BeanToMapUtil;
 import com.zouzoutingting.utils.FileUtil;
 import com.zouzoutingting.utils.HttpUtil;
-import com.zouzoutingting.utils.MD5;
 import com.zouzoutingting.utils.OfflinePackageUtil;
 import com.zouzoutingting.utils.ParamUtil;
 import com.zouzoutingting.utils.ZipUtil;

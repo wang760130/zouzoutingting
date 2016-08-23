@@ -11,7 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.zouzoutingting.api.JuheSmsApi;
+import com.zouzoutingting.components.api.JuheSmsApi;
 import com.zouzoutingting.model.User;
 import com.zouzoutingting.service.IUserService;
 import com.zouzoutingting.service.IVcCodeService;

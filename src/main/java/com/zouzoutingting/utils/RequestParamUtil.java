@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.zouzoutingting.common.Global;
+import com.zouzoutingting.components.encrypt.DES;
 
 
 /**

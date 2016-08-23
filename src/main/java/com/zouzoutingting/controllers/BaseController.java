@@ -23,7 +23,7 @@ import org.apache.log4j.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zouzoutingting.common.Global;
-import com.zouzoutingting.utils.DES;
+import com.zouzoutingting.components.encrypt.DES;
 import com.zouzoutingting.utils.GZipUtils;
 
 /**

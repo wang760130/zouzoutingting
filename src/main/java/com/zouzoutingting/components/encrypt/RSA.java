@@ -1,4 +1,4 @@
-package com.zouzoutingting.utils;
+package com.zouzoutingting.components.encrypt;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;

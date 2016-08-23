@@ -2,6 +2,8 @@ package com.zouzoutingting.utils;
 
 import org.apache.commons.httpclient.NameValuePair;
 
+import com.zouzoutingting.components.encrypt.MD5;
+
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.alibaba.fastjson.JSONObject;
-import com.zouzoutingting.api.BaiduMapApi;
+import com.zouzoutingting.components.api.BaiduMapApi;
 import com.zouzoutingting.model.City;
 import com.zouzoutingting.service.ICityService;
 import com.zouzoutingting.utils.RequestParamUtil;

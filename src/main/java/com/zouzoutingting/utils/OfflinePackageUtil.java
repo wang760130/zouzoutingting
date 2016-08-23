@@ -4,6 +4,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 
 import com.zouzoutingting.common.Global;
+import com.zouzoutingting.components.encrypt.DES;
 
 /**
  * Created by zhangyong on 16/7/28.

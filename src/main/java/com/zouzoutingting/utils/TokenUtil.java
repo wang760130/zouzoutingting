@@ -7,6 +7,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 
 import com.zouzoutingting.common.Global;
+import com.zouzoutingting.components.encrypt.DES;
 
 /**
  * @author Jerry Wang

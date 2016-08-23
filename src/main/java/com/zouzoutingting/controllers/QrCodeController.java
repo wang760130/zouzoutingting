@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.swetake.util.Qrcode;
-import com.zouzoutingting.utils.MD5;
+import com.zouzoutingting.components.encrypt.MD5;
 
 /**
  * @author Jerry Wang

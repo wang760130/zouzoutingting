@@ -1,4 +1,4 @@
-package com.zouzoutingting.utils;
+package com.zouzoutingting.components.encrypt;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
