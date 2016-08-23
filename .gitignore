@@ -4,3 +4,6 @@
 /logs
 /offlinepackage
 /offlinepackagetemp
+/.classpath
+/.project
+/.springBeans
