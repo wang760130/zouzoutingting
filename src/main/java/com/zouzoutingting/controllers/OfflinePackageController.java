@@ -65,6 +65,7 @@ public class OfflinePackageController extends BaseController {
 		long vid = ParamUtil.getLong(request, "vid", -1L);
 		String zipFile = this.generate(vid);
 		File file = new File(zipFile);
+		
 		try {
 			this.downloadResult(file, response);
 		} finally {
@@ -123,18 +124,17 @@ public class OfflinePackageController extends BaseController {
      	
      	try {
      		String defualtPic = viewSpot.getDefualtPic();
+     		HttpUtil.downloadFile(tempPath + fileName + File.separator + this.md5Url(defualtPic), defualtPic);
+     		
      		String listPic = viewSpot.getListPic();
-     		String[] picArr = listPic.split(",");
-     		
-     		String defualtPicFile = this.md5Url(defualtPic);
-     		HttpUtil.downloadFile(tempPath + fileName + File.separator + defualtPicFile, defualtPic);
-     		
-    		for(String pic : picArr) {
-    			String picFile = this.md5Url(pic);
-    			HttpUtil.downloadFile(tempPath + fileName + File.separator + picFile, pic);
-    		}
-     		
-    		viewSpot.setPic(picArr);
+     		if(listPic != null && !"".equals(listPic)) {
+	     		String[] picArr = listPic.split(",");
+	     		
+	    		for(String pic : picArr) {
+	    			HttpUtil.downloadFile(tempPath + fileName + File.separator + this.md5Url(pic), pic);
+	    		}
+	    		viewSpot.setPic(picArr);
+     		} 
      		
      		Map<String, Object> viewSoptMap = new HashMap<String, Object>();
      		viewSoptMap = BeanToMapUtil.convertBeanToMap(viewSpot);
@@ -159,17 +159,19 @@ public class OfflinePackageController extends BaseController {
 	        		map.put("name", spot.getName());
 	        		map.put("sequence", spot.getSequence());
 	        		String pic = spot.getPic();
-	        		String picFile = this.md5Url(pic);
-	        		HttpUtil.downloadFile(tempPath + fileName + File.separator + picFile, pic);
+	        		HttpUtil.downloadFile(tempPath + fileName + File.separator + this.md5Url(pic), pic);
 	        		map.put("pic", pic);
 	        		String audio = spot.getAudio();
 	        		audio = OfflinePackageUtil.decryptOffline(audio);
-	        		String audioFile = this.md5Url(audio);
-	        		HttpUtil.downloadFile(tempPath + fileName + File.separator + audioFile, audio);
+	        		HttpUtil.downloadFile(tempPath + fileName + File.separator + this.md5Url(audio), audio);
 	        		map.put("audio", audio);
 	        		map.put("content", spot.getContent());
 	        		String spotListPic = spot.getListPic();
 	        		if(spotListPic != null && !"".equals(spotListPic)) {
+	        			String[] spotListPicArr = spotListPic.split(",");
+	        			for(String spotpic : spotListPicArr) {
+	            			HttpUtil.downloadFile(tempPath + fileName + File.separator + this.md5Url(spotpic), spotpic);
+	            		}
 	        			map.put("listpic", spotListPic.split(","));
 	        		} else {
 	        			map.put("listpic", new ArrayList<String>());
@@ -200,7 +202,9 @@ public class OfflinePackageController extends BaseController {
 	        	} else if(spot.getType() == SpotEnum.PICTURE.getType()) {
 	        		map.put("id", spot.getId());
 	        		map.put("vid",vid);
-	        		map.put("pic", spot.getPic());
+	        		String pic = spot.getPic();
+	        		HttpUtil.downloadFile(tempPath + fileName + File.separator + this.md5Url(pic), pic);
+	        		map.put("pic", pic);
 	        		picList.add(map);
 	        	}
 	        }
@@ -241,5 +245,5 @@ public class OfflinePackageController extends BaseController {
 		}
      	return zipPath + File.separator + fileName + ".zip";
 	}
-
+	
 }

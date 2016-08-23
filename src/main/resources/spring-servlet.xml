@@ -25,13 +25,6 @@
  	<!-- 启用spring mvc 注解--> 
     <mvc:annotation-driven />
     
-    <!--  
-    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">  
-        <property name="prefix" value="/"></property>  
-        <property name="suffix" value=".jsp"></property>  
-    </bean>  
-    -->
-    
     <!-- 自定义配置拦截器 -->  
 	<mvc:interceptors>    
 	    <bean class="com.zouzoutingting.interceptor.AccessLoggerInterceptor"></bean>    
@@ -43,6 +36,13 @@
           <property name="maxUploadSize" value="10485760000" />  
           <property name="maxInMemorySize" value="40960" />  
     </bean> 	
+    -->
+    
+    <!--  
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">  
+        <property name="prefix" value="/"></property>  
+        <property name="suffix" value=".jsp"></property>  
+    </bean>  
     -->
     
     <!-- 配置Velocity视图解析器 -->
