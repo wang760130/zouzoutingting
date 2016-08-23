@@ -1,16 +1,18 @@
 package com.zouzoutingting.service.impl;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
 import com.zouzoutingting.common.Global;
 import com.zouzoutingting.dao.IDao;
+import com.zouzoutingting.enums.CouponStateEnum;
 import com.zouzoutingting.enums.OrderStateEnum;
+import com.zouzoutingting.model.Coupon;
 import com.zouzoutingting.model.Order;
 import com.zouzoutingting.model.PrePayResult;
 import com.zouzoutingting.service.IPayService;
 import com.zouzoutingting.utils.*;
 import com.zouzoutingting.utils.alipay.AliParamCore;
 import com.zouzoutingting.utils.alipay.AlipayCore;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -36,6 +38,9 @@ public class PayServiceImpl implements IPayService{
     @Autowired
     private IDao<Order> orderDao;
 
+    @Autowired
+    private IDao<Coupon> couponDao;
+
     @Override
     public PrePayResult getWxPreyPayInfo(Order order) throws Exception{
         PrePayResult resultDto = new PrePayResult();
@@ -45,11 +50,10 @@ public class PayServiceImpl implements IPayService{
         String respresut = String.valueOf(resultMap.get("result_code"));
         //拼接调起支付参数
         if((respresut).equals("SUCCESS")){
-            String prepayid = (String.valueOf(resultMap.get("prepay_id")));
-            logger.info("wechat get prepayid success,prepayid=" + prepayid);
-            resultDto.setParamMap(AppBuildWxRequestStr(prepayid, order));
+
+            resultDto.setParamMap(AppBuildWxRequestStr(resultMap, order));
             resultDto.setResult(true);
-            logger.info("wechat jointPayParams success,orderid={}"+order.getOrderid() +",result={}" + resultDto);
+            logger.info("wechat jointPayParams success,orderid={}"+order.getOrderid() +",result={}" + JSON.toJSON(resultDto));
         }else{
             resultDto.setErrMsg(String.valueOf(resultMap.get("return_msg")));
             if(resultMap.get("err_code_des") != null){
@@ -65,12 +69,12 @@ public class PayServiceImpl implements IPayService{
         try{
             Map<String, String> requestMap = wxPayParamsNotify(br);
             if(requestMap==null){
-                logger.info("wxPayParamsNotify WXNotify 返回结果：---------" + ret +" params:" + JSONUtils.toJSONString(params));
+                logger.info("wxPayParamsNotify WXNotify 返回结果：---------" + ret +" params:" + JSON.toJSONString(params));
             }else {
                 ret = wxPayLogicNotify(params, requestMap);
             }
         }catch (Exception e){
-            logger.error("wx notify Error"+" params:" + JSONUtils.toJSONString(params), e);
+            logger.error("wx notify Error"+" params:" + JSON.toJSONString(params), e);
         }
         return ret;
     }
@@ -112,10 +116,13 @@ public class PayServiceImpl implements IPayService{
                     Map<String,String> map = new HashMap<String, String>();
                     map.put("paytype","wx");
                     map.put("trade_no",transaction_id);
+                    order.setComment(JSON.toJSONString(map));
                     order.setPayTime(getPayDate(paytime, sdf_Wx));
                     order.setUpdateTime(new Date());
                     orderDao.save(order);
-                    logger.info("order:"+JSONUtils.toJSONString(order)+" wx 支付 ok");
+                    //处理券状态
+                    dealCouponUse(orderidStr, params, "wx");
+                    logger.info("order:"+JSON.toJSONString(order)+" wx 支付 ok");
                     //TODO纪录日志
                 }
                 result = true;
@@ -126,6 +133,40 @@ public class PayServiceImpl implements IPayService{
             logger.error("orderID:"+orderidStr+" wxNotify param Wrong!!");
         }
         return result;
+    }
+
+    private void dealCouponUse(String orderidStr, Map<String,String> params, String payType){
+        //处理券状态
+        String couponCode = params.get("couponcode");
+        if(StringUtils.isNotBlank(couponCode)&& !couponCode.equals("null")){
+            Coupon coupon = getCouponByCode(couponCode.trim().toUpperCase());
+            if(coupon.getState()== CouponStateEnum.Used.getState()){
+                logger.error("!!!!!!!券已使用,多次使用!!!! code:"+couponCode+", orderid:"+orderidStr);
+            }else{
+                coupon.setState(CouponStateEnum.Used.getState());
+                coupon.setUpdatetime(new Date());
+                Map<String,String> coupmap = new HashMap<String, String>();
+                coupmap.put("orderid", orderidStr);
+                coupmap.put("paytype", payType);
+                coupon.setComment(JSON.toJSONString(coupmap));
+                couponDao.save(coupon);
+                logger.info(payType + " orderid:"+orderidStr+" 使用 券:"+couponCode+" ok");
+            }
+        }
+    }
+
+    private Coupon getCouponByCode(String code) {
+        Coupon coupon = null;
+        String condition = "code = '" + code+"'";
+        Page page = new Page();
+        page.setCondition(condition);
+        page.setPageNo(1);
+        page.setPageSize(1);
+        List<Coupon> list = couponDao.page(page);
+        if(list!=null && list.size()>0){
+            coupon = list.get(0);
+        }
+        return coupon;
     }
 
     private Date getPayDate(String paytime, SimpleDateFormat sdf){
@@ -153,41 +194,57 @@ public class PayServiceImpl implements IPayService{
         //notifyurl
         String extInfo = order.getOrderid()  + "_" + order.getUid() + "_" + order.getVid() + "_" + order.getCode();
         String notifyUrl = PropManager.getSingletonInstance().getProperty("ali_notify_url");
-        notifyUrl = notifyUrl + "zztt_info=" + extInfo;
-        sParaTemp.put("service", Global.Ali_PAY_SERVICE);
-        sParaTemp.put("_input_charset", Global.ALI_PAY_INPUT_CHARSET);
-        sParaTemp.put("payment_type",Global.ALI_PAY_PAYMENT_TYPE);
+        String code = order.getCode();
+        if(StringUtils.isEmpty(code)){
+            code = "null";
+        }
+        notifyUrl = notifyUrl + code+"/"+order.getOrderid()+"/" + order.getUid()+"/" + order.getVid();
+        sParaTemp.put("app_id", Global.getAliAppID());
+        sParaTemp.put("method", "alipay.trade.app.pay");
+        sParaTemp.put("charset", Global.ALI_PAY_INPUT_CHARSET);
+        sParaTemp.put("sign_type", "RSA");
+        sParaTemp.put("timestamp", sdf_Ali.format(new Date()));
+        sParaTemp.put("version", Global.ALI_PAY_INTERFACE_VERSION);
         sParaTemp.put("notify_url", notifyUrl);
-        sParaTemp.put("out_trade_no", order.getOrderid()+"");//订单id做账单id
-        sParaTemp.put("total_fee", order.getNeedpay() + "");
-        //合作id
-        sParaTemp.put("partner", Global.getAliPayParterID());
-        //帐号
-        sParaTemp.put("seller_id", Global.getAliPaySellerId());
-        //商品详情
-        sParaTemp.put("body", Global.PAY_SUBJECT);
-        //商品名称
-//        if(StringUtils.isNotBlank(prePayDto.getSubject())){
-//            sParaTemp.put("subject", prePayDto.getSubject());
-//        }else{
-        sParaTemp.put("subject", Global.PAY_SUBJECT);
-//        }
-//        if(StringUtils.isNotBlank(prePayDto.getReturnUrl())){
-//            sParaTemp.put("return_url", prePayDto.getReturnUrl());
-//        }
-//        if(StringUtils.isNotBlank(prePayDto.getShowUrl())){
-//            sParaTemp.put("show_url", prePayDto.getShowUrl());
-//        }
+
+        Map<String, String> bizMap = new HashMap<String, String>();
+        bizMap.put("body",Global.PAY_SUBJECT);
+        bizMap.put("subject", Global.PAY_SUBJECT);
+        bizMap.put("out_trade_no", order.getOrderid()+"");
+        bizMap.put("total_amount", order.getNeedpay() + "");
+        bizMap.put("seller_id", Global.getAliPaySellerId());
+        bizMap.put("product_code", "QUICK_MSECURITY_PAY");
+        sParaTemp.put("biz_content",JSON.toJSONString(bizMap));
+
+        String params = null;
         try {
-            String params = AliParamCore.AppBuildAliRequestStr(sParaTemp, Global
-                    .ALI_PAY_PARTNER_PRIVATE_KEY);
-            logger.info("ali ret is : " + params);
-            resultDto.setResult(true);
+            params = AliParamCore.getFullUrlParam(sParaTemp);
             resultDto.setParamMap(params);
-            logger.info("ali jointPayParams success,orderid=" + order.getOrderid());
+            logger.info("ali jointPayParams success,orderid=" + order.getOrderid() +" data:"+params);
         } catch (Exception e) {
             logger.error("ali buildRequestStr err,date=" + JSON.toJSONString(sParaTemp),e);
             resultDto.setErrMsg("加签失败");
+        }
+        try{
+            String[] pair = params.split("&");
+            Map<String, String> postMap = new HashMap<String, String>();
+            for(String pp : pair){
+                String[] kv = pp.split("=");
+                if(kv.length==2) {
+                    postMap.put(kv[0], kv[1]);
+                }
+            }
+            String url = Global.getAliPayGatewayUrl();
+            String body = HttpUtil.post(url, postMap);
+            if(StringUtils.isNotBlank(body)){
+                logger.info("ali prepay http "+url+" ---invoke result:"+body);
+                resultDto.setResult(true);
+            }else {
+                logger.info("ali prepay: "+ url+" return null");
+            }
+        }catch (Exception e){
+            logger.error("向支付宝创建订单失败", e);
+            resultDto.setErrMsg("向支付宝创建订单失败");
         }
         return resultDto;
     }
@@ -260,14 +317,15 @@ public class PayServiceImpl implements IPayService{
                             Map<String,String> map = new HashMap<String, String>();
                             map.put("paytype","ali");
                             map.put("trade_no",trade_no);
-                            order.setComment(JSONUtils.toJSONString(map));
+                            order.setComment(JSON.toJSONString(map));
                             order.setPayTime(getPayDate(paytime, sdf_Ali));
                             orderDao.save(order);
-                            logger.info("order:"+JSONUtils.toJSONString(order)+" ali 支付 ok");
+                            dealCouponUse(orderidStr, params, "ali");
+                            logger.info("order:"+JSON.toJSONString(order)+" ali 支付 ok");
                         }
                         result = true;
                     }else{
-                        logger.info("回调状态为未完成 oid:"+orderidStr+","+JSONUtils.toJSONString(requestParams));
+                        logger.info("回调状态为未完成 oid:"+orderidStr+","+JSON.toJSONString(requestParams));
                     }
 
                 } else {
@@ -277,7 +335,7 @@ public class PayServiceImpl implements IPayService{
                 logger.error("orderID:" + orderidStr + " aliNotify param Wrong!!");
             }
         }else {
-            logger.error("AliNotify verfy wrong:" + JSONUtils.toJSONString(requestParams));
+            logger.error("AliNotify verfy wrong:" + JSON.toJSONString(requestParams));
         }
         return result;
     }
@@ -417,14 +475,18 @@ public class PayServiceImpl implements IPayService{
         //notifyurl
         String extInfo = order.getOrderid()  + "_" + order.getUid() + "_" + order.getVid() + "_" + order.getCode();
         String notifyUrl = PropManager.getSingletonInstance().getProperty("wx_notify_url");
-        notifyUrl = notifyUrl + "zztt_info=" + extInfo;
+        String code = order.getCode();
+        if(StringUtils.isEmpty(code)){
+            code = "null";
+        }
+        notifyUrl = notifyUrl + code+"/"+order.getOrderid()+"/" + order.getUid()+"/" + order.getVid();
 
         sParaTemp.put("trade_type", Global.WX_Trade_Type);
         sParaTemp.put("nonce_str", WXUtil.getNonceStr());
         sParaTemp.put("notify_url", notifyUrl);
         sParaTemp.put("out_trade_no", String.valueOf(order.getOrderid()));//用订单id即可
 
-        sParaTemp.put("total_fee",Integer.parseInt((int)order.getNeedpay()*100 + "")+"");
+        sParaTemp.put("total_fee",Integer.parseInt((int)(order.getNeedpay()*100) + "")+"");
         //合作id
         sParaTemp.put("appid", Global.WX_APPID);
         //帐号
@@ -444,22 +506,27 @@ public class PayServiceImpl implements IPayService{
 
     /**
      * app 构建请求参数
-     * @param prepayid 微信预付id
+     * @param resultMap 微信返回值
      * @param order 订单实体
      * @return
      */
-    private String AppBuildWxRequestStr(String prepayid, Order order){
+    private String AppBuildWxRequestStr(Map<String, String> resultMap, Order order){
         String result = "";
+        String prepayid = (String.valueOf(resultMap.get("prepay_id")));
+        logger.info("wechat get prepayid success,prepayid=" + prepayid);
+
         Map<String,String> retMap = new HashMap<String, String>();
         List<NameValuePair> payMap = new LinkedList<NameValuePair>();
         payMap.add(new NameValuePair("appid", Global.WX_APPID));
         retMap.put("appid", Global.WX_APPID);
-        payMap.add(new NameValuePair("noncestr", WXUtil.getNonceStr()));
-        retMap.put("noncestr", WXUtil.getNonceStr());
+        String noncestr = String.valueOf(resultMap.get("nonce_str"));
+        payMap.add(new NameValuePair("noncestr", noncestr));
+        retMap.put("noncestr", noncestr);
         payMap.add(new NameValuePair("package", "Sign=WXPay"));
         retMap.put("package", "Sign=WXPay");
-        payMap.add(new NameValuePair("partnerid", Global.WX_PAY_MCH_ID));
-        retMap.put("partnerid", Global.WX_PAY_MCH_ID);
+        String partnerid = resultMap.get("mch_id");
+        payMap.add(new NameValuePair("partnerid", partnerid));
+        retMap.put("partnerid", partnerid);
         payMap.add(new NameValuePair("prepayid", prepayid));
         retMap.put("prepayid", prepayid);
         payMap.add(new NameValuePair("timestamp", WXUtil.getTimeStamp()));

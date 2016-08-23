@@ -5,15 +5,18 @@ import com.alibaba.fastjson.serializer.ObjectArraySerializer;
 import com.zouzoutingting.common.Global;
 import com.zouzoutingting.model.Order;
 import com.zouzoutingting.service.IThirdPayService;
+import com.zouzoutingting.utils.alipay.AliParamCore;
+import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by zhangyong on 16/8/21.
  */
+@Service("thirdPayService")
 public class ThirdPayServiceImpl implements IThirdPayService {
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     @Override
@@ -41,7 +44,7 @@ public class ThirdPayServiceImpl implements IThirdPayService {
 
     private boolean AliQueryTrade(String aliTradeid, long orderid){
         boolean ispayed = false;
-        Map<String, Object> requestMap = new HashMap<String, Object>();
+        Map<String, String> requestMap = new HashMap<String, String>();
         requestMap.put("app_id", Global.getAliAppID());
         requestMap.put("method", "alipay.trade.query");
         requestMap.put("charset", Global.ALI_PAY_INPUT_CHARSET);
@@ -51,11 +54,17 @@ public class ThirdPayServiceImpl implements IThirdPayService {
         Map<String, String> bizMap = new HashMap<String, String>();
         bizMap.put("out_trade_no", orderid+"");
         bizMap.put("trade_no", aliTradeid);
-        requestMap.put("biz_content",bizMap);
-        requestMap.put("sign","");
-//        String query_url = Global.getAliPayGatewayUrl() + "service=notify_verify&partner=" + partner + "&notify_id=" +
-//                notify_id;
+        requestMap.put("biz_content",JSONUtils.toJSONString(bizMap));
 
+        String query_url = Global.getAliPayGatewayUrl() + AliParamCore.getFullUrlParam(requestMap);
+        System.out.println(query_url);
         return  ispayed;
     }
+
+    public static void main(String[] args){
+        ThirdPayServiceImpl service = new ThirdPayServiceImpl();
+        System.out.println(service.AliQueryTrade("11111", 123));
+    }
+
+
 }

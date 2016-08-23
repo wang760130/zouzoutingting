@@ -1,5 +1,6 @@
 package com.zouzoutingting.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.zouzoutingting.dao.IDao;
 import com.zouzoutingting.enums.CouponStateEnum;
 import com.zouzoutingting.model.Coupon;
@@ -9,7 +10,10 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by zhangyong on 16/6/19.
@@ -18,10 +22,15 @@ import java.util.List;
 public class CouponServiceImpl implements ICouponService{
     private static final Logger logger = Logger.getLogger(CouponServiceImpl.class);
     @Override
-    public boolean useCounpon(Coupon coupon) {
+    public boolean useCounpon(Coupon coupon, Long orderid) {
         boolean retResult = false;
         if(coupon!=null && coupon.getState()== CouponStateEnum.Available.getState()){
             coupon.setState(CouponStateEnum.Used.getState());
+            coupon.setUpdatetime(new Date());
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("orderid", orderid.toString());
+            map.put("paytype", "coupon");
+            coupon.setComment(JSON.toJSONString(map));
             couponDao.update(coupon);
             logger.info("counp "+coupon.getCouponid()+", "+coupon.getCode()+" avilable--> used");
             retResult = true;

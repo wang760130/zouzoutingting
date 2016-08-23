@@ -30,6 +30,12 @@ public class Coupon {
     @Column(name = "endtime")
     private Date endtime;
 
+    @Column(name = "updatetime")
+    private Date updatetime;
+
+    @Column(name = "comment")
+    private String comment;
+
     public long getCouponid() {
         return couponid;
     }
@@ -76,5 +82,21 @@ public class Coupon {
 
     public void setEndtime(Date endtime) {
         this.endtime = endtime;
+    }
+
+    public Date getUpdatetime() {
+        return updatetime;
+    }
+
+    public void setUpdatetime(Date updatetime) {
+        this.updatetime = updatetime;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }
