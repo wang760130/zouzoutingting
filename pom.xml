@@ -349,6 +349,12 @@
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
+			
+			<!-- Spring Boot 将项目打包成一个可执行jar -->
+	        <plugin>
+	            <groupId>org.springframework.boot</groupId>
+	            <artifactId>spring-boot-maven-plugin</artifactId>
+	        </plugin>
 		</plugins>
 	</build>
 </project>
