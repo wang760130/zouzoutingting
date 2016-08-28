@@ -139,5 +139,11 @@ public class RSA{
         
         return privateKey;
     }
+
+//    public static void main(String[] args){
+//        String data = "app_id=2016070801594335&biz_content={\"body\":\"走走听听语音包\",\"out_trade_no\":\"184\"," +
+//                "\"product_code\":\"QUICK_MSECURITY_PAY\",\"subject\":\"走走听听语音包\",\"total_amount\":\"0.01\"}&charset=utf-8&method=alipay.trade.app.pay&notify_url=http://api.test.imonl.com/notify/ali/null/184/100019/27&sign_type=RSA&timestamp=2016-08-28 22:51:55&version=1.0";
+//        String sign =
+//    }
 }
 

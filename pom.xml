@@ -12,7 +12,7 @@
 	<properties>
 		<!-- spring版本号 -->
 		<spring.version>4.0.0.RELEASE</spring.version>
-		
+
 		<!-- hibernate版本号 -->
 		<hibernate.version>4.0.0.Final</hibernate.version>
 
@@ -176,7 +176,7 @@
 			<artifactId>spring-context-support</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-		
+
 		<!-- spring boot -->
 		<dependency>
 		    <groupId>org.springframework.boot</groupId>
@@ -346,12 +346,12 @@
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
-			
+
 			<!-- Spring Boot 将项目打包成一个可执行jar -->
 	        <plugin>
 	            <groupId>org.springframework.boot</groupId>
 	            <artifactId>spring-boot-maven-plugin</artifactId>
-	        </plugin>
+			</plugin>
 		</plugins>
 	</build>
 </project>

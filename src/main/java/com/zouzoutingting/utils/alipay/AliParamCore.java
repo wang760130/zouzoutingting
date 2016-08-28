@@ -1,7 +1,5 @@
 package com.zouzoutingting.utils.alipay;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zouzoutingting.common.Global;
 import org.apache.log4j.Logger;
 
@@ -10,71 +8,45 @@ import java.net.URLEncoder;
 import java.util.*;
 
 /**
+ *
  * 阿里支付工具类
  */
 public class AliParamCore {
   private static final Logger logger = Logger.getLogger(AliParamCore.class);
 
-  /**
-   * 去空，加签
-   * @param sParaTemp
-   * @param privateKey
-   * @return
-   * @throws UnsupportedEncodingException
-   */
-  public static String AppBuildAliRequestStr(Map<String, String> sParaTemp,String privateKey)throws
-          UnsupportedEncodingException {
-//    Map<String, String> ret = new HashMap<String, String>();
-//    // 除去数组中的空值和签名参数
-    Map<String, String> sPara = AlipayCore.paraFilter(sParaTemp);
-//    ret.put("_input_charset", sPara.get("_input_charset"));
-//    ret.put("body",sPara.get("body"));
-//    ret.put("notify_url", sPara.get("notify_url"));
-//    ret.put("out_trade_no",sPara.get("out_trade_no"));
-//    ret.put("partner",sPara.get("partner"));
-//    ret.put("payment_type", sPara.get("payment_type"));
-//    ret.put("seller_id",sPara.get("seller_id"));
-//    ret.put("service",sPara.get("service"));
-//    ret.put("subject",sPara.get("subject"));
-//    ret.put("total_fee",sPara.get("total_fee"));
-//    ObjectMapper mapper = new ObjectMapper();
-//    String value = null;
-//    try {
-//      value = mapper.writeValueAsString(ret);
-//    } catch (JsonProcessingException e) {
-//      logger.error("阿里支付转json error", e);
-//    }
-//    logger.info("APP加密前串：" + value);
-//    String mysign = RSA.sign(value, privateKey, Global.ALI_PAY_INPUT_CHARSET);
-//    ret.put("sign",URLEncoder.encode(mysign, Global.ALI_PAY_INPUT_CHARSET));
-//    ret.put("sign_type","RSA");
-
-    StringBuilder ret = new StringBuilder();
-    ret.append("partner=\"").append(sPara.get("partner")).append("\"")
-            .append("&seller_id=\"").append(sPara.get("seller_id"))	.append("\"")
-            .append("&out_trade_no=\"").append(sPara.get("out_trade_no")).append("\"")
-            .append("&subject=\"").append(sPara.get("subject")).append("\"")
-            .append("&body=\"").append(sPara.get("body")).append("\"")
-            .append("&total_fee=\"").append(sPara.get("total_fee")).append("\"")
-            .append("&notify_url=\"").append(sPara.get("notify_url")).append("\"")
-            .append("&service=\"").append(sPara.get("service")).append("\"")
-            .append("&_input_charset=\"").append("utf-8").append("\"")
-            .append("&payment_type=\"").append(sPara.get("payment_type")).append("\"");
-    logger.info("ret is : "+ret.toString());
-    String mysign = RSA.sign(ret.toString(), privateKey, Global.ALI_PAY_INPUT_CHARSET);
-
-    ret.append("&sign=\"").append(URLEncoder.encode(mysign,Global.ALI_PAY_INPUT_CHARSET)).append("\"")
-            .append("&sign_type=\"").append("RSA").append("\"");
-    return ret.toString();
-  }
 
   public static String getFullUrlParam(Map<String, String> map){
     String sign = getSign(map, Global.ALI_PAY_PARTNER_PRIVATE_KEY);
-    return getParasm(map)+"&sign="+sign;
+    String params = getParasm(map, false);
+//    logger.info("verify sign " + RSA.verify(params, sign, Global.ALI_PAY_PARTNER_PUB_KEY, Global.ALI_PAY_INPUT_CHARSET));
+    return params+"&sign=\""+sign+"\"&sign_type=\"" + "RSA" + "\"";
 
   }
 
-  private static String getParasm(Map<String, String> map){
+//  /**
+//   * 构造支付订单参数信息
+//   * @param map 支付订单参数
+//   * @return
+//   */
+//  public static String buildOrderParam(Map<String, String> map) {
+//    List<String> keys = new ArrayList<String>(map.keySet());
+//
+//    StringBuilder sb = new StringBuilder();
+//    for (int i = 0; i < keys.size() - 1; i++) {
+//      String key = keys.get(i);
+//      String value = map.get(key);
+//      sb.append(buildKeyValue(key, value, true));
+//      sb.append("&");
+//    }
+//
+//    String tailKey = keys.get(keys.size() - 1);
+//    String tailValue = map.get(tailKey);
+//    sb.append(buildKeyValue(tailKey, tailValue, true));
+//
+//    return sb.toString();
+//  }
+
+  private static String getParasm(Map<String, String> map, boolean needurlencode){
     List<String> keys = new ArrayList<String>(map.keySet());
     // key排序
     Collections.sort(keys);
@@ -83,13 +55,13 @@ public class AliParamCore {
     for (int i = 0; i < keys.size() - 1; i++) {
       String key = keys.get(i);
       String value = map.get(key);
-      authInfo.append(buildKeyValue(key, value, false));
+      authInfo.append(buildKeyValue(key, value, needurlencode));
       authInfo.append("&");
     }
 
     String tailKey = keys.get(keys.size() - 1);
     String tailValue = map.get(tailKey);
-    authInfo.append(buildKeyValue(tailKey, tailValue, false));
+    authInfo.append(buildKeyValue(tailKey, tailValue, needurlencode));
     return authInfo.toString();
   }
   /**
@@ -101,17 +73,18 @@ public class AliParamCore {
    * @return
    */
   public static String getSign(Map<String, String> map, String rsaKey) {
-    String authInfo = getParasm(map);
-
+    String authInfo = getParasm(map, false);
+    logger.info("befer rsa data:" + authInfo);
     String oriSign = RSA.sign(authInfo, rsaKey, Global.ALI_PAY_INPUT_CHARSET);
     String encodedSign = "";
 
     try {
       encodedSign = URLEncoder.encode(oriSign, "UTF-8");
     } catch (UnsupportedEncodingException e) {
-      e.printStackTrace();
+      logger.error("get sign error", e);
     }
     return encodedSign;
+//    return  oriSign;
   }
 
   /**
@@ -128,12 +101,12 @@ public class AliParamCore {
     sb.append("=");
     if (isEncode) {
       try {
-        sb.append(URLEncoder.encode(value, "UTF-8"));
+        sb.append("\"").append(URLEncoder.encode(value, "UTF-8")).append("\"");
       } catch (UnsupportedEncodingException e) {
         sb.append(value);
       }
     } else {
-      sb.append(value);
+      sb.append("\"").append(value).append("\"");
     }
     return sb.toString();
   }

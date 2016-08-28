@@ -40,7 +40,7 @@ public class Global {
 
 	public static final String Ali_PAY_SERVICE = "alipay.wap.create.direct.pay.by.user";
 
-	public static final String ALI_PAY_INPUT_CHARSET = "UTF-8";
+	public static final String ALI_PAY_INPUT_CHARSET = "utf-8";
 
 	public static final String ALI_PAY_PAYMENT_TYPE = "1";
 
@@ -51,22 +51,10 @@ public class Global {
 	public static final String ALI_PAY_SELLER_ID = "2088321043087101";//TODO 沙箱:2088102169325432 online:2088321043087101
 
 	private static final String ALI_APP_ID = "2016070801594335";//阿里appid  沙箱:2016073100134649  online:2016070801594335
-	public static String
-			ALI_PAY_PARTNER_PRIVATE_KEY="MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBALb1uL28eDYDyDG9\n" +
-			"1xZMOdJB2ebtaPIw4pDyaoQw2jNxPOOS1/0aI2aykLvK8vVqAQMFzAG9hOXAZe8f\n" +
-			"0NfLbKFUJ12zWjq3PkLkZQmKO9z6ZtluvxPX/Efz73OlBdZVEPURBOgmtT7UeoJJ\n" +
-			"4m6cIDZW34rc5e2/CV4AHB0uVgotAgMBAAECgYACsamPuae3e+TFvrrdDDBJxUh1\n" +
-			"GwfRkSC066zf12xPF5rC6xWdF3Zv+68f5MQhEveC2OIBII5FZ8jYdYp4svkdfJxk\n" +
-			"mjrf6VrcojhzG/+jzReLshVcBpK3UzeSgo7tu9LrOEjTlyYDiQpRdgyZi9hdh+kR\n" +
-			"Ft+MHfz1oaH4FxH+AQJBAPAAt8SNrIdK/E7QuvMOpPijnm0fd0hifGDXq3tN9fVm\n" +
-			"TrJ+vWgLBZo30pmDLkN5hY2STuDTTnxPOdQv9jkuzIECQQDDJ6cYDpLmyrCtKua+\n" +
-			"xUe61ur9GVkySfiw1QCiTnsZuTqcDtJpWSFWa2g61az+vjN/qMH4MJoUBEG59Lb/\n" +
-			"NletAkBZ7DruZxKsglj0gtp49RS0oEFcq3x634OwmT4D7hrovlNgJ4J5+B86QA4l\n" +
-			"PHRaDa8PczEgpatzgg+tw+aiWDmBAkEArHbVfzgZ8KX9nvuD8eGsc1zNTKFjJ0Mh\n" +
-			"6TxEFCvhNClyt0mN/5XKFXJUKXJ+MJ5sKow75xckgz4Dy8+NDVu7/QJAHTt36zNA\n" +
-			"1Maduqkj25skutRQ0ze/H66/XAS8+MNrCr7ePPdlOCtSU3qH7ancHIxmtx4Bb4l8\n" +
-			"pfw99h9dA9CmZQ==";
-	public static String ALI_PAY_PARTNER_PUB_KEY="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC29bi9vHg2A8gxvdcWTDnSQdnm7WjyMOKQ8mqEMNozcTzjktf9GiNmspC7yvL1agEDBcwBvYTlwGXvH9DXy2yhVCdds1o6tz5C5GUJijvc+mbZbr8T1/xH8+9zpQXWVRD1EQToJrU+1HqCSeJunCA2Vt+K3OXtvwleABwdLlYKLQIDAQAB";// TODO
+
+	public static String ALI_PAY_PARTNER_PRIVATE_KEY="MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAL3U6JcINvEKN3O+nTfw8oZ+vtCuqTbeReIYIT4iAgJxhd1MnvxbT7iMDwIjCPoN9NC0ccDUBaCviZNiviJasKyAujjR0HxQPD8utJp7Q/dM8X/z2G9Wt79fxXVT6yTG8LQP3FynDiOEcd5Hok2sROw3msYm5rBaDtznXjEXvv7LAgMBAAECgYBpQgvx6vEj+ElFGZVtdmHT56WAasiTDu5q7nxISm0Y07+pNJoXTb5HkwmjYq/QjzqHGvbUN/wi3BKJsb/Bps289DN73eMlP8razOsh4Qt95gbFOYCq6C0LPHN+pLttyEA4Q3pqjZURz7xBRYYoYR1gGyXbO+FOZ7QSqcDk4U8mIQJBAOZKxYmJsXCdt6rnDzBvimN3PxCCOYsHHmEOZ9Gt49AyYayUI6qUHCLC4E9QtvnlIUgJmW/XWpimH7qNWuFE5nECQQDTBd6tYg4GVF1nHff6UctryXv4epfv/8KJ6FZbbdoelOUauSSeq8+8fX7VpCzarAlnuRZw/SEYg67BcUUcNO77AkEAlivMBJQ1kSpHyrpBvWP+6j2ocit5Op+5v7CVIrYyCGHSL6eqWmGat1A81Xvc1bgEq+UWmUflXAV4Sz5CNQOpAQJAEd4EXa/YuiZ4hhuefH5id+zmZ0KSDMseAKlAbptdhYtb3qhgdmLbwvzpOVOeTKGWZkbgpI56N+YmbNCXZm0A8wJAbbiAXQxVXzGN3NNcVptsrw9pAf91o68vMcBLQKjEYQlE9xfG/OL1fAXAanJz6Yae9l6jzgPG1QS5jHJlPIhKAg==";
+	public static String ALI_PAY_PARTNER_PUB_KEY="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCnxj/9qwVfgoUh/y2W89L6BkRAFljhNhgPdyPuBV64bfQNN1PjbCzkIM6qRdKBoLPXmKKMiFYnkd6rAoprih3/PrQEB/VsW8OoM8fxn67UDYuyBTqA23MML9q1+ilIZwBC2AQ2UBVOrFXfFl75p6/B5KsiNG9zpgmLCUYuLkxpLQIDAQAB";
+
 
 	//支付宝提供给商户的服务接入网关URL
 	private static final String ALI_PAY_GATEWAY_URL = "https://mapi.alipay.com/gateway.do?";

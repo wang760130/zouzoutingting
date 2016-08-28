@@ -25,6 +25,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -194,60 +196,74 @@ public class PayServiceImpl implements IPayService{
 
         Map<String, String> sParaTemp = new HashMap<String, String>();
         //notifyurl
-        String extInfo = order.getOrderid()  + "_" + order.getUid() + "_" + order.getVid() + "_" + order.getCode();
         String notifyUrl = PropManager.getSingletonInstance().getProperty("ali_notify_url");
         String code = order.getCode();
         if(StringUtils.isEmpty(code)){
             code = "null";
         }
         notifyUrl = notifyUrl + code+"/"+order.getOrderid()+"/" + order.getUid()+"/" + order.getVid();
-        sParaTemp.put("app_id", Global.getAliAppID());
-        sParaTemp.put("method", "alipay.trade.app.pay");
-        sParaTemp.put("charset", Global.ALI_PAY_INPUT_CHARSET);
-        sParaTemp.put("sign_type", "RSA");
-        sParaTemp.put("timestamp", sdf_Ali.format(new Date()));
-        sParaTemp.put("version", Global.ALI_PAY_INTERFACE_VERSION);
+//        sParaTemp.put("app_id", Global.getAliAppID());
+//        sParaTemp.put("method", "alipay.trade.app.pay");
+//        sParaTemp.put("charset", Global.ALI_PAY_INPUT_CHARSET);
+//        sParaTemp.put("sign_type", "RSA");
+//        sParaTemp.put("timestamp", sdf_Ali.format(new Date()));
+//        sParaTemp.put("version", Global.ALI_PAY_INTERFACE_VERSION);
+//        sParaTemp.put("notify_url", notifyUrl);
+//
+//        Map<String, String> bizMap = new HashMap<String, String>();
+//        bizMap.put("body",Global.PAY_SUBJECT);
+//        bizMap.put("subject", Global.PAY_SUBJECT);
+//        bizMap.put("out_trade_no", order.getOrderid()+"");
+//        bizMap.put("total_amount", order.getNeedpay() + "");
+//        //bizMap.put("seller_id", Global.getAliPaySellerId());
+//        bizMap.put("product_code", "QUICK_MSECURITY_PAY");
+//        sParaTemp.put("biz_content",JSON.toJSONString(bizMap));
+
+
+        //老sdk
+        sParaTemp.put("service", "mobile.securitypay.pay");
+        sParaTemp.put("partner", Global.getAliPaySellerId());
+        sParaTemp.put("_input_charset", Global.ALI_PAY_INPUT_CHARSET);
+//        sParaTemp.put("sign_type", "RSA");
         sParaTemp.put("notify_url", notifyUrl);
-
-        Map<String, String> bizMap = new HashMap<String, String>();
-        bizMap.put("body",Global.PAY_SUBJECT);
-        bizMap.put("subject", Global.PAY_SUBJECT);
-        bizMap.put("out_trade_no", order.getOrderid()+"");
-        bizMap.put("total_amount", order.getNeedpay() + "");
-        bizMap.put("seller_id", Global.getAliPaySellerId());
-        bizMap.put("product_code", "QUICK_MSECURITY_PAY");
-        sParaTemp.put("biz_content",JSON.toJSONString(bizMap));
-
+        sParaTemp.put("app_id", Global.getAliAppID());
+        sParaTemp.put("out_trade_no",  order.getOrderid()+"");
+        sParaTemp.put("subject",Global.PAY_SUBJECT);
+        sParaTemp.put("payment_type", "1");
+        sParaTemp.put("seller_id", Global.ALI_PAY_SELLER_MAIL);
+        sParaTemp.put("total_fee", order.getNeedpay() + "");
+        sParaTemp.put("body", Global.PAY_SUBJECT);
         String params = null;
         try {
             params = AliParamCore.getFullUrlParam(sParaTemp);
             resultDto.setParamMap(params);
+            resultDto.setResult(true);
             logger.info("ali jointPayParams success,orderid=" + order.getOrderid() +" data:"+params);
         } catch (Exception e) {
             logger.error("ali buildRequestStr err,date=" + JSON.toJSONString(sParaTemp),e);
             resultDto.setErrMsg("加签失败");
         }
-        try{
-            String[] pair = params.split("&");
-            Map<String, String> postMap = new HashMap<String, String>();
-            for(String pp : pair){
-                String[] kv = pp.split("=");
-                if(kv.length==2) {
-                    postMap.put(kv[0], kv[1]);
-                }
-            }
-            String url = Global.getAliPayGatewayUrl();
-            String body = HttpUtil.post(url, postMap);
-            if(StringUtils.isNotBlank(body)){
-                logger.info("ali prepay http "+url+" ---invoke result:"+body);
-                resultDto.setResult(true);
-            }else {
-                logger.info("ali prepay: "+ url+" return null");
-            }
-        }catch (Exception e){
-            logger.error("向支付宝创建订单失败", e);
-            resultDto.setErrMsg("向支付宝创建订单失败");
-        }
+//        try{
+//            String[] pair = params.split("&");
+//            Map<String, String> postMap = new LinkedHashMap<String, String>();
+//            for(String pp : pair){
+//                String[] kv = pp.split("=");
+//                if(kv.length==2) {
+//                    postMap.put(kv[0], URLDecoder.decode(kv[1], "utf-8"));
+//                }
+//            }
+//            String url = Global.getAliPayGatewayUrl();
+//            String body = HttpUtil.post(url, postMap);
+//            if(StringUtils.isNotBlank(body)){
+//                logger.info("ali prepay http "+url+" ---invoke result:"+body);
+//                resultDto.setResult(true);
+//            }else {
+//                logger.info("ali prepay: "+ url+" return null");
+//            }
+//        }catch (Exception e){
+//            logger.error("向支付宝创建订单失败", e);
+//            resultDto.setErrMsg("向支付宝创建订单失败");
+//        }
         return resultDto;
     }
 
