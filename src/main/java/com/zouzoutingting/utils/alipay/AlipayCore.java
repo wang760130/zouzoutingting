@@ -36,8 +36,7 @@ public class AlipayCore {
 			String value = entry.getValue();
 			if (value == null || value.equals("")
 					|| key.equalsIgnoreCase("sign")
-					|| key.equalsIgnoreCase("sign_type")
-					|| key.startsWith("zztt_")) {
+					|| key.equalsIgnoreCase("sign_type")) {
 				continue;
 			}
 			result.put(key, value);

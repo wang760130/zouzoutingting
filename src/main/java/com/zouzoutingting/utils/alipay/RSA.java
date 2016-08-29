@@ -1,5 +1,7 @@
 package com.zouzoutingting.utils.alipay;
 
+import com.zouzoutingting.common.Global;
+
 import javax.crypto.Cipher;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -140,10 +142,14 @@ public class RSA{
         return privateKey;
     }
 
-//    public static void main(String[] args){
-//        String data = "app_id=2016070801594335&biz_content={\"body\":\"走走听听语音包\",\"out_trade_no\":\"184\"," +
-//                "\"product_code\":\"QUICK_MSECURITY_PAY\",\"subject\":\"走走听听语音包\",\"total_amount\":\"0.01\"}&charset=utf-8&method=alipay.trade.app.pay&notify_url=http://api.test.imonl.com/notify/ali/null/184/100019/27&sign_type=RSA&timestamp=2016-08-28 22:51:55&version=1.0";
-//        String sign =
-//    }
+    public static void main(String[] args) throws Exception{
+        String data = "body=走走听听语音包&buyer_email=13146470322&buyer_id=2088302556226605&discount=0.00&gmt_create=2016-08-30 00:12:03&gmt_payment=2016-08-30 00:12:03&is_total_fee_adjust=N&notify_id=13b851826b6f75f03c413954a9063adkmq&notify_time=2016-08-30 00:12:03&notify_type=trade_status_sync&out_trade_no=200&payment_type=1&price=0.03&quantity=1&seller_email=zouzoutingting@aliyun.com&seller_id=2088321043087101&subject=走走听听语音包&total_fee=0.03&trade_no=2016083021001004600283902945&trade_status=TRADE_SUCCESS&use_coupon=N";
+        String sdata = "Ss070/aFj7RdNwkxDD71oyR9WNCGX613DrrHeFZDhdSuVPvCr9lm1ZwKIumsmMCUbOWuxUL8kfNeaR3fN/1sfvecFTUb" +
+                "/JAlFItSODhoGQ9BwE2XSAUj5HAJ7LK+xwl2mEfVnMOZ89eA5orOXkc+EcWXXlAcLN9Z5CqxeToxp0g=";
+        String sign = RSA.sign(data, Global.ALI_PAY_PARTNER_PRIVATE_KEY, Global.ALI_PAY_INPUT_CHARSET);
+        System.out.println(sign);
+        System.out.println(RSA.verify(data, sdata, Global.ALI_PAY_PARTNER_PUB_KEY, Global.ALI_PAY_INPUT_CHARSET));
+//        System.out.println(RSA.decrypt(sdata, Global.ALI_PAY_PARTNER_PUB_KEY, Global.ALI_PAY_INPUT_CHARSET));
+    }
 }
 

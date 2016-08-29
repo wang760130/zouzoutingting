@@ -14,7 +14,6 @@ import com.zouzoutingting.utils.*;
 import com.zouzoutingting.utils.alipay.AliParamCore;
 import com.zouzoutingting.utils.alipay.AlipayCore;
 
-import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -25,8 +24,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -54,7 +51,18 @@ public class PayServiceImpl implements IPayService{
         String respresut = String.valueOf(resultMap.get("result_code"));
         //拼接调起支付参数
         if((respresut).equals("SUCCESS")){
+            try{
+                Map<String, String> commentMap = new HashMap<String, String>();
+                commentMap.put("paytype", "wx");
 
+                order.setComment(JSON.toJSONString(commentMap));
+                if(order.getState()==OrderStateEnum.Jinx.getState()) {
+                    order.setState(OrderStateEnum.TobePayed.getState());
+                }
+                orderDao.update(order);
+            }catch (Exception e){
+                logger.info("update order wx paytype error oid:"+order.getOrderid());
+            }
             resultDto.setParamMap(AppBuildWxRequestStr(resultMap, order));
             resultDto.setResult(true);
             logger.info("wechat jointPayParams success,orderid={}"+order.getOrderid() +",result={}" + JSON.toJSON(resultDto));
@@ -238,10 +246,24 @@ public class PayServiceImpl implements IPayService{
             params = AliParamCore.getFullUrlParam(sParaTemp);
             resultDto.setParamMap(params);
             resultDto.setResult(true);
+
             logger.info("ali jointPayParams success,orderid=" + order.getOrderid() +" data:"+params);
         } catch (Exception e) {
             logger.error("ali buildRequestStr err,date=" + JSON.toJSONString(sParaTemp),e);
             resultDto.setErrMsg("加签失败");
+        }
+
+        try{
+            Map<String, String> commentMap = new HashMap<String, String>();
+            commentMap.put("paytype", "ali");
+
+            order.setComment(JSON.toJSONString(commentMap));
+            if(order.getState()==OrderStateEnum.Jinx.getState()) {
+                order.setState(OrderStateEnum.TobePayed.getState());
+            }
+            orderDao.update(order);
+        }catch (Exception e){
+            logger.info("update order ali paytype error oid:"+order.getOrderid());
         }
 //        try{
 //            String[] pair = params.split("&");
@@ -318,7 +340,7 @@ public class PayServiceImpl implements IPayService{
     private boolean aLiPayLogicNotify(Map requestParams, Map params) throws Exception{
         boolean result = false;
 
-        if(verify(params)) {//验证成功
+        if(verify(requestParams)) {//验证成功
             String orderidStr = (String) requestParams.get("out_trade_no");
             String paytime = (String) requestParams.get("gmt_payment");
             if (StringUtils.isNotBlank(orderidStr) && orderidStr.equals(params.get("orderid"))) {
@@ -326,15 +348,22 @@ public class PayServiceImpl implements IPayService{
                 if (order != null) {
                     String trade_no = (String) requestParams.get("trade_no");//支付宝交易号
                     String trade_status = (String) requestParams.get("trade_status");
+                    String buyer_email = (String) requestParams.get("buyer_email");
                     if (trade_status.equals("TRADE_FINISHED") || trade_status.equals("TRADE_SUCCESS")){
                         if (order.getState() != OrderStateEnum.Finish.getState()) {
                             logger.info("ali orderid:" + orderidStr + " payed state " + order.getState() + "-->" + OrderStateEnum.Finish
                                     .getState());
                             order.setState(OrderStateEnum.Finish.getState());
                             //todo 纪录日志
-                            Map<String,String> map = new HashMap<String, String>();
+                            Map<String,String> map = null;
+                            if(StringUtils.isNotBlank(order.getComment())){
+                                map = JSON.parseObject(order.getComment(), Map.class);
+                            }else{
+                                map = new HashMap<String, String>();
+                            }
                             map.put("paytype","ali");
                             map.put("trade_no",trade_no);
+                            map.put("buyer_email", buyer_email);
                             order.setComment(JSON.toJSONString(map));
                             order.setPayTime(getPayDate(paytime, sdf_Ali));
                             orderDao.save(order);
@@ -343,7 +372,8 @@ public class PayServiceImpl implements IPayService{
                         }
                         result = true;
                     }else{
-                        logger.info("回调状态为未完成 oid:"+orderidStr+","+JSON.toJSONString(requestParams));
+                        logger.info("回调状态为未完成 " + trade_status + " oid:"+orderidStr+","+JSON.toJSONString
+                                (requestParams) +" requst:"+JSON.toJSONString(params));
                     }
 
                 } else {
@@ -443,7 +473,9 @@ public class PayServiceImpl implements IPayService{
         }
         logger.info(" AlipayNotify verify responseTxt" +responseTxt);
         String sign = "";
-        if(params.get("sign") != null) {sign = params.get("sign");}
+        if(params.get("sign") != null) {
+            sign = params.get("sign");
+        }
         logger.info(" AlipayNotify verify sign" +sign);
         boolean isSign = getSignVeryfy(params, sign);
         logger.info(" AlipayNotify verify isSign" +isSign);
