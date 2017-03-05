@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSON;
+import com.zouzoutingting.model.*;
 import com.zouzoutingting.service.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -27,10 +28,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.zouzoutingting.components.cache.CacheMap;
 import com.zouzoutingting.enums.CouponStateEnum;
 import com.zouzoutingting.enums.OrderStateEnum;
-import com.zouzoutingting.model.Coupon;
-import com.zouzoutingting.model.Order;
-import com.zouzoutingting.model.PrePayResult;
-import com.zouzoutingting.model.ViewSpot;
 import com.zouzoutingting.utils.CouponCodeUtil;
 import com.zouzoutingting.utils.RequestParamUtil;
 
@@ -58,6 +55,8 @@ public class PayController extends BaseController {
     private IViewSpotService viewSpotService;
     @Autowired
     private IThirdPayService thirdPayService;
+    @Autowired
+    private IConfigService configService;
 
     @RequestMapping(value = "/couponcheck", method = RequestMethod.POST)
     public void couponCheck(HttpServletRequest request, HttpServletResponse response){
@@ -517,6 +516,24 @@ public class PayController extends BaseController {
         }
 
     }
+
+    @RequestMapping(value = "/pay/config")
+    public void PayConfig(HttpServletRequest request, HttpServletResponse response) {
+        Map<String,String> map = new HashMap<String, String>();
+        String config = "0";
+
+        try {
+            String tconfig = configService.getCoinfig("onlinepay");
+            if(tconfig!=null){
+                config = tconfig;
+            }
+        } catch (Exception e) {
+            logger.error("getconfig onlinepay error", e);
+        }
+        map.put("onlinepay", config);
+        gzipCipherResult(RETURN_CODE_SUCCESS, RETURN_MESSAGE_SUCCESS, map, request, response);
+    }
+
     public static void main(String[] args){
         Double total = 0.03;
         Double amount = 0.02;
